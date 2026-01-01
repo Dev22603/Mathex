@@ -7,7 +7,7 @@
 
 // Components
 export { MathInput } from './components/MathInput';
-// export { MathKeyboard } from './components/MathKeyboard'; // TODO: Phase 2
+export { MathKeyboard, KeyboardButton } from './components/MathKeyboard';
 // export { MathProvider } from './components/MathProvider'; // TODO: Phase 3
 
 // Types

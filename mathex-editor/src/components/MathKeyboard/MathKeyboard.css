@@ -1,0 +1,368 @@
+/**
+ * MathKeyboard Component Styles
+ * Phase 2: Basic keyboard layout with buttons, toggle, and animations
+ */
+
+/* ============================================
+   CSS Variables for Keyboard
+   ============================================ */
+:root {
+  /* Keyboard Colors */
+  --math-keyboard-bg: #f5f5f5;
+  --math-keyboard-border: #e0e0e0;
+
+  /* Button Colors */
+  --math-button-bg: #ffffff;
+  --math-button-hover-bg: #f0f0f0;
+  --math-button-active-bg: #e0e0e0;
+  --math-button-text: #000000;
+  --math-button-border: #d0d0d0;
+
+  /* Special Button Colors */
+  --math-button-enter-bg: #2f7def;
+  --math-button-enter-hover-bg: #1e6dd8;
+  --math-button-enter-text: #ffffff;
+  --math-button-functions-bg: #4caf50;
+  --math-button-functions-hover-bg: #45a049;
+  --math-button-backspace-bg: #ff9800;
+  --math-button-backspace-hover-bg: #e68900;
+
+  /* Button Sizing */
+  --math-button-width: 60px;
+  --math-button-height: 50px;
+  --math-button-wide-width: 150px;
+  --math-button-gap: 6px;
+
+  /* Keyboard Spacing */
+  --math-keyboard-padding: 16px;
+  --math-keyboard-section-gap: 20px;
+  --math-keyboard-border-radius: 8px;
+
+  /* Animation */
+  --math-keyboard-transition: 300ms ease;
+}
+
+/* ============================================
+   Keyboard Container
+   ============================================ */
+.math-keyboard {
+  background-color: var(--math-keyboard-bg);
+  border-top: 1px solid var(--math-keyboard-border);
+  padding: var(--math-keyboard-padding);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform var(--math-keyboard-transition),
+              opacity var(--math-keyboard-transition);
+  z-index: 1000;
+}
+
+/* Fixed Bottom Positioning */
+.math-keyboard--fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-top-left-radius: var(--math-keyboard-border-radius);
+  border-top-right-radius: var(--math-keyboard-border-radius);
+}
+
+/* Floating Positioning */
+.math-keyboard--floating {
+  position: absolute;
+  border-radius: var(--math-keyboard-border-radius);
+}
+
+/* Visibility States with Slide Animation */
+.math-keyboard--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.math-keyboard--hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   Keyboard Content Layout
+   ============================================ */
+.math-keyboard__content {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--math-keyboard-section-gap);
+}
+
+/* ============================================
+   Button Grid Layout
+   ============================================ */
+.math-keyboard__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--math-button-gap);
+}
+
+.math-keyboard__row {
+  display: flex;
+  justify-content: center;
+  gap: var(--math-button-gap);
+}
+
+/* ============================================
+   Button Base Styles
+   ============================================ */
+.math-keyboard__button {
+  /* Sizing */
+  width: var(--math-button-width);
+  height: var(--math-button-height);
+  min-width: var(--math-button-width);
+  padding: 8px;
+
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Styling */
+  background-color: var(--math-button-bg);
+  border: 1px solid var(--math-button-border);
+  border-radius: 4px;
+  color: var(--math-button-text);
+  font-size: 18px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+
+  /* Remove default button styles */
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Content Wrapper */
+.math-keyboard__button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Button Hover & Active States
+   ============================================ */
+.math-keyboard__button:hover {
+  background-color: var(--math-button-hover-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.math-keyboard__button:active {
+  background-color: var(--math-button-active-bg);
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.math-keyboard__button:focus-visible {
+  outline: 2px solid var(--math-primary-color);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Button Type Variants
+   ============================================ */
+.math-keyboard__button--number {
+  font-weight: 600;
+}
+
+.math-keyboard__button--operator {
+  font-weight: 500;
+  color: #666;
+}
+
+.math-keyboard__button--symbol {
+  font-weight: 500;
+  color: #333;
+}
+
+.math-keyboard__button--function {
+  font-weight: 500;
+  color: var(--math-primary-color);
+}
+
+/* ============================================
+   Wide Button Modifier
+   ============================================ */
+.math-keyboard__button--wide {
+  width: var(--math-button-wide-width);
+  min-width: var(--math-button-wide-width);
+}
+
+/* ============================================
+   Special Buttons Section
+   ============================================ */
+.math-keyboard__special {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--math-button-gap);
+  flex-wrap: wrap;
+  padding-top: var(--math-keyboard-section-gap);
+  border-top: 1px solid var(--math-keyboard-border);
+}
+
+/* Navigation Arrows Container */
+.math-keyboard__nav {
+  display: flex;
+  gap: var(--math-button-gap);
+}
+
+/* ============================================
+   Special Button Styles
+   ============================================ */
+
+/* Backspace Button */
+.math-keyboard__button--backspace {
+  background-color: var(--math-button-backspace-bg);
+  color: white;
+  font-size: 20px;
+}
+
+.math-keyboard__button--backspace:hover {
+  background-color: var(--math-button-backspace-hover-bg);
+}
+
+/* Enter Button */
+.math-keyboard__button--enter {
+  background-color: var(--math-button-enter-bg);
+  color: var(--math-button-enter-text);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.math-keyboard__button--enter:hover {
+  background-color: var(--math-button-enter-hover-bg);
+}
+
+/* Functions Button */
+.math-keyboard__button--functions {
+  background-color: var(--math-button-functions-bg);
+  color: white;
+  font-weight: 600;
+}
+
+.math-keyboard__button--functions:hover {
+  background-color: var(--math-button-functions-hover-bg);
+}
+
+/* Arrow Buttons */
+.math-keyboard__button--arrow {
+  font-size: 20px;
+}
+
+/* ============================================
+   Toggle Button
+   ============================================ */
+.math-keyboard__toggle {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+
+  /* Sizing */
+  padding: 12px 20px;
+
+  /* Styling */
+  background-color: var(--math-primary-color);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Effects */
+  box-shadow: 0 4px 12px rgba(47, 125, 239, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1001;
+
+  /* Remove default button styles */
+  outline: none;
+}
+
+.math-keyboard__toggle:hover {
+  background-color: #1e6dd8;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(47, 125, 239, 0.4);
+}
+
+.math-keyboard__toggle:active {
+  transform: scale(0.98);
+}
+
+.math-keyboard__toggle:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 768px) {
+  .math-keyboard__content {
+    max-width: 100%;
+  }
+
+  .math-keyboard__button {
+    --math-button-width: 50px;
+    --math-button-height: 44px;
+    font-size: 16px;
+  }
+
+  .math-keyboard__button--wide {
+    --math-button-wide-width: 120px;
+  }
+
+  .math-keyboard {
+    --math-keyboard-padding: 12px;
+    --math-button-gap: 4px;
+  }
+
+  .math-keyboard__toggle {
+    bottom: 12px;
+    right: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .math-keyboard__button {
+    --math-button-width: 44px;
+    --math-button-height: 40px;
+    font-size: 14px;
+  }
+
+  .math-keyboard__button--wide {
+    --math-button-wide-width: 100px;
+  }
+
+  .math-keyboard {
+    --math-keyboard-padding: 8px;
+    --math-button-gap: 3px;
+    --math-keyboard-section-gap: 12px;
+  }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  .math-keyboard,
+  .math-keyboard__toggle {
+    display: none !important;
+  }
+}

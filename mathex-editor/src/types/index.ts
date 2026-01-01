@@ -27,6 +27,8 @@ export interface MathInputProps {
   readOnly?: boolean;
   /** Callback fired when LaTeX rendering error occurs */
   onError?: (error: Error) => void;
+  /** Enable automatic fraction conversion (x/y → \frac{x}{y}) (default: true) */
+  autoConvert?: boolean;
 }
 
 export interface MathKeyboardProps {
@@ -44,6 +46,8 @@ export interface MathKeyboardProps {
   showToggleButton?: boolean;
   /** Custom button configurations */
   customButtons?: ButtonConfig[];
+  /** Callback fired when a button is clicked */
+  onButtonClick?: (latex: string) => void;
 }
 
 export interface MathProviderProps {

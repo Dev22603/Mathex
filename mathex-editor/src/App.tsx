@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { MathInput } from './components/MathInput';
+import { MathKeyboard } from './components/MathKeyboard';
 import './App.css';
 
 function App() {
   const [equation1, setEquation1] = useState('x^2 + 3x + 1');
   const [equation2, setEquation2] = useState('\\frac{a}{b}');
   const [equation3, setEquation3] = useState('\\sqrt{x^2 + y^2}');
+  const [keyboardDemo, setKeyboardDemo] = useState('');
+
+  const handleKeyboardClick = (latex: string) => {
+    // For now, just append to the current value
+    // In Phase 3, this will be handled by context
+    setKeyboardDemo(prev => prev + latex);
+  };
 
   return (
     <div className="app">
@@ -58,6 +66,32 @@ function App() {
               <code className="latex-display">LaTeX: {equation3}</code>
             </div>
           </div>
+        </section>
+
+        <section className="demo-section">
+          <h2>MathKeyboard Component (Phase 2)</h2>
+          <p className="demo-description">
+            Virtual keyboard for inputting math expressions. Click the toggle button to show/hide the keyboard.
+          </p>
+
+          <div className="demo-item">
+            <label htmlFor="keyboard-demo">Try the Keyboard:</label>
+            <MathInput
+              id="keyboard-demo"
+              value={keyboardDemo}
+              onChange={setKeyboardDemo}
+              placeholder="Click keyboard buttons below..."
+            />
+            <code className="latex-display">LaTeX: {keyboardDemo || '(empty)'}</code>
+          </div>
+
+          <MathKeyboard
+            mode="basic"
+            position="fixed-bottom"
+            defaultVisible={false}
+            showToggleButton={true}
+            onButtonClick={handleKeyboardClick}
+          />
         </section>
 
         <section className="demo-section">
@@ -115,11 +149,11 @@ function App() {
               </div>
             </div>
 
-            <div className="status-item status-pending">
-              <span className="status-icon">⏳</span>
+            <div className="status-item status-completed">
+              <span className="status-icon">✅</span>
               <div>
                 <strong>Phase 2: MathKeyboard</strong>
-                <p>Visual keyboard with buttons (Coming Soon)</p>
+                <p>Visual keyboard with buttons</p>
               </div>
             </div>
 
@@ -143,7 +177,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Math Equation Editor v0.1.0 - Phase 1 Demo</p>
+        <p>Math Equation Editor v0.2.0 - Phase 1 & 2 Demo</p>
         <p>Built with React + TypeScript + KaTeX + Vite</p>
       </footer>
     </div>

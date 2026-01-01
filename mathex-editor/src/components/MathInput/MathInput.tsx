@@ -3,6 +3,7 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import clsx from 'clsx';
 import type { MathInputProps } from '../../types';
+import { convertSlashToFrac } from '../../utils/autoConversions';
 import './MathInput.css';
 
 /**
@@ -23,6 +24,7 @@ export const MathInput: React.FC<MathInputProps> = ({
   autoFocus = false,
   readOnly = false,
   onError,
+  autoConvert = true,
 }) => {
   // Generate unique ID if not provided
   const generatedId = useId();
@@ -32,10 +34,10 @@ export const MathInput: React.FC<MathInputProps> = ({
   const [latex, setLatex] = useState(value ?? defaultValue);
   const [focused, setFocused] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [cursorPosition, setCursorPosition] = useState(latex.length);
+  const [_cursorPosition, setCursorPosition] = useState(latex.length);
 
   // Refs
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sync with controlled value prop
@@ -90,9 +92,36 @@ export const MathInput: React.FC<MathInputProps> = ({
    * Handle input changes from keyboard
    */
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newLatex = e.target.value;
-    setLatex(newLatex);
+    const input = e.target as HTMLInputElement;
+    const newLatex = input.value;
+    const cursorPos = input.selectionStart || 0;
 
+    // Track cursor position
+    setCursorPosition(cursorPos);
+
+    // Apply auto-conversion if enabled and "/" was typed
+    if (autoConvert && newLatex[cursorPos - 1] === '/') {
+      const result = convertSlashToFrac(newLatex, cursorPos);
+
+      if (result.converted) {
+        setLatex(result.newLatex);
+        if (onChange) {
+          onChange(result.newLatex);
+        }
+
+        // Restore cursor position after React updates
+        setTimeout(() => {
+          if (input) {
+            input.setSelectionRange(result.newCursorPos, result.newCursorPos);
+            setCursorPosition(result.newCursorPos);
+          }
+        }, 0);
+        return;
+      }
+    }
+
+    // Normal flow if no conversion
+    setLatex(newLatex);
     if (onChange) {
       onChange(newLatex);
     }
