@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useId } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import clsx from 'clsx';
-import { MathInputProps } from '../../types';
+import type { MathInputProps } from '../../types';
 import './MathInput.css';
 
 /**
