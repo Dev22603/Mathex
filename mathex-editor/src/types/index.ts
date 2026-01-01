@@ -2,7 +2,7 @@
  * Type definitions for Math Equation Editor
  */
 
-import type React from 'react';
+import React from 'react';
 
 export interface MathInputProps {
   /** LaTeX string value (controlled component) */
