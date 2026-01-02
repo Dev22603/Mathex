@@ -34,6 +34,14 @@ export const KeyboardButton: React.FC<KeyboardButtonProps> = ({
     onClick(config.latex);
   };
 
+  /**
+   * Prevent the default mousedown behavior to keep the input focused
+   * when clicking keyboard buttons
+   */
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   const buttonClass = `math-keyboard__button math-keyboard__button--${config.type}${wide ? ' math-keyboard__button--wide' : ''}${className ? ` ${className}` : ''}`;
 
   return (
@@ -41,6 +49,7 @@ export const KeyboardButton: React.FC<KeyboardButtonProps> = ({
       type="button"
       className={buttonClass}
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       style={style}
       aria-label={`Insert ${config.display}`}
       title={`Insert ${config.display}`}

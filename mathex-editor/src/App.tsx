@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MathInput } from './components/MathInput';
 import { MathKeyboard } from './components/MathKeyboard';
+import { MathProvider } from './components/MathProvider';
 import './App.css';
 
 function App() {
@@ -9,9 +10,13 @@ function App() {
   const [equation3, setEquation3] = useState('\\sqrt{x^2 + y^2}');
   const [keyboardDemo, setKeyboardDemo] = useState('');
 
+  // Phase 3: Multi-input state
+  const [multiInput1, setMultiInput1] = useState('');
+  const [multiInput2, setMultiInput2] = useState('');
+  const [multiInput3, setMultiInput3] = useState('');
+
   const handleKeyboardClick = (latex: string) => {
-    // For now, just append to the current value
-    // In Phase 3, this will be handled by context
+    // For backward compatibility with Phase 2 demo
     setKeyboardDemo(prev => prev + latex);
   };
 
@@ -95,6 +100,57 @@ function App() {
         </section>
 
         <section className="demo-section">
+          <h2>Multi-Input with Context (Phase 3)</h2>
+          <p className="demo-description">
+            Multiple inputs sharing a single keyboard via MathProvider. Click any input to focus it, then use the keyboard. The keyboard automatically routes to the active input!
+          </p>
+
+          <MathProvider>
+            <div className="demo-grid">
+              <div className="demo-item">
+                <label htmlFor="multi-input-1">Equation 1:</label>
+                <MathInput
+                  id="multi-input-1"
+                  value={multiInput1}
+                  onChange={setMultiInput1}
+                  placeholder="Click to focus, then use keyboard..."
+                />
+                <code className="latex-display">LaTeX: {multiInput1 || '(empty)'}</code>
+              </div>
+
+              <div className="demo-item">
+                <label htmlFor="multi-input-2">Equation 2:</label>
+                <MathInput
+                  id="multi-input-2"
+                  value={multiInput2}
+                  onChange={setMultiInput2}
+                  placeholder="Click to focus, then use keyboard..."
+                />
+                <code className="latex-display">LaTeX: {multiInput2 || '(empty)'}</code>
+              </div>
+
+              <div className="demo-item">
+                <label htmlFor="multi-input-3">Equation 3:</label>
+                <MathInput
+                  id="multi-input-3"
+                  value={multiInput3}
+                  onChange={setMultiInput3}
+                  placeholder="Click to focus, then use keyboard..."
+                />
+                <code className="latex-display">LaTeX: {multiInput3 || '(empty)'}</code>
+              </div>
+            </div>
+
+            <MathKeyboard
+              mode="basic"
+              position="fixed-bottom"
+              defaultVisible={true}
+              showToggleButton={true}
+            />
+          </MathProvider>
+        </section>
+
+        <section className="demo-section">
           <h2>Try Different LaTeX Commands</h2>
           <div className="examples-grid">
             <div className="example-card">
@@ -157,11 +213,11 @@ function App() {
               </div>
             </div>
 
-            <div className="status-item status-pending">
-              <span className="status-icon">⏳</span>
+            <div className="status-item status-completed">
+              <span className="status-icon">✅</span>
               <div>
                 <strong>Phase 3: Multi-Input</strong>
-                <p>Context provider for multiple inputs (Coming Soon)</p>
+                <p>Context provider for multiple inputs</p>
               </div>
             </div>
 
@@ -177,7 +233,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Math Equation Editor v0.2.0 - Phase 1 & 2 Demo</p>
+        <p>Math Equation Editor v0.3.0 - Phase 1-3 Demo</p>
         <p>Built with React + TypeScript + KaTeX + Vite</p>
       </footer>
     </div>

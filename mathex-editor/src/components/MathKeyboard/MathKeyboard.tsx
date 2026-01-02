@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import type { MathKeyboardProps, ButtonConfig } from '../../types';
 import { KeyboardButton } from './KeyboardButton';
+import { MathContext } from '../MathProvider/MathContext';
 import './MathKeyboard.css';
 
 /**
@@ -85,16 +86,32 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   showToggleButton = true,
   onButtonClick,
 }) => {
+  // Optional context integration (works with or without MathProvider)
+  const context = useContext(MathContext);
+  const hasProvider = context && context.activeInputId !== undefined;
+
   const [visible, setVisible] = useState(defaultVisible);
 
   const handleToggle = () => {
     setVisible(!visible);
+    // Also toggle in context if available
+    if (hasProvider && context) {
+      context.toggleKeyboard();
+    }
+  };
+
+  /**
+   * Prevent the default mousedown behavior on toggle button
+   * to keep the input focused when showing/hiding keyboard
+   */
+  const handleToggleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
   };
 
   const handleButtonClick = (latex: string) => {
     // Handle special buttons
     if (latex === 'BACKSPACE' || latex === 'ENTER' || latex === 'ARROW_LEFT' || latex === 'ARROW_RIGHT' || latex === 'FUNCTIONS') {
-      // These will be handled in Phase 3 with context
+      // TODO: Phase 4+ - Implement special button functionality
       console.log(`Special button clicked: ${latex}`);
       if (onButtonClick) {
         onButtonClick(latex);
@@ -103,7 +120,10 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
     }
 
     // Regular button - insert LaTeX
-    if (onButtonClick) {
+    // If context is available, use it; otherwise use prop callback
+    if (hasProvider && context) {
+      context.insertAtCursor(latex);
+    } else if (onButtonClick) {
       onButtonClick(latex);
     }
   };
@@ -118,6 +138,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           type="button"
           className="math-keyboard__toggle"
           onClick={handleToggle}
+          onMouseDown={handleToggleMouseDown}
           aria-label={visible ? 'Hide keyboard' : 'Show keyboard'}
           aria-expanded={visible}
         >
