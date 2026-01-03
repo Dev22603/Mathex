@@ -1,7 +1,24 @@
 # TODO: Math Equation Editor Component Library
 
 **Project**: React-based component library for visual math equation editing
+**Package Name**: `mathex`
 **Vision**: Build a Desmos-like WYSIWYG math editor that developers can integrate into educational platforms
+
+**Current Status**: 📋 Planning Phase - Project Not Started Yet
+
+## Quick Usage Overview (Target API)
+```jsx
+import { MathInput, MathKeyboard } from 'mathex';
+
+function App() {
+  return (
+    <div>
+      <MathInput onChange={(latex) => console.log(latex)} />
+      <MathKeyboard />
+    </div>
+  );
+}
+```
 
 ---
 
@@ -9,7 +26,7 @@
 
 ### 0.1 Initial Setup
 - [ ] Initialize React + TypeScript + Vite project
-  - [ ] Run `npm create vite@latest mathex-editor -- --template react-ts`
+  - [ ] Run `npm create vite@latest mathex -- --template react-ts`
   - [ ] Configure TypeScript strict mode
   - [ ] Set up proper tsconfig.json
 - [ ] Install core dependencies
@@ -89,9 +106,10 @@
 
 ### 1.3 Basic Text Input
 - [ ] Implement editable container
-  - [ ] Use contentEditable div or input element
+  - [ ] Use contentEditable div (Desmos-like approach)
   - [ ] Capture user typing
   - [ ] Update LaTeX state on input
+  - [ ] **Note**: Research Desmos behavior - start simple, iterate based on testing
 - [ ] Hardware keyboard support
   - [ ] onKeyDown handler for typing
   - [ ] Support basic LaTeX syntax: `x^2`, `\frac{a}{b}`, etc.
@@ -425,8 +443,8 @@
   - [ ] nPr → `P(n,r)`
   - [ ] nCr → `\binom{n}{r}`
 
-### 5.6 Hyperbolic Trig (Priority 2 - v1.1)
-- [ ] Category: "HYPERBOLIC TRIG"
+### 5.6 Hyperbolic Trig Functions (Priority 1)
+- [ ] Category: "HYPERBOLIC TRIG FUNCTIONS"
 - [ ] Functions:
   - [ ] sinh → `\sinh(`
   - [ ] cosh → `\cosh(`
@@ -435,14 +453,100 @@
   - [ ] sech → `\text{sech}(`
   - [ ] coth → `\coth(`
 
-### 5.7 Statistics (Priority 2 - v1.1)
-- [ ] Category: "STATISTICS" (basic only)
+### 5.7 Statistics (Priority 1)
+- [ ] Category: "STATISTICS"
 - [ ] Functions:
   - [ ] mean → `\text{mean}(`
   - [ ] median → `\text{median}(`
-  - [ ] stdev → `\text{stdev}(`
   - [ ] min → `\min(`
   - [ ] max → `\max(`
+  - [ ] quartile → `\text{quartile}(`
+  - [ ] quantile → `\text{quantile}(`
+  - [ ] stdev → `\text{stdev}(`
+  - [ ] stdevp → `\text{stdevp}(`
+  - [ ] var → `\text{var}(`
+  - [ ] varp → `\text{varp}(`
+  - [ ] cov → `\text{cov}(`
+  - [ ] covp → `\text{covp}(`
+  - [ ] mad → `\text{mad}(`
+  - [ ] corr → `\text{corr}(`
+  - [ ] spearman → `\text{spearman}(`
+  - [ ] stats → `\text{stats}(`
+  - [ ] count → `\text{count}(`
+  - [ ] total → `\text{total}(`
+
+### 5.8 Probability Distributions (Priority 1)
+- [ ] Category: "PROBABILITY DISTRIBUTIONS"
+- [ ] Functions:
+  - [ ] normaldist → `\text{normaldist}(`
+  - [ ] tdist → `\text{tdist}(`
+  - [ ] chisqdist → `\text{chisqdist}(`
+  - [ ] uniformdist → `\text{uniformdist}(`
+  - [ ] binomialdist → `\text{binomialdist}(`
+  - [ ] poissondist → `\text{poissondist}(`
+  - [ ] geodist → `\text{geodist}(`
+  - [ ] pdf → `\text{pdf}(`
+  - [ ] cdf → `\text{cdf}(`
+  - [ ] inversecdf → `\text{inversecdf}(`
+  - [ ] random → `\text{random}(`
+
+### 5.9 Inference (Priority 1)
+- [ ] Category: "INFERENCE"
+- [ ] Functions:
+  - [ ] ztest → `\text{ztest}(`
+  - [ ] ttest → `\text{ttest}(`
+  - [ ] zproptest → `\text{zproptest}(`
+  - [ ] chisqtest → `\text{chisqtest}(`
+  - [ ] chisqgof → `\text{chisqgof}(`
+  - [ ] null → `\text{null}(`
+  - [ ] p → `p`
+  - [ ] pleft → `\text{pleft}(`
+  - [ ] pright → `\text{pright}(`
+  - [ ] score → `\text{score}(`
+  - [ ] dof → `\text{dof}(`
+  - [ ] stderr → `\text{stderr}(`
+  - [ ] conf → `\text{conf}(`
+  - [ ] lower → `\text{lower}(`
+  - [ ] upper → `\text{upper}(`
+  - [ ] estimate → `\text{estimate}(`
+
+### 5.10 List Operations (Priority 1)
+- [ ] Category: "LIST OPERATIONS"
+- [ ] Functions:
+  - [ ] repeat → `\text{repeat}(`
+  - [ ] join → `\text{join}(`
+  - [ ] sort → `\text{sort}(`
+  - [ ] shuffle → `\text{shuffle}(`
+  - [ ] unique → `\text{unique}(`
+  - [ ] for → `\text{for}(`
+
+### 5.11 Visualizations (Priority 1)
+- [ ] Category: "VISUALIZATIONS"
+- [ ] Functions:
+  - [ ] histogram → `\text{histogram}(`
+  - [ ] dotplot → `\text{dotplot}(`
+  - [ ] boxplot → `\text{boxplot}(`
+
+### 5.12 Geometry (Priority 1)
+- [ ] Category: "GEOMETRY"
+- [ ] Functions:
+  - [ ] polygon → `\text{polygon}(`
+  - [ ] distance → `\text{distance}(`
+  - [ ] midpoint → `\text{midpoint}(`
+
+### 5.13 Custom Colors (Priority 1)
+- [ ] Category: "CUSTOM COLORS"
+- [ ] Functions:
+  - [ ] rgb → `\text{rgb}(`
+  - [ ] hsv → `\text{hsv}(`
+  - [ ] okhsv → `\text{okhsv}(`
+  - [ ] oklab → `\text{oklab}(`
+  - [ ] oklch → `\text{oklch}(`
+
+### 5.14 Sound (Priority 1)
+- [ ] Category: "SOUND"
+- [ ] Functions:
+  - [ ] tone → `\text{tone}(`
 
 ---
 
@@ -462,7 +566,7 @@
 ### 6.2 Basic Algebra Mode
 - [ ] Define BASIC_MODE configuration
   - [ ] Button grid (numbers, operators, basic symbols)
-  - [ ] Function categories: Trig, Inverse Trig, Calculus, Number Theory
+  - [ ] All 13 function categories available in functions panel
 - [ ] Implement mode switching
   - [ ] Mode selector in keyboard
   - [ ] Update button layout on mode change
@@ -470,8 +574,8 @@
 ### 6.3 Calculus Mode
 - [ ] Define CALCULUS_MODE configuration
   - [ ] All basic buttons
-  - [ ] Additional calculus-specific buttons
-  - [ ] Function categories: + Hyperbolic Trig
+  - [ ] Additional calculus-specific buttons on main keyboard
+  - [ ] All 13 function categories available in functions panel
 - [ ] Add mode to selector
 
 ### 6.4 Chemistry Mode (Optional for v1.0)
@@ -785,11 +889,11 @@
 
 ### 11.2 Package.json Configuration
 - [ ] Metadata
-  - [ ] Name: `@yourorg/mathex-editor` (or `mathex-editor`)
+  - [ ] Name: `mathex`
   - [ ] Version: `1.0.0`
-  - [ ] Description
-  - [ ] Keywords: math, equation, editor, react, latex, katex
-  - [ ] License: MIT (or your choice)
+  - [ ] Description: "A Desmos-like math equation editor component library for React"
+  - [ ] Keywords: math, equation, editor, react, latex, katex, desmos, wysiwyg, educational
+  - [ ] License: MIT
   - [ ] Author info
   - [ ] Repository URL
 - [ ] Entry points
@@ -880,10 +984,9 @@
 ### 12.2 v1.1 Enhancements
 - [ ] Full cursor positioning (character-level)
 - [ ] Improved selection handling
-- [ ] Hyperbolic trig functions
-- [ ] Statistics functions
 - [ ] Additional keyboard shortcuts
 - [ ] Performance improvements
+- [ ] Advanced templates
 
 ### 12.3 v1.2 Features
 - [ ] Templates gallery
@@ -950,30 +1053,44 @@
 1. ✅ MathInput with KaTeX rendering
 2. ✅ Basic MathKeyboard (numbers, operators, basic symbols)
 3. ✅ Multi-input support via MathProvider
-4. ✅ 4 function categories: Trig, Inverse Trig, Calculus, Number Theory
-5. ✅ Light theme
-6. ✅ Basic documentation
-7. ✅ npm package published
+4. ✅ ALL 13 function categories:
+   - Trig Functions
+   - Inverse Trig Functions
+   - Calculus
+   - Hyperbolic Trig Functions
+   - Number Theory
+   - Statistics
+   - Probability Distributions
+   - Inference
+   - List Operations
+   - Visualizations
+   - Geometry
+   - Custom Colors
+   - Sound
+5. ✅ ABC mode (letter input keyboard)
+6. ✅ Light theme
+7. ✅ Basic documentation (README, API docs)
+8. ✅ npm package published
 
 ### Should Have (v1.0)
-- ⚠️ ABC mode
-- ⚠️ Calculus mode
 - ⚠️ Dark theme
-- ⚠️ Comprehensive tests
-- ⚠️ Storybook
+- ⚠️ Comprehensive tests (80%+ coverage)
+- ⚠️ Storybook (Phase 10/Documentation)
+- ⚠️ Multiple keyboard modes (Basic, Calculus)
 
 ### Nice to Have (v1.1)
-- 💡 Full cursor positioning
-- 💡 Selection handling
-- 💡 Hyperbolic trig
-- 💡 Statistics functions
+- 💡 Full cursor positioning (character-level)
+- 💡 Advanced selection handling
 - 💡 Chemistry mode
+- 💡 Advanced templates
+- 💡 Equation history
 
 ### Future (v2.0+)
 - 🔮 Mobile support
-- 🔮 Graphing
+- 🔮 Graphing capabilities
 - 🔮 AI assistance
 - 🔮 Plugin system
+- 🔮 Multi-framework support
 
 ---
 
@@ -982,12 +1099,15 @@
 **Phase 0-1**: 3 weeks (Setup + Basic MathInput)
 **Phase 2-3**: 3 weeks (Basic Keyboard + Context)
 **Phase 4**: 2 weeks (Advanced editing)
-**Phase 5-6**: 3 weeks (Functions + Modes)
+**Phase 5**: 4 weeks (All 13 Function Categories - intensive!)
+**Phase 6**: 2 weeks (Keyboard Modes)
 **Phase 7-8**: 2 weeks (Theming + Error handling)
 **Phase 9**: 2 weeks (Testing)
-**Phase 10-11**: 2 weeks (Documentation + Release)
+**Phase 10-11**: 2 weeks (Documentation with Storybook + Release)
 
-**Total**: ~17 weeks (4 months) for v1.0
+**Total**: ~20 weeks (5 months) for v1.0
+
+**Note**: Phase 5 expanded from 3 to 4 weeks due to implementing all 13 Desmos function categories
 
 ---
 
