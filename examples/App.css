@@ -1,0 +1,82 @@
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 300px; /* Space for keyboard */
+}
+
+.app-header {
+  background: white;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #2F7DEF;
+  font-size: 2.5rem;
+}
+
+.app-header p {
+  margin: 0.5rem 0 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.app-content {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.demo-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+}
+
+.demo-section h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.input-example {
+  margin-bottom: 2rem;
+}
+
+.input-example label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.latex-display {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #F5F5F5;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.info-section {
+  background: #FFF9E6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #FFD700;
+}
+
+.info-section h3 {
+  margin-top: 0;
+  color: #B8860B;
+}
+
+.info-section p {
+  margin: 0.5rem 0;
+  color: #666;
+}
