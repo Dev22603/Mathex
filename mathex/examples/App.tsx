@@ -51,11 +51,14 @@ function App() {
           </section>
 
           <section className="info-section">
-            <h3>📋 Project Status: Phase 0 Complete</h3>
-            <p>✅ Project structure set up</p>
-            <p>✅ Dependencies installed</p>
-            <p>✅ TypeScript configured</p>
-            <p>⏳ Next: Phase 1 - Implement MathInput with KaTeX</p>
+            <h3>📋 Project Status: Phase 1 Complete! 🎉</h3>
+            <p>✅ MathInput with real-time KaTeX rendering</p>
+            <p>✅ Hardware keyboard support</p>
+            <p>✅ Error handling for invalid LaTeX</p>
+            <p>✅ Focus/blur state management</p>
+            <p>⏳ Next: Phase 2 - MathKeyboard component</p>
+            <br />
+            <p><strong>Try clicking on an equation above to edit it!</strong></p>
           </section>
         </main>
 
