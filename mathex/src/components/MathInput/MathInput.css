@@ -1,0 +1,139 @@
+/**
+ * MathInput Component Styles
+ * Based on Desmos design specifications (MASTERPLAN-V2.md Section 3)
+ */
+
+/* Main input container */
+.mathex-input {
+  position: relative;
+  min-height: var(--math-input-min-height, 48px);
+  padding: var(--math-input-padding, 12px 16px);
+  background: var(--math-background, #FFFFFF);
+  border: 2px solid var(--math-border-color, #D0D0D0);
+  border-left: 3px solid transparent;
+  border-radius: var(--math-border-radius, 4px);
+  font-family: var(--math-font, 'KaTeX_Main', 'Times New Roman', serif);
+  font-size: var(--math-font-size, 18px);
+  line-height: 1.6;
+  cursor: text;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Focused state */
+.mathex-input--focused {
+  border-left-color: var(--math-primary-color, #2F7DEF);
+  outline: none;
+}
+
+/* Error state */
+.mathex-input--error {
+  background: var(--math-error-bg, #FFF3E0);
+}
+
+/* Disabled state */
+.mathex-input--disabled {
+  background: var(--math-bg-light-gray, #F5F5F5);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Rendered math display */
+.mathex-rendered {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mathex-rendered .katex {
+  font-size: inherit;
+}
+
+/* ContentEditable input */
+.mathex-editable {
+  outline: none;
+  font-family: 'Courier New', 'Monaco', monospace;
+  color: var(--math-text-color, #000000);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 20px;
+}
+
+.mathex-editable:focus {
+  outline: none;
+}
+
+/* Placeholder */
+.mathex-placeholder {
+  color: var(--math-text-light, #999999);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Cursor indicator */
+.mathex-cursor {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--math-text-color, #000000);
+  animation: mathex-blink 1s infinite;
+  pointer-events: none;
+}
+
+@keyframes mathex-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Error indicator icon */
+.mathex-error-icon {
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--math-warning-color, #FF9800);
+  cursor: help;
+}
+
+/* Error text styling */
+.mathex-error {
+  color: var(--math-warning-color, #FF9800);
+  font-family: 'Courier New', monospace;
+}
+
+/* Selection highlighting */
+.mathex-input ::selection {
+  background: var(--math-selection-bg, #C9E1FF);
+  color: inherit;
+}
+
+.mathex-input ::-moz-selection {
+  background: var(--math-selection-bg, #C9E1FF);
+  color: inherit;
+}
+
+/* Hover effect for non-disabled inputs */
+.mathex-input:not(.mathex-input--disabled):hover {
+  border-color: var(--math-border-light, #BCBCBC);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mathex-input {
+    font-size: 16px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .mathex-cursor {
+    height: 20px;
+  }
+}
