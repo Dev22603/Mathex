@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { useMathContext } from '../MathProvider/MathProvider';
 import './MathInput.css';
 
 /**
@@ -74,6 +75,12 @@ export const MathInput: React.FC<MathInputProps> = ({
   const inputRef = useRef<HTMLDivElement>(null);
   const contentEditableRef = useRef<HTMLDivElement>(null);
 
+  // Generate unique ID if not provided
+  const inputId = useMemo(() => id || `math-input-${Math.random().toString(36).substr(2, 9)}`, [id]);
+
+  // Get context (optional - component works without provider)
+  const mathContext = useMathContext();
+
   /**
    * Render LaTeX to HTML using KaTeX
    */
@@ -134,7 +141,11 @@ export const MathInput: React.FC<MathInputProps> = ({
    */
   const handleFocus = useCallback(() => {
     setIsFocused(true);
-  }, []);
+    // Notify provider that this input is now active
+    if (mathContext) {
+      mathContext.setActiveInput(inputId);
+    }
+  }, [mathContext, inputId]);
 
   /**
    * Handle blur
@@ -181,6 +192,46 @@ export const MathInput: React.FC<MathInputProps> = ({
       contentEditableRef.current.textContent = latex;
     }
   }, [latex, isFocused]);
+
+  /**
+   * Handle keyboard insertions from MathKeyboard
+   */
+  const handleKeyboardInsertion = useCallback(
+    (insertedLatex: string) => {
+      if (insertedLatex === 'BACKSPACE') {
+        // Handle backspace
+        const newLatex = latex.slice(0, -1);
+        if (isControlled) {
+          onChange?.(newLatex);
+        } else {
+          setUncontrolledValue(newLatex);
+          onChange?.(newLatex);
+        }
+      } else {
+        // Insert LaTeX at end (Phase 1 - cursor always at end)
+        const newLatex = latex + insertedLatex;
+        if (isControlled) {
+          onChange?.(newLatex);
+        } else {
+          setUncontrolledValue(newLatex);
+          onChange?.(newLatex);
+        }
+      }
+    },
+    [latex, isControlled, onChange]
+  );
+
+  /**
+   * Register with provider on mount, unregister on unmount
+   */
+  useEffect(() => {
+    if (mathContext) {
+      mathContext.registerInput(inputId, handleKeyboardInsertion);
+      return () => {
+        mathContext.unregisterInput(inputId);
+      };
+    }
+  }, [mathContext, inputId, handleKeyboardInsertion]);
 
   return (
     <div

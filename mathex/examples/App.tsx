@@ -1,6 +1,19 @@
 import { useState } from 'react';
-import { MathInput, MathKeyboard, MathProvider } from 'mathex';
+import { MathInput, MathKeyboard, MathProvider, useMathContext } from 'mathex';
 import './App.css';
+
+// Keyboard wrapper component to connect with provider
+function KeyboardWrapper() {
+  const context = useMathContext();
+
+  const handleButtonClick = (latex: string, _buttonType: string) => {
+    if (context) {
+      context.insertAtCursor(latex);
+    }
+  };
+
+  return <MathKeyboard mode="basic" onButtonClick={handleButtonClick} />;
+}
 
 function App() {
   const [latex1, setLatex1] = useState('x^2 + 3x + 1');
@@ -51,18 +64,18 @@ function App() {
           </section>
 
           <section className="info-section">
-            <h3>📋 Project Status: Phase 1 Complete! 🎉</h3>
+            <h3>📋 Project Status: Phase 2 Complete! 🎉</h3>
             <p>✅ MathInput with real-time KaTeX rendering</p>
-            <p>✅ Hardware keyboard support</p>
-            <p>✅ Error handling for invalid LaTeX</p>
-            <p>✅ Focus/blur state management</p>
-            <p>⏳ Next: Phase 2 - MathKeyboard component</p>
+            <p>✅ MathKeyboard with 3 modes (Basic, Calculus, ABC)</p>
+            <p>✅ Keyboard-Input integration via MathProvider</p>
+            <p>✅ Click keyboard buttons to insert LaTeX!</p>
+            <p>⏳ Next: Phase 3 - Advanced features</p>
             <br />
-            <p><strong>Try clicking on an equation above to edit it!</strong></p>
+            <p><strong>Try clicking an equation, then use the keyboard below! 👇</strong></p>
           </section>
         </main>
 
-        <MathKeyboard mode="basic" />
+        <KeyboardWrapper />
       </div>
     </MathProvider>
   );

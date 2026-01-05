@@ -7,13 +7,10 @@
 // Component exports
 export { MathInput } from './components/MathInput/MathInput';
 export { MathKeyboard } from './components/MathKeyboard/MathKeyboard';
-export { MathProvider } from './components/MathProvider/MathProvider';
+export { MathProvider, useMathContext } from './components/MathProvider/MathProvider';
 
 // Type exports
 export type { MathInputProps } from './components/MathInput/MathInput';
 export type { MathKeyboardProps } from './components/MathKeyboard/MathKeyboard';
 export type { MathProviderProps } from './components/MathProvider/MathProvider';
 export type { KeyboardMode, ButtonConfig, FunctionCategory } from './types';
-
-// Hook exports (when we create them)
-// export { useMathContext } from './hooks/useMathContext';
