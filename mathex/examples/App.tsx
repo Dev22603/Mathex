@@ -12,7 +12,7 @@ function KeyboardWrapper() {
     }
   };
 
-  return <MathKeyboard mode="basic" onButtonClick={handleButtonClick} />;
+  return <MathKeyboard onButtonClick={handleButtonClick} />;
 }
 
 function App() {
@@ -66,7 +66,7 @@ function App() {
           <section className="info-section">
             <h3>📋 Project Status: Phase 2 Complete! 🎉</h3>
             <p>✅ MathInput with real-time KaTeX rendering</p>
-            <p>✅ MathKeyboard with 3 modes (Basic, Calculus, ABC)</p>
+            <p>✅ MathKeyboard with Desmos-exact design (Numbers/ABC modes)</p>
             <p>✅ Keyboard-Input integration via MathProvider</p>
             <p>✅ Click keyboard buttons to insert LaTeX!</p>
             <p>⏳ Next: Phase 3 - Advanced features</p>

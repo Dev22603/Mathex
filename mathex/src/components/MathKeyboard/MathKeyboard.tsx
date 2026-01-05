@@ -7,18 +7,12 @@ import './MathKeyboard.css';
  * Props for the MathKeyboard component
  */
 export interface MathKeyboardProps {
-  /** Keyboard mode (basic, calculus, abc) */
-  mode?: 'basic' | 'calculus' | 'abc';
-  /** Positioning style for the keyboard */
-  position?: 'fixed-bottom' | 'floating';
   /** Additional CSS class name */
   className?: string;
   /** Inline styles */
   style?: React.CSSProperties;
   /** Whether keyboard is visible by default */
   defaultVisible?: boolean;
-  /** Whether to show the toggle button */
-  showToggleButton?: boolean;
   /** Callback when a button is clicked */
   onButtonClick?: (latex: string, buttonType: string) => void;
   /** Callback when keyboard visibility changes */
@@ -27,35 +21,21 @@ export interface MathKeyboardProps {
 
 /**
  * MathKeyboard - A virtual keyboard for inserting mathematical symbols
- *
- * Provides a touch/click interface for inserting LaTeX symbols and functions
- * into the currently focused MathInput component.
+ * Exact Desmos design
  *
  * @component
- * @example
- * ```tsx
- * <MathKeyboard
- *   mode="basic"
- *   position="fixed-bottom"
- *   defaultVisible={true}
- * />
- * ```
  */
 export const MathKeyboard: React.FC<MathKeyboardProps> = ({
-  mode: initialMode = 'basic',
-  position = 'fixed-bottom',
   className = '',
   style,
   defaultVisible = true,
-  showToggleButton = true,
   onButtonClick,
   onVisibilityChange,
 }) => {
   // State
   const [isVisible, setIsVisible] = useState(defaultVisible);
-  const [currentMode, setCurrentMode] = useState<'basic' | 'calculus' | 'abc'>(initialMode);
+  const [currentMode, setCurrentMode] = useState<'numbers' | 'abc'>('numbers');
   const [isShiftActive, setIsShiftActive] = useState(false);
-  const [showFunctionsPanel, setShowFunctionsPanel] = useState(false);
 
   // Get current keyboard layout
   const layout = getKeyboardLayout(currentMode);
@@ -80,29 +60,24 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       if (type === 'action') {
         switch (latex) {
           case 'BACKSPACE':
-            // Will be handled by MathProvider
             onButtonClick?.('BACKSPACE', type);
             return;
 
-          case 'MODE_SWITCH':
-            // Toggle between ABC and numeric modes
-            setCurrentMode((prev) => (prev === 'abc' ? 'basic' : 'abc'));
+          case 'MODE_NUMBERS':
+            setCurrentMode('numbers');
+            return;
+
+          case 'MODE_ABC':
+            setCurrentMode('abc');
             return;
 
           case 'SHIFT':
-            // Toggle uppercase
             setIsShiftActive((prev) => !prev);
             return;
 
-          case 'SUBSCRIPT':
-            // Insert subscript syntax
-            onButtonClick?.('_{}', 'operator');
-            return;
-
           case 'ENTER':
-            // Close keyboard
-            setIsVisible(false);
-            onVisibilityChange?.(false);
+            // Just close keyboard or trigger callback
+            onButtonClick?.('ENTER', type);
             return;
 
           default:
@@ -120,71 +95,28 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       // Trigger callback
       onButtonClick?.(finalLatex, type);
     },
-    [isShiftActive, onButtonClick, onVisibilityChange]
+    [isShiftActive, onButtonClick]
   );
 
-  /**
-   * Toggle functions panel
-   */
-  const toggleFunctionsPanel = useCallback(() => {
-    setShowFunctionsPanel((prev) => !prev);
-  }, []);
-
-  /**
-   * Switch keyboard mode
-   */
-  const switchMode = useCallback((newMode: 'basic' | 'calculus' | 'abc') => {
-    setCurrentMode(newMode);
-  }, []);
-
   return (
-    <div className={`mathex-keyboard-container ${className}`} style={style}>
-      {/* Toggle button (keyboard icon) */}
-      {showToggleButton && (
-        <button
-          className={`mathex-keyboard-toggle ${isVisible ? 'active' : ''}`}
-          onClick={toggleVisibility}
-          aria-label={isVisible ? 'Hide keyboard' : 'Show keyboard'}
-          title={isVisible ? 'Hide keyboard' : 'Show keyboard'}
-        >
-          <span className="keyboard-icon">⌨</span>
-          <span className="toggle-arrow">{isVisible ? '▼' : '▲'}</span>
-        </button>
-      )}
+    <div className={`mathex-keyboard-wrapper ${className}`} style={style}>
+      {/* Toggle button - Desmos style (bottom-left) */}
+      <button
+        className={`mathex-kb-toggle ${isVisible ? 'open' : ''}`}
+        onClick={toggleVisibility}
+        aria-label={isVisible ? 'Hide keyboard' : 'Show keyboard'}
+      >
+        <span className="kb-icon">⌨</span>
+        <span className="kb-arrow">{isVisible ? '▲' : '▼'}</span>
+      </button>
 
       {/* Keyboard panel */}
       {isVisible && (
-        <div
-          className={`mathex-keyboard ${
-            position === 'fixed-bottom' ? 'mathex-keyboard--fixed' : ''
-          }`}
-        >
-          {/* Mode selector tabs */}
-          <div className="mathex-keyboard-modes">
-            <button
-              className={`mode-tab ${currentMode === 'basic' ? 'active' : ''}`}
-              onClick={() => switchMode('basic')}
-            >
-              Basic
-            </button>
-            <button
-              className={`mode-tab ${currentMode === 'calculus' ? 'active' : ''}`}
-              onClick={() => switchMode('calculus')}
-            >
-              Calculus
-            </button>
-            <button
-              className={`mode-tab ${currentMode === 'abc' ? 'active' : ''}`}
-              onClick={() => switchMode('abc')}
-            >
-              ABC
-            </button>
-          </div>
-
+        <div className="mathex-keyboard">
           {/* Button grid */}
-          <div className="mathex-keyboard-grid">
+          <div className="mathex-kb-grid">
             {layout.map((row, rowIndex) => (
-              <div key={rowIndex} className="mathex-keyboard-row">
+              <div key={rowIndex} className="mathex-kb-row">
                 {row.map((button, buttonIndex) => {
                   // Apply shift transformation for display
                   let displayText = button.display;
@@ -196,15 +128,21 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                     displayText = button.display.toUpperCase();
                   }
 
+                  // Special handling for mode switch button
+                  const isModeSwitch = button.latex === 'MODE_NUMBERS' || button.latex === 'MODE_ABC';
+                  const isEnterButton = button.latex === 'ENTER';
+                  const isActionButton = button.type === 'action';
+
                   return (
                     <button
                       key={`${rowIndex}-${buttonIndex}`}
-                      className={`mathex-keyboard-button mathex-button--${button.type} ${
+                      className={`mathex-kb-btn ${
+                        isActionButton && !isEnterButton ? 'action' : ''
+                      } ${isEnterButton ? 'enter' : ''} ${
                         isShiftActive && button.latex === 'SHIFT' ? 'active' : ''
-                      }`}
+                      } ${isModeSwitch ? 'mode-switch' : ''}`}
                       onClick={() => handleButtonClick(button)}
                       title={button.description}
-                      data-latex={button.latex}
                     >
                       {displayText}
                     </button>
@@ -214,23 +152,14 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
             ))}
           </div>
 
-          {/* Functions panel toggle */}
-          <div className="mathex-keyboard-footer">
+          {/* ABC/123 mode toggle (if in ABC mode, show 123 button; if in numbers mode, show ABC button) */}
+          {currentMode === 'numbers' && (
             <button
-              className={`functions-toggle ${showFunctionsPanel ? 'active' : ''}`}
-              onClick={toggleFunctionsPanel}
+              className="mathex-mode-toggle-btn"
+              onClick={() => setCurrentMode('abc')}
             >
-              <span>ƒ</span> Functions {showFunctionsPanel ? '▼' : '▶'}
+              ABC
             </button>
-          </div>
-
-          {/* Functions panel (Phase 5 - will be implemented later) */}
-          {showFunctionsPanel && (
-            <div className="mathex-functions-panel">
-              <p className="functions-placeholder">
-                Function categories (Trig, Calculus, etc.) will be added in Phase 5
-              </p>
-            </div>
           )}
         </div>
       )}

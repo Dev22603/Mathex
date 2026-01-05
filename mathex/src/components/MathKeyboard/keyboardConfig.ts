@@ -1,68 +1,24 @@
 /**
  * Keyboard Configuration for MathKeyboard
- * Defines button layouts for different keyboard modes
+ * Exact Desmos layout based on screenshots
  */
 
 import type { ButtonConfig } from '../../types';
 
 /**
- * Basic keyboard mode - numbers, operators, and common symbols
- * Based on Desmos keyboard layout (4 rows)
+ * Basic/Numbers keyboard mode (default)
+ * Simple calculator-style layout
  */
-export const BASIC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
-  // Row 1: Numbers 7-9 and basic operators
-  [
-    { display: '7', latex: '7', type: 'number' },
-    { display: '8', latex: '8', type: 'number' },
-    { display: '9', latex: '9', type: 'number' },
-    { display: '÷', latex: '\\div', type: 'operator', description: 'Division' },
-    { display: 'x²', latex: '^2', type: 'operator', description: 'Square' },
-    { display: '√', latex: '\\sqrt{}', type: 'function', description: 'Square root' },
-  ],
-
-  // Row 2: Numbers 4-6 and more operators
-  [
-    { display: '4', latex: '4', type: 'number' },
-    { display: '5', latex: '5', type: 'number' },
-    { display: '6', latex: '6', type: 'number' },
-    { display: '×', latex: '\\times', type: 'operator', description: 'Multiplication' },
-    { display: 'xⁿ', latex: '^{}', type: 'operator', description: 'Exponent' },
-    { display: 'ⁿ√', latex: '\\sqrt[]{}', type: 'function', description: 'Nth root' },
-  ],
-
-  // Row 3: Numbers 1-3 and fractions
-  [
-    { display: '1', latex: '1', type: 'number' },
-    { display: '2', latex: '2', type: 'number' },
-    { display: '3', latex: '3', type: 'number' },
-    { display: '−', latex: '-', type: 'operator', description: 'Subtraction' },
-    { display: 'x/y', latex: '\\frac{}{}', type: 'function', description: 'Fraction' },
-    { display: '()', latex: '()', type: 'symbol', description: 'Parentheses' },
-  ],
-
-  // Row 4: Zero, decimal, and special keys
-  [
-    { display: '0', latex: '0', type: 'number' },
-    { display: '.', latex: '.', type: 'symbol', description: 'Decimal point' },
-    { display: 'π', latex: '\\pi', type: 'symbol', description: 'Pi' },
-    { display: '+', latex: '+', type: 'operator', description: 'Addition' },
-    { display: '=', latex: '=', type: 'operator', description: 'Equals' },
-    { display: '⌫', latex: 'BACKSPACE', type: 'action', description: 'Backspace' },
-  ],
-];
-
-/**
- * Calculus keyboard mode - includes calculus-specific symbols
- */
-export const CALCULUS_KEYBOARD_LAYOUT: ButtonConfig[][] = [
+export const NUMBERS_KEYBOARD_LAYOUT: ButtonConfig[][] = [
   // Row 1
   [
     { display: '7', latex: '7', type: 'number' },
     { display: '8', latex: '8', type: 'number' },
     { display: '9', latex: '9', type: 'number' },
     { display: '÷', latex: '\\div', type: 'operator' },
-    { display: '∫', latex: '\\int', type: 'function', description: 'Integral' },
-    { display: 'd/dx', latex: '\\frac{d}{dx}', type: 'function', description: 'Derivative' },
+    { display: 'x²', latex: '^{2}', type: 'operator' },
+    { display: '√', latex: '\\sqrt{}', type: 'function' },
+    { display: 'π', latex: '\\pi', type: 'symbol' },
   ],
 
   // Row 2
@@ -71,8 +27,9 @@ export const CALCULUS_KEYBOARD_LAYOUT: ButtonConfig[][] = [
     { display: '5', latex: '5', type: 'number' },
     { display: '6', latex: '6', type: 'number' },
     { display: '×', latex: '\\times', type: 'operator' },
-    { display: '∑', latex: '\\sum', type: 'function', description: 'Summation' },
-    { display: '∏', latex: '\\prod', type: 'function', description: 'Product' },
+    { display: 'xⁿ', latex: '^{}', type: 'operator' },
+    { display: 'ⁿ√', latex: '\\sqrt[]{}', type: 'function' },
+    { display: '(', latex: '(', type: 'symbol' },
   ],
 
   // Row 3
@@ -81,26 +38,29 @@ export const CALCULUS_KEYBOARD_LAYOUT: ButtonConfig[][] = [
     { display: '2', latex: '2', type: 'number' },
     { display: '3', latex: '3', type: 'number' },
     { display: '−', latex: '-', type: 'operator' },
-    { display: 'lim', latex: '\\lim', type: 'function', description: 'Limit' },
-    { display: '()', latex: '()', type: 'symbol' },
+    { display: 'x/y', latex: '\\frac{}{}', type: 'function' },
+    { display: '|x|', latex: '\\left|\\right|', type: 'function' },
+    { display: ')', latex: ')', type: 'symbol' },
   ],
 
   // Row 4
   [
     { display: '0', latex: '0', type: 'number' },
     { display: '.', latex: '.', type: 'symbol' },
-    { display: '∞', latex: '\\infty', type: 'symbol', description: 'Infinity' },
+    { display: ',', latex: ',', type: 'symbol' },
     { display: '+', latex: '+', type: 'operator' },
     { display: '=', latex: '=', type: 'operator' },
+    { display: '<', latex: '<', type: 'operator' },
     { display: '⌫', latex: 'BACKSPACE', type: 'action' },
   ],
 ];
 
 /**
- * ABC keyboard mode - letter input (QWERTY layout)
+ * ABC/Letters keyboard mode
+ * Based on Desmos screenshot - exact layout
  */
 export const ABC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
-  // Row 1: Q-P
+  // Row 1: q-p (10 letters)
   [
     { display: 'q', latex: 'q', type: 'symbol' },
     { display: 'w', latex: 'w', type: 'symbol' },
@@ -114,7 +74,7 @@ export const ABC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
     { display: 'p', latex: 'p', type: 'symbol' },
   ],
 
-  // Row 2: A-L
+  // Row 2: a-l + theta (9 letters + theta)
   [
     { display: 'a', latex: 'a', type: 'symbol' },
     { display: 's', latex: 's', type: 'symbol' },
@@ -125,12 +85,12 @@ export const ABC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
     { display: 'j', latex: 'j', type: 'symbol' },
     { display: 'k', latex: 'k', type: 'symbol' },
     { display: 'l', latex: 'l', type: 'symbol' },
-    { display: 'θ', latex: '\\theta', type: 'symbol', description: 'Theta' },
+    { display: 'θ', latex: '\\theta', type: 'symbol' },
   ],
 
-  // Row 3: Z-M with shift
+  // Row 3: shift + z-m + backspace
   [
-    { display: '↑', latex: 'SHIFT', type: 'action', description: 'Uppercase toggle' },
+    { display: '↑', latex: 'SHIFT', type: 'action' },
     { display: 'z', latex: 'z', type: 'symbol' },
     { display: 'x', latex: 'x', type: 'symbol' },
     { display: 'c', latex: 'c', type: 'symbol' },
@@ -141,28 +101,22 @@ export const ABC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
     { display: '⌫', latex: 'BACKSPACE', type: 'action' },
   ],
 
-  // Row 4: Special keys
+  // Row 4: mode switch + special symbols + large return
   [
-    { display: '123', latex: 'MODE_SWITCH', type: 'action', description: 'Switch to numbers' },
-    { display: 'aₙ', latex: 'SUBSCRIPT', type: 'action', description: 'Subscript toggle' },
-    { display: 'Space', latex: ' ', type: 'symbol', description: 'Space' },
-    { display: '=', latex: '=', type: 'operator' },
-    { display: '←', latex: 'ENTER', type: 'action', description: 'Done' },
+    { display: '123', latex: 'MODE_NUMBERS', type: 'action' },
+    { display: 'aₙ', latex: '_{}', type: 'operator' },
+    { display: '!%', latex: '!', type: 'symbol' },
+    { display: '[ ]', latex: '[]', type: 'symbol' },
+    { display: '{ }', latex: '\\{\\}', type: 'symbol' },
+    { display: '~˙', latex: '\\sim', type: 'symbol' },
+    { display: ',', latex: ',', type: 'symbol' },
+    { display: '↵', latex: 'ENTER', type: 'action' },
   ],
 ];
 
 /**
- * Get keyboard layout by mode ID
+ * Get keyboard layout by mode
  */
-export function getKeyboardLayout(mode: 'basic' | 'calculus' | 'abc'): ButtonConfig[][] {
-  switch (mode) {
-    case 'basic':
-      return BASIC_KEYBOARD_LAYOUT;
-    case 'calculus':
-      return CALCULUS_KEYBOARD_LAYOUT;
-    case 'abc':
-      return ABC_KEYBOARD_LAYOUT;
-    default:
-      return BASIC_KEYBOARD_LAYOUT;
-  }
+export function getKeyboardLayout(mode: 'numbers' | 'abc'): ButtonConfig[][] {
+  return mode === 'abc' ? ABC_KEYBOARD_LAYOUT : NUMBERS_KEYBOARD_LAYOUT;
 }
