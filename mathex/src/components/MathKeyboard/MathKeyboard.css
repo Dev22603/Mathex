@@ -1,0 +1,384 @@
+/**
+ * MathKeyboard Styles
+ * Pixel-perfect Desmos design
+ */
+
+/* ============================================
+   Keyboard Wrapper & Toggle Button
+   ============================================ */
+
+.mathex-keyboard-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Toggle button - Fixed bottom-left */
+.mathex-kb-toggle {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 72px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #F5F5F5;
+  border: 1px solid #D0D0D0;
+  border-bottom: none;
+  border-left: none;
+  border-radius: 0 6px 0 0;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  z-index: 999;
+  font-size: 16px;
+  color: #555;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mathex-kb-toggle:hover {
+  background: #ECECEC;
+}
+
+.mathex-kb-toggle .kb-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mathex-kb-toggle .kb-arrow {
+  font-size: 10px;
+  color: #777;
+  line-height: 1;
+}
+
+/* ============================================
+   Keyboard Panel
+   ============================================ */
+
+.mathex-keyboard {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FAFAFA;
+  border-top: 1px solid #D0D0D0;
+  padding: 16px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================
+   Numbers Mode - 4 Section Grid
+   ============================================ */
+
+.mathex-kb-numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) repeat(3, 1fr) 1fr 2fr;
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: start;
+}
+
+/* Variables Section (4 columns) */
+.mathex-kb-section.variables-section {
+  grid-column: 1 / 5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Numbers Section (3 columns) */
+.mathex-kb-section.numbers-section {
+  grid-column: 5 / 8;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Operators Section (1 column) */
+.mathex-kb-section.operators-section {
+  grid-column: 8 / 9;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Actions Section (variable width) */
+.mathex-kb-section.actions-section {
+  grid-column: 9 / 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ============================================
+   ABC Mode - Full Width QWERTY
+   ============================================ */
+
+.mathex-kb-abc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Keyboard Rows
+   ============================================ */
+
+.mathex-kb-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center ABC rows */
+.mathex-kb-abc-grid .mathex-kb-row {
+  justify-content: center;
+}
+
+/* ============================================
+   Button Base Styles
+   ============================================ */
+
+.mathex-kb-btn {
+  /* Base */
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: 400;
+  border: 1px solid #D0D0D0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* Flexbox for centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.mathex-kb-btn:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.mathex-kb-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.9);
+}
+
+/* ============================================
+   Button Color Styles
+   ============================================ */
+
+/* White buttons (default) */
+.mathex-kb-btn.style-white {
+  background: #FFFFFF;
+  color: #333;
+}
+
+/* Gray light (numbers) */
+.mathex-kb-btn.style-gray-light {
+  background: #C5C5C5;
+  color: #333;
+}
+
+/* Gray medium (functions, arrows) */
+.mathex-kb-btn.style-gray-medium {
+  background: #E0E0E0;
+  color: #333;
+}
+
+/* Gray dark (ABC, shift, 123) */
+.mathex-kb-btn.style-gray-dark {
+  background: #B0B0B0;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Blue (return/enter) */
+.mathex-kb-btn.style-blue {
+  background: #2F7DEF;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.mathex-kb-btn.style-blue:hover {
+  background: #2868D0;
+}
+
+/* ============================================
+   Button Size Styles
+   ============================================ */
+
+/* Standard size (default) */
+.mathex-kb-btn.size-standard {
+  min-width: 46px;
+}
+
+/* Wide (shift, delete, ABC, 123) */
+.mathex-kb-btn.size-wide {
+  min-width: 70px;
+}
+
+/* Extra wide (return/enter) */
+.mathex-kb-btn.size-extra-wide {
+  min-width: 220px;
+}
+
+/* ============================================
+   Special Button States
+   ============================================ */
+
+/* Active state (shift, functions) */
+.mathex-kb-btn.active {
+  background: #4A90E2 !important;
+  color: #FFFFFF !important;
+  border-color: #2F7DEF;
+}
+
+/* Enter button special styling */
+.mathex-kb-btn.enter {
+  font-size: 20px;
+  min-height: 184px;
+  padding: 16px 20px;
+}
+
+/* ============================================
+   Specific Section Adjustments
+   ============================================ */
+
+/* Variables section buttons */
+.variables-section .mathex-kb-btn {
+  flex: 1;
+  min-width: 44px;
+}
+
+/* Numbers section buttons */
+.numbers-section .mathex-kb-btn {
+  flex: 1;
+  min-width: 46px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* Operators section buttons */
+.operators-section .mathex-kb-btn {
+  width: 100%;
+  min-width: 46px;
+  font-size: 18px;
+}
+
+/* Actions section buttons */
+.actions-section .mathex-kb-row {
+  justify-content: flex-start;
+}
+
+.actions-section .mathex-kb-btn {
+  flex-shrink: 0;
+}
+
+/* Functions button full width in its row */
+.actions-section .mathex-kb-row:first-child .mathex-kb-btn {
+  width: 100%;
+  font-size: 14px;
+}
+
+/* ============================================
+   Functions Panel (Placeholder)
+   ============================================ */
+
+.mathex-functions-panel {
+  background: #FFFFFF;
+  border: 1px solid #D0D0D0;
+  border-radius: 4px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.functions-placeholder {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+  .mathex-kb-numbers-grid {
+    grid-template-columns: repeat(4, 1fr) repeat(3, 1fr) 1fr 1.5fr;
+    gap: 4px;
+  }
+
+  .mathex-kb-btn {
+    min-height: 40px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .mathex-kb-btn.size-standard {
+    min-width: 44px;
+  }
+
+  .mathex-kb-btn.size-wide {
+    min-width: 70px;
+  }
+
+  .mathex-kb-btn.size-extra-wide {
+    min-width: 100px;
+  }
+
+  .numbers-section .mathex-kb-btn {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mathex-keyboard {
+    padding: 8px;
+  }
+
+  .mathex-kb-numbers-grid {
+    gap: 3px;
+  }
+
+  .mathex-kb-row {
+    gap: 3px;
+  }
+
+  .mathex-kb-btn {
+    min-height: 36px;
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+
+  .mathex-kb-btn.size-standard {
+    min-width: 40px;
+  }
+
+  .mathex-kb-btn.size-wide {
+    min-width: 60px;
+  }
+
+  .mathex-kb-btn.size-extra-wide {
+    min-width: 80px;
+  }
+}
