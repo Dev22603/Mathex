@@ -146,10 +146,16 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       if (button.latex === 'SHIFT' && isShiftActive) classNames.push('active');
       if (button.latex === 'FUNCTIONS' && showFunctionsPanel) classNames.push('active');
 
+      // Apply flex-grow style
+      const style: React.CSSProperties = button.flexGrow
+        ? { flexGrow: button.flexGrow }
+        : {};
+
       return (
         <button
           key={key}
           className={classNames.join(' ')}
+          style={style}
           onClick={() => handleButtonClick(button)}
           title={button.description}
         >
@@ -161,59 +167,38 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   );
 
   /**
-   * Check if layout is Numbers Mode (4-section) or ABC mode (simple rows)
+   * Check if layout is Numbers Mode (flex rows) or ABC mode (simple rows)
    */
   const isNumbersMode = (
     layout: ButtonConfig[][] | NumbersModeLayout
   ): layout is NumbersModeLayout => {
-    return 'variables' in layout;
+    return 'rows' in layout;
   };
 
   /**
-   * Render Numbers Mode - 4 Section Layout
+   * Render Numbers Mode - Flex Row Layout (matches Desmos)
    */
   const renderNumbersMode = (layout: NumbersModeLayout) => {
     return (
-      <div className="mathex-kb-numbers-grid">
-        {/* Variables Section */}
-        <div className="mathex-kb-section variables-section">
-          {layout.variables.map((row, rowIdx) => (
-            <div key={`var-row-${rowIdx}`} className="mathex-kb-row">
-              {row.map((button, btnIdx) =>
-                renderButton(button, `var-${rowIdx}-${btnIdx}`)
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Numbers Section */}
-        <div className="mathex-kb-section numbers-section">
-          {layout.numbers.map((row, rowIdx) => (
-            <div key={`num-row-${rowIdx}`} className="mathex-kb-row">
-              {row.map((button, btnIdx) =>
-                renderButton(button, `num-${rowIdx}-${btnIdx}`)
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Operators Section */}
-        <div className="mathex-kb-section operators-section">
-          {layout.operators.map((button, idx) =>
-            renderButton(button, `op-${idx}`)
-          )}
-        </div>
-
-        {/* Actions Section */}
-        <div className="mathex-kb-section actions-section">
-          {layout.actions.map((row, rowIdx) => (
-            <div key={`act-row-${rowIdx}`} className="mathex-kb-row">
-              {row.map((button, btnIdx) =>
-                renderButton(button, `act-${rowIdx}-${btnIdx}`)
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="mathex-kb-numbers-layout">
+        {layout.rows.map((row, rowIdx) => (
+          <div key={`row-${rowIdx}`} className="mathex-kb-row">
+            {row.map((item, itemIdx) => {
+              // Check if it's a spacer
+              if ('type' in item && item.type === 'spacer') {
+                return (
+                  <div
+                    key={`spacer-${rowIdx}-${itemIdx}`}
+                    className="mathex-kb-spacer"
+                    style={{ flexGrow: item.flexGrow }}
+                  />
+                );
+              }
+              // It's a button
+              return renderButton(item as ButtonConfig, `btn-${rowIdx}-${itemIdx}`);
+            })}
+          </div>
+        ))}
       </div>
     );
   };

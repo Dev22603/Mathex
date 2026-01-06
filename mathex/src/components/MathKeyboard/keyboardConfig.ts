@@ -6,129 +6,80 @@
 import type { ButtonConfig } from '../../types';
 
 /**
- * NUMBERS MODE - 4 Section Layout
- * Based on: "cursor in equation next to 2x.png"
+ * NUMBERS MODE - Flex Row Layout (matches Desmos structure)
+ * Based on Desmos HTML structure where each row is a flexbox container
  *
- * Layout:
- * ┌─────────────────┬──────────────┬─────────┬──────────────────┐
- * │   Variables     │   Numbers    │   Ops   │     Actions      │
- * │   (4x4 grid)    │  (3x4 grid)  │ (1x4)   │  (various sizes) │
- * └─────────────────┴──────────────┴─────────┴──────────────────┘
+ * Each row contains buttons with flex-grow values and spacers between sections
  */
 
 export interface NumbersModeLayout {
-  variables: ButtonConfig[][];  // 4x4 grid
-  numbers: ButtonConfig[][];    // 3x4 grid (calculator layout)
-  operators: ButtonConfig[];    // 1x4 vertical column
-  actions: ButtonConfig[][];    // 4 rows with various button sizes
+  rows: Array<Array<ButtonConfig | { type: 'spacer'; flexGrow: number }>>;
 }
 
 /**
- * Variables Section (Left) - 4 columns × 4 rows
- */
-const VARIABLES_SECTION: ButtonConfig[][] = [
-  // Row 1
-  [
-    { display: 'x', latex: 'x', type: 'variable', style: 'white' },
-    { display: 'y', latex: 'y', type: 'variable', style: 'white' },
-    { display: 'a²', latex: '^{2}', type: 'operator', style: 'white' },
-    { display: 'aᵇ', latex: '^{}', type: 'operator', style: 'white' },
-  ],
-  // Row 2
-  [
-    { display: '(', latex: '(', type: 'symbol', style: 'white' },
-    { display: ')', latex: ')', type: 'symbol', style: 'white' },
-    { display: '<', latex: '<', type: 'operator', style: 'white' },
-    { display: '>', latex: '>', type: 'operator', style: 'white' },
-  ],
-  // Row 3
-  [
-    { display: '|a|', latex: '\\left|\\right|', type: 'function', style: 'white' },
-    { display: ',', latex: ',', type: 'symbol', style: 'white' },
-    { display: '≤', latex: '\\leq', type: 'operator', style: 'white' },
-    { display: '≥', latex: '\\geq', type: 'operator', style: 'white' },
-  ],
-  // Row 4
-  [
-    { display: 'ABC', latex: 'MODE_ABC', type: 'action', style: 'gray-dark' },
-    { display: '🔊', latex: 'AUDIO', type: 'action', style: 'gray-dark' },
-    { display: '√', latex: '\\sqrt{}', type: 'function', style: 'white' },
-    { display: 'π', latex: '\\pi', type: 'symbol', style: 'white' },
-  ],
-];
-
-/**
- * Numbers Section (Center-Left) - 3 columns × 4 rows
- * Calculator-style layout
- */
-const NUMBERS_SECTION: ButtonConfig[][] = [
-  // Row 1
-  [
-    { display: '7', latex: '7', type: 'number', style: 'gray-light' },
-    { display: '8', latex: '8', type: 'number', style: 'gray-light' },
-    { display: '9', latex: '9', type: 'number', style: 'gray-light' },
-  ],
-  // Row 2
-  [
-    { display: '4', latex: '4', type: 'number', style: 'gray-light' },
-    { display: '5', latex: '5', type: 'number', style: 'gray-light' },
-    { display: '6', latex: '6', type: 'number', style: 'gray-light' },
-  ],
-  // Row 3
-  [
-    { display: '1', latex: '1', type: 'number', style: 'gray-light' },
-    { display: '2', latex: '2', type: 'number', style: 'gray-light' },
-    { display: '3', latex: '3', type: 'number', style: 'gray-light' },
-  ],
-  // Row 4
-  [
-    { display: '0', latex: '0', type: 'number', style: 'gray-light' },
-    { display: '.', latex: '.', type: 'symbol', style: 'gray-light' },
-    { display: '=', latex: '=', type: 'operator', style: 'white' },
-  ],
-];
-
-/**
- * Operators Section (Center-Right) - 1 column × 4 rows
- */
-const OPERATORS_SECTION: ButtonConfig[] = [
-  { display: '÷', latex: '\\div', type: 'operator', style: 'white' },
-  { display: '×', latex: '\\times', type: 'operator', style: 'white' },
-  { display: '−', latex: '-', type: 'operator', style: 'white' },
-  { display: '+', latex: '+', type: 'operator', style: 'white' },
-];
-
-/**
- * Actions Section (Right) - Various button sizes per row
- */
-const ACTIONS_SECTION: ButtonConfig[][] = [
-  // Row 1: Functions button (wide)
-  [
-    { display: 'functions', latex: 'FUNCTIONS', type: 'action', style: 'gray-medium', size: 'wide' },
-  ],
-  // Row 2: Left and Right arrow buttons
-  [
-    { display: '←', latex: 'ARROW_LEFT', type: 'action', style: 'gray-medium', size: 'standard' },
-    { display: '→', latex: 'ARROW_RIGHT', type: 'action', style: 'gray-medium', size: 'standard' },
-  ],
-  // Row 3: Delete button
-  [
-    { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'gray-medium', size: 'standard' },
-  ],
-  // Row 4: Return button (large blue)
-  [
-    { display: '↵', latex: 'ENTER', type: 'action', style: 'blue', size: 'extra-wide' },
-  ],
-];
-
-/**
- * Complete Numbers Mode Layout
+ * Numbers Mode Layout - Flex Row Structure (matches Desmos HTML exactly)
+ * Each row is a flex container with buttons and spacers
  */
 export const NUMBERS_MODE_LAYOUT: NumbersModeLayout = {
-  variables: VARIABLES_SECTION,
-  numbers: NUMBERS_SECTION,
-  operators: OPERATORS_SECTION,
-  actions: ACTIONS_SECTION,
+  rows: [
+    // Row 1: x, y, a², aᵇ | 7, 8, 9 | ÷ | functions
+    [
+      { display: 'x', latex: 'x', type: 'variable', style: 'white', flexGrow: 1 },
+      { display: 'y', latex: 'y', type: 'variable', style: 'white', flexGrow: 1 },
+      { display: 'a²', latex: '^{2}', type: 'operator', style: 'white', flexGrow: 1 },
+      { display: 'aᵇ', latex: '^{}', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '7', latex: '7', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '8', latex: '8', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '9', latex: '9', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '÷', latex: '\\div', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: 'functions', latex: 'FUNCTIONS', type: 'action', style: 'gray-medium', flexGrow: 2 },
+    ],
+    // Row 2: (, ), <, > | 4, 5, 6 | × | ←, →
+    [
+      { display: '(', latex: '(', type: 'symbol', style: 'white', flexGrow: 1 },
+      { display: ')', latex: ')', type: 'symbol', style: 'white', flexGrow: 1 },
+      { display: '<', latex: '<', type: 'operator', style: 'white', flexGrow: 1 },
+      { display: '>', latex: '>', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '4', latex: '4', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '5', latex: '5', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '6', latex: '6', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '×', latex: '\\times', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '←', latex: 'ARROW_LEFT', type: 'action', style: 'gray-medium', flexGrow: 1 },
+      { display: '→', latex: 'ARROW_RIGHT', type: 'action', style: 'gray-medium', flexGrow: 1 },
+    ],
+    // Row 3: |a|, ,, ≤, ≥ | 1, 2, 3 | − | ⌫
+    [
+      { display: '|a|', latex: '\\left|\\right|', type: 'function', style: 'white', flexGrow: 1 },
+      { display: ',', latex: ',', type: 'symbol', style: 'white', flexGrow: 1 },
+      { display: '≤', latex: '\\leq', type: 'operator', style: 'white', flexGrow: 1 },
+      { display: '≥', latex: '\\geq', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '1', latex: '1', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '2', latex: '2', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '3', latex: '3', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '−', latex: '-', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 1 },
+      { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'gray-medium', flexGrow: 1.5 },
+    ],
+    // Row 4: ABC, 🔊, √, π | 0, ., = | + | ↵
+    [
+      { display: 'ABC', latex: 'MODE_ABC', type: 'action', style: 'gray-dark', flexGrow: 1 },
+      { display: '🔊', latex: 'AUDIO', type: 'action', style: 'gray-dark', flexGrow: 1 },
+      { display: '√', latex: '\\sqrt{}', type: 'function', style: 'white', flexGrow: 1 },
+      { display: 'π', latex: '\\pi', type: 'symbol', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '0', latex: '0', type: 'number', style: 'gray-light', flexGrow: 1 },
+      { display: '.', latex: '.', type: 'symbol', style: 'gray-light', flexGrow: 1 },
+      { display: '=', latex: '=', type: 'operator', style: 'white', flexGrow: 1 },
+      { display: '+', latex: '+', type: 'operator', style: 'white', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
+      { display: '↵', latex: 'ENTER', type: 'action', style: 'blue', flexGrow: 2 },
+    ],
+  ],
 };
 
 /**
