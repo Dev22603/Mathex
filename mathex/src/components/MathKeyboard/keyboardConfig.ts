@@ -44,7 +44,7 @@ const VARIABLES_SECTION: ButtonConfig[][] = [
   // Row 3
   [
     { display: '|a|', latex: '\\left|\\right|', type: 'function', style: 'white' },
-    { display: ';', latex: ';', type: 'symbol', style: 'white' },
+    { display: ',', latex: ',', type: 'symbol', style: 'white' },
     { display: '≤', latex: '\\leq', type: 'operator', style: 'white' },
     { display: '≥', latex: '\\geq', type: 'operator', style: 'white' },
   ],

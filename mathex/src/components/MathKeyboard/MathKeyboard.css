@@ -76,8 +76,8 @@
 
 .mathex-kb-numbers-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr) repeat(3, 1fr) 1fr 2fr;
-  column-gap: 10px;
+  grid-template-columns: repeat(4, 1fr) 0.5fr repeat(3, 1fr) 1fr 0.5fr 2fr;
+  column-gap: 6px;
   row-gap: 6px;
   align-items: start;
 }
@@ -92,7 +92,7 @@
 
 /* Numbers Section (3 columns) */
 .mathex-kb-section.numbers-section {
-  grid-column: 5 / 8;
+  grid-column: 6 / 9;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -100,7 +100,7 @@
 
 /* Operators Section (1 column) */
 .mathex-kb-section.operators-section {
-  grid-column: 8 / 9;
+  grid-column: 9 / 10;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -108,7 +108,7 @@
 
 /* Actions Section (variable width) */
 .mathex-kb-section.actions-section {
-  grid-column: 9 / 10;
+  grid-column: 11 / 12;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -147,18 +147,19 @@
    ============================================ */
 
 .mathex-kb-btn {
-  /* Base */
-  min-height: 40px;
-  padding: 8px 12px;
-  font-size: 15px;
+  /* Base - Desmos-matching dimensions */
+  min-height: 48px;
+  height: 48px;
+  padding: 0 12px;
+  font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-weight: 400;
-  border: 1px solid #D0D0D0;
-  border-radius: 4px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.1s;
   user-select: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
 
   /* Flexbox for centering */
   display: flex;
@@ -253,8 +254,9 @@
 
 /* Enter button special styling - matches Desmos exactly */
 .mathex-kb-btn.enter {
-  font-size: 20px;
-  min-height: 180px;
+  font-size: 22px;
+  min-height: 210px;
+  height: 210px;
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -275,7 +277,7 @@
 .numbers-section .mathex-kb-btn {
   flex: 1;
   min-width: 46px;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 500;
 }
 
