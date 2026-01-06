@@ -1,0 +1,466 @@
+/**
+ * MathKeyboard styles - Exact Desmos replica
+ * Colors, spacing, and layout extracted from Desmos HTML
+ */
+
+/* ===== ROOT VARIABLES (Exact Desmos colors) ===== */
+:root {
+  /* Primary colors */
+  --mathex-kb-blue: #2F7DEF;
+  --mathex-kb-blue-hover: #1D6FDE;
+
+  /* Backgrounds */
+  --mathex-kb-bg-white: #FFFFFF;
+  --mathex-kb-bg-light: #F7F7F7;
+  --mathex-kb-bg-gray: #E8E8E8;
+  --mathex-kb-bg-medium: #D5D5D5;
+  --mathex-kb-bg-dark: #C4C4C4;
+
+  /* Borders */
+  --mathex-kb-border: #CCCCCC;
+  --mathex-kb-border-light: #E0E0E0;
+
+  /* Text */
+  --mathex-kb-text: #000000;
+  --mathex-kb-text-gray: #666666;
+
+  /* Shadows */
+  --mathex-kb-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  --mathex-kb-btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+
+  /* Sizing */
+  --mathex-kb-height: auto;
+  --mathex-kb-btn-width: 60px;
+  --mathex-kb-btn-height: 50px;
+  --mathex-kb-gap: 6px;
+  --mathex-kb-section-gap: 20px;
+  --mathex-kb-padding: 16px;
+  --mathex-kb-border-radius: 6px;
+}
+
+/* ===== KEYBOARD CONTAINER (Fixed at bottom) ===== */
+.mathex-keyboard-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+}
+
+.mathex-keyboard-background {
+  background: var(--mathex-kb-bg-light);
+  border-top: 1px solid var(--mathex-kb-border-light);
+  box-shadow: var(--mathex-kb-shadow);
+}
+
+.mathex-keyboard-keys {
+  padding: var(--mathex-kb-padding);
+  padding-bottom: 8px;
+}
+
+.mathex-keyboard-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== KEYBOARD ROWS ===== */
+.mathex-kb-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--mathex-kb-gap);
+  margin-bottom: var(--mathex-kb-gap);
+}
+
+.mathex-kb-row:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== BUTTON CONTAINERS ===== */
+.mathex-kb-btn-container {
+  /* flex-grow is set inline from config */
+  min-width: 0;
+}
+
+.mathex-kb-spacer {
+  /* flex-grow is set inline from config */
+  min-width: 0;
+  pointer-events: none;
+}
+
+/* ===== BUTTONS (Base styles) ===== */
+.mathex-kb-btn {
+  width: 100%;
+  height: var(--mathex-kb-btn-height);
+  border: 1px solid var(--mathex-kb-border);
+  border-radius: var(--mathex-kb-border-radius);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--mathex-kb-btn-shadow);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+}
+
+.mathex-kb-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.mathex-kb-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mathex-kb-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mathex-kb-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== BUTTON VARIANTS (Exact Desmos colors) ===== */
+
+/* Light buttons (variables, operators, symbols) */
+.mathex-kb-btn--light {
+  background: var(--mathex-kb-bg-white);
+  color: var(--mathex-kb-text);
+}
+
+.mathex-kb-btn--light:hover:not(:disabled) {
+  background: var(--mathex-kb-bg-light);
+}
+
+.mathex-kb-btn--light:active:not(:disabled) {
+  background: var(--mathex-kb-bg-gray);
+}
+
+/* Dark buttons (numbers, navigation, ABC) */
+.mathex-kb-btn--dark {
+  background: var(--mathex-kb-bg-gray);
+  color: var(--mathex-kb-text);
+}
+
+.mathex-kb-btn--dark:hover:not(:disabled) {
+  background: var(--mathex-kb-bg-medium);
+}
+
+.mathex-kb-btn--dark:active:not(:disabled) {
+  background: var(--mathex-kb-bg-dark);
+}
+
+/* Blue button (Enter) */
+.mathex-kb-btn--blue {
+  background: var(--mathex-kb-blue);
+  color: #FFFFFF;
+  border-color: var(--mathex-kb-blue);
+}
+
+.mathex-kb-btn--blue:hover:not(:disabled) {
+  background: var(--mathex-kb-blue-hover);
+  border-color: var(--mathex-kb-blue-hover);
+}
+
+.mathex-kb-btn--blue:active:not(:disabled) {
+  background: #0D5FCD;
+}
+
+/* Active state (for shift key) */
+.mathex-kb-btn--active {
+  background: var(--mathex-kb-blue);
+  color: #FFFFFF;
+  border-color: var(--mathex-kb-blue);
+}
+
+/* ===== KATEX RENDERING IN BUTTONS ===== */
+.mathex-kb-btn-katex,
+.mathex-kb-func-katex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mathex-kb-btn-katex .katex,
+.mathex-kb-func-katex .katex {
+  font-size: 16px;
+}
+
+.mathex-kb-btn-katex .katex .mord,
+.mathex-kb-func-katex .katex .mord {
+  color: inherit;
+}
+
+/* ===== MINIMIZE BUTTON ===== */
+.mathex-kb-minimize-container {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 12px 0;
+}
+
+.mathex-kb-minimize-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mathex-kb-text-gray);
+  font-size: 18px;
+  transition: color 0.15s;
+}
+
+.mathex-kb-minimize-btn:hover {
+  color: var(--mathex-kb-text);
+}
+
+.mathex-kb-toggle-icon {
+  font-size: 20px;
+}
+
+.mathex-kb-toggle-caret {
+  font-size: 12px;
+}
+
+/* ===== MINIMIZED STATE ===== */
+.mathex-keyboard-minimized {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.mathex-kb-toggle-btn {
+  background: var(--mathex-kb-bg-white);
+  border: 1px solid var(--mathex-kb-border);
+  border-radius: 24px;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mathex-kb-text-gray);
+  font-size: 18px;
+  transition: all 0.15s;
+}
+
+.mathex-kb-toggle-btn:hover {
+  background: var(--mathex-kb-bg-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: var(--mathex-kb-text);
+}
+
+/* ===== FUNCTIONS PANEL ===== */
+.mathex-functions-panel {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 320px;
+  background: var(--mathex-kb-bg-white);
+  border-left: 1px solid var(--mathex-kb-border-light);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  animation: mathex-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@keyframes mathex-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mathex-functions-panel-interior {
+  padding: 0;
+}
+
+.mathex-functions-panel-content {
+  padding: 16px;
+  padding-bottom: 100px; /* Space for keyboard */
+}
+
+/* Arrow pointing to functions button */
+.mathex-functions-panel-arrow {
+  position: absolute;
+  bottom: calc(var(--mathex-kb-height, 240px) + 20px);
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--mathex-kb-bg-white);
+}
+
+/* ===== FUNCTION SECTIONS ===== */
+.mathex-kb-func-section {
+  margin-bottom: 32px;
+}
+
+.mathex-kb-func-section:last-child {
+  margin-bottom: 0;
+}
+
+.mathex-kb-func-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mathex-kb-text-gray);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mathex-kb-func-help {
+  color: var(--mathex-kb-text-gray);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.mathex-kb-func-help:hover {
+  color: var(--mathex-kb-blue);
+}
+
+.mathex-kb-func-help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ===== FUNCTION BUTTONS ===== */
+.mathex-kb-func-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mathex-kb-func-btn-container {
+  /* Each function button in grid */
+}
+
+.mathex-kb-func-btn {
+  width: 100%;
+  height: 44px;
+  background: var(--mathex-kb-bg-light);
+  border: 1px solid var(--mathex-kb-border-light);
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mathex-kb-text);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.mathex-kb-func-btn:hover {
+  background: var(--mathex-kb-bg-gray);
+  border-color: var(--mathex-kb-border);
+}
+
+.mathex-kb-func-btn:active {
+  background: var(--mathex-kb-bg-medium);
+  transform: scale(0.98);
+}
+
+.mathex-kb-func-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .mathex-functions-panel {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .mathex-kb-btn {
+    font-size: 14px;
+  }
+
+  .mathex-kb-func-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .mathex-keyboard-keys {
+    padding: 8px;
+  }
+
+  .mathex-kb-btn {
+    height: 44px;
+    font-size: 13px;
+  }
+
+  .mathex-kb-gap {
+    --mathex-kb-gap: 4px;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.mathex-kb-btn:focus-visible,
+.mathex-kb-func-btn:focus-visible,
+.mathex-kb-toggle-btn:focus-visible,
+.mathex-kb-minimize-btn:focus-visible {
+  outline: 2px solid var(--mathex-kb-blue);
+  outline-offset: 2px;
+}
+
+/* ===== SMOOTH SCROLLING IN FUNCTIONS PANEL ===== */
+.mathex-functions-panel {
+  scroll-behavior: smooth;
+}
+
+.mathex-functions-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mathex-functions-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mathex-functions-panel::-webkit-scrollbar-thumb {
+  background: var(--mathex-kb-border);
+  border-radius: 4px;
+}
+
+.mathex-functions-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--mathex-kb-bg-dark);
+}
