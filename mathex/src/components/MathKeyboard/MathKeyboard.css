@@ -17,35 +17,38 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 80px;
-  height: 48px;
+  width: 72px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: #E8E8E8;
+  gap: 4px;
+  background: #F5F5F5;
   border: 1px solid #D0D0D0;
   border-bottom: none;
   border-left: none;
-  border-radius: 0 8px 0 0;
+  border-radius: 0 6px 0 0;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s;
   z-index: 999;
-  font-size: 18px;
-  color: #333;
+  font-size: 16px;
+  color: #555;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mathex-kb-toggle:hover {
-  background: #DDD;
+  background: #ECECEC;
 }
 
 .mathex-kb-toggle .kb-icon {
-  font-size: 20px;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .mathex-kb-toggle .kb-arrow {
-  font-size: 14px;
-  color: #666;
+  font-size: 10px;
+  color: #777;
+  line-height: 1;
 }
 
 /* ============================================
@@ -144,9 +147,9 @@
 
 .mathex-kb-btn {
   /* Base */
-  min-height: 44px;
-  padding: 8px 12px;
-  font-size: 16px;
+  min-height: 42px;
+  padding: 6px 10px;
+  font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-weight: 400;
   border: 1px solid #D0D0D0;
@@ -222,17 +225,17 @@
 
 /* Standard size (default) */
 .mathex-kb-btn.size-standard {
-  min-width: 52px;
+  min-width: 46px;
 }
 
 /* Wide (shift, delete, ABC, 123) */
 .mathex-kb-btn.size-wide {
-  min-width: 80px;
+  min-width: 70px;
 }
 
 /* Extra wide (return/enter) */
 .mathex-kb-btn.size-extra-wide {
-  min-width: 140px;
+  min-width: 220px;
 }
 
 /* ============================================
@@ -249,6 +252,8 @@
 /* Enter button special styling */
 .mathex-kb-btn.enter {
   font-size: 18px;
+  min-height: 90px;
+  padding: 12px 16px;
 }
 
 /* ============================================
@@ -258,22 +263,22 @@
 /* Variables section buttons */
 .variables-section .mathex-kb-btn {
   flex: 1;
-  min-width: 50px;
+  min-width: 44px;
 }
 
 /* Numbers section buttons */
 .numbers-section .mathex-kb-btn {
   flex: 1;
-  min-width: 52px;
-  font-size: 18px;
+  min-width: 46px;
+  font-size: 17px;
   font-weight: 500;
 }
 
 /* Operators section buttons */
 .operators-section .mathex-kb-btn {
   width: 100%;
-  min-width: 52px;
-  font-size: 20px;
+  min-width: 46px;
+  font-size: 18px;
 }
 
 /* Actions section buttons */

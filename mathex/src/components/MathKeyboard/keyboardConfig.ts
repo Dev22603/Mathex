@@ -113,7 +113,7 @@ const ACTIONS_SECTION: ButtonConfig[][] = [
   ],
   // Row 3: Delete button
   [
-    { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'white', size: 'standard' },
+    { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'gray-medium', size: 'standard' },
   ],
   // Row 4: Return button (large blue)
   [
