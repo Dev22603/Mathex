@@ -56,10 +56,12 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   min-height: 20px;
+  caret-color: var(--math-text-color, #000000);
 }
 
 .mathex-editable:focus {
   outline: none;
+  caret-color: var(--math-text-color, #000000);
 }
 
 /* Placeholder */
@@ -70,19 +72,13 @@
   -webkit-user-select: none;
 }
 
-/* Cursor indicator */
+/* Cursor indicator - Using native browser caret instead */
+/* Custom cursor removed to match Desmos behavior */
 .mathex-cursor {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 24px;
-  background: var(--math-text-color, #000000);
-  animation: mathex-blink 1s infinite;
-  pointer-events: none;
+  display: none;
 }
 
+/* Keep keyframes for potential future use */
 @keyframes mathex-blink {
   0%, 49% {
     opacity: 1;
