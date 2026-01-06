@@ -76,8 +76,8 @@
 
 .mathex-kb-numbers-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr) 0.5fr repeat(3, 1fr) 1fr 0.5fr 2fr;
-  column-gap: 6px;
+  grid-template-columns: repeat(4, minmax(44px, 1fr)) repeat(3, minmax(56px, 1fr)) minmax(46px, 0.9fr) minmax(180px, 1.8fr);
+  column-gap: 8px;
   row-gap: 6px;
   align-items: start;
 }
@@ -92,7 +92,7 @@
 
 /* Numbers Section (3 columns) */
 .mathex-kb-section.numbers-section {
-  grid-column: 6 / 9;
+  grid-column: 5 / 8;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -100,7 +100,7 @@
 
 /* Operators Section (1 column) */
 .mathex-kb-section.operators-section {
-  grid-column: 9 / 10;
+  grid-column: 8 / 9;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -108,7 +108,7 @@
 
 /* Actions Section (variable width) */
 .mathex-kb-section.actions-section {
-  grid-column: 11 / 12;
+  grid-column: 9 / 10;
   display: flex;
   flex-direction: column;
   gap: 6px;
