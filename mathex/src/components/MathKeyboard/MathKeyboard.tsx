@@ -146,16 +146,10 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       if (button.latex === 'SHIFT' && isShiftActive) classNames.push('active');
       if (button.latex === 'FUNCTIONS' && showFunctionsPanel) classNames.push('active');
 
-      // Apply flex-grow style
-      const style: React.CSSProperties = button.flexGrow
-        ? { flexGrow: button.flexGrow }
-        : {};
-
       return (
         <button
           key={key}
           className={classNames.join(' ')}
-          style={style}
           onClick={() => handleButtonClick(button)}
           title={button.description}
         >
@@ -194,8 +188,17 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                   />
                 );
               }
-              // It's a button
-              return renderButton(item as ButtonConfig, `btn-${rowIdx}-${itemIdx}`);
+              // It's a button - wrap in container with flex-grow (Desmos structure)
+              const button = item as ButtonConfig;
+              return (
+                <div
+                  key={`container-${rowIdx}-${itemIdx}`}
+                  className="mathex-kb-btn-container"
+                  style={{ flexGrow: button.flexGrow || 1 }}
+                >
+                  {renderButton(button, `btn-${rowIdx}-${itemIdx}`)}
+                </div>
+              );
             })}
           </div>
         ))}
