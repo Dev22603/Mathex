@@ -252,12 +252,13 @@
   border-color: #2F7DEF;
 }
 
-/* Enter button special styling - matches Desmos exactly */
+/* Enter button special styling - same height as other buttons */
 .mathex-kb-btn.enter {
-  font-size: 22px;
-  min-height: 210px;
-  height: 210px;
-  padding: 16px 20px;
+  font-size: 20px;
+  /* Height matches standard buttons (48px) */
+  min-height: 48px;
+  height: 48px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
