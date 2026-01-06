@@ -46,6 +46,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
   // State
   const [isVisible, setIsVisible] = useState(defaultVisible);
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const [isABCMode, setIsABCMode] = useState(false); // false = 123 mode, true = ABC mode
   const [isFunctionsPanelOpen, setIsFunctionsPanelOpen] = useState(false);
   const [isShiftActive, setIsShiftActive] = useState(false); // For uppercase in ABC mode
@@ -140,13 +141,19 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
    * Toggle keyboard visibility
    */
   const toggleKeyboard = useCallback(() => {
-    const newVisibility = !isVisible;
-    setIsVisible(newVisibility);
-    onVisibilityChange?.(newVisibility);
-
-    // Close functions panel when hiding keyboard
-    if (!newVisibility) {
-      setIsFunctionsPanelOpen(false);
+    if (isVisible) {
+      // Hide: trigger slide-down animation
+      setIsAnimatingOut(true);
+      setTimeout(() => {
+        setIsVisible(false);
+        setIsAnimatingOut(false);
+        onVisibilityChange?.(false);
+        setIsFunctionsPanelOpen(false);
+      }, 300); // Match animation duration
+    } else {
+      // Show: just set visible (slide-up animation will play)
+      setIsVisible(true);
+      onVisibilityChange?.(true);
     }
   }, [isVisible, onVisibilityChange]);
 
@@ -179,7 +186,6 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <div
           key={`spacer-${index}`}
           className="mathex-kb-spacer"
-          style={{ flexGrow: button.flexGrow }}
         />
       );
     }
@@ -203,13 +209,16 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       );
     }
 
+    // Determine grid span for wider buttons
+    const dataWide = button.flexGrow >= 2 ? '2' : button.flexGrow >= 1.5 ? '1.5' : undefined;
+
     // Special case for functions button
     if (button.command === 'OPEN_FUNCTIONS') {
       return (
         <div
           key={`btn-${index}`}
           className="mathex-kb-btn-container"
-          style={{ flexGrow: button.flexGrow }}
+          data-wide={dataWide}
         >
           <button
             ref={functionsButtonRef}
@@ -229,7 +238,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <div
         key={`btn-${index}`}
         className="mathex-kb-btn-container"
-        style={{ flexGrow: button.flexGrow }}
+        data-wide={dataWide}
       >
         <button
           type="button"
@@ -298,41 +307,38 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   // Select current layout
   const currentLayout = isABCMode ? ABC_KEYBOARD_LAYOUT : MAIN_KEYBOARD_LAYOUT;
 
-  if (!isVisible) {
-    // Show minimized keyboard toggle button
-    return (
-      <div className={`mathex-keyboard-minimized ${className}`} style={style}>
-        <button
-          type="button"
-          className="mathex-kb-toggle-btn"
-          onClick={toggleKeyboard}
-          aria-label="Show Keypad"
-          aria-expanded={false}
-        >
-          <span className="mathex-kb-toggle-icon">⌨</span>
-          <span className="mathex-kb-toggle-caret">▲</span>
-        </button>
-      </div>
-    );
-  }
-
   return (
     <>
       {/* Main keyboard container */}
-      <div
-        className={`mathex-keyboard-container ${className}`}
-        style={style}
-        aria-hidden={false}
-      >
+      {(isVisible || isAnimatingOut) && (
+        <div
+          className={`mathex-keyboard-container ${isAnimatingOut ? 'mathex-keyboard-container--hiding' : ''} ${className}`}
+          style={style}
+          aria-hidden={false}
+        >
         <div className="mathex-keyboard-background">
           <div className="mathex-keyboard-keys">
             <div className="mathex-keyboard-main">
               {/* Render rows */}
-              {currentLayout.map((row, rowIndex) => (
-                <div key={`row-${rowIndex}`} className="mathex-kb-row">
-                  {row.map((button, btnIndex) => renderButton(button, btnIndex))}
-                </div>
-              ))}
+              {currentLayout.map((row, rowIndex) => {
+                // Determine row class based on mode
+                let rowClass = 'mathex-kb-row--main';
+                if (isABCMode) {
+                  if (rowIndex === 2) {
+                    rowClass = 'mathex-kb-row--abc-row3';
+                  } else if (rowIndex === 3) {
+                    rowClass = 'mathex-kb-row--abc-row4';
+                  } else {
+                    rowClass = 'mathex-kb-row--abc';
+                  }
+                }
+
+                return (
+                  <div key={`row-${rowIndex}`} className={rowClass}>
+                    {row.map((button, btnIndex) => renderButton(button, btnIndex))}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -351,6 +357,23 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           </div>
         </div>
       </div>
+      )}
+
+      {/* Minimized keyboard toggle button */}
+      {!isVisible && !isAnimatingOut && (
+        <div className={`mathex-keyboard-minimized ${className}`} style={style}>
+          <button
+            type="button"
+            className="mathex-kb-toggle-btn"
+            onClick={toggleKeyboard}
+            aria-label="Show Keypad"
+            aria-expanded={false}
+          >
+            <span className="mathex-kb-toggle-icon">⌨</span>
+            <span className="mathex-kb-toggle-caret">▲</span>
+          </button>
+        </div>
+      )}
 
       {/* Functions panel (slide out from right) */}
       {isFunctionsPanelOpen && (

@@ -38,14 +38,36 @@
   --mathex-kb-border-radius: 6px;
 }
 
-/* ===== KEYBOARD CONTAINER (Fixed at bottom) ===== */
+/* ===== KEYBOARD CONTAINER (Slides from bottom) ===== */
 .mathex-keyboard-container {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  animation: mathex-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mathex-keyboard-container--hiding {
+  animation: mathex-slide-down 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mathex-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes mathex-slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 .mathex-keyboard-background {
@@ -62,30 +84,68 @@
 .mathex-keyboard-main {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-/* ===== KEYBOARD ROWS ===== */
-.mathex-kb-row {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   gap: var(--mathex-kb-gap);
-  margin-bottom: var(--mathex-kb-gap);
 }
 
-.mathex-kb-row:last-child {
-  margin-bottom: 0;
+/* ===== KEYBOARD ROWS (Grid layout for perfect alignment) ===== */
+/* Main keyboard (123 mode) grid */
+.mathex-kb-row--main {
+  display: grid;
+  grid-template-columns:
+    repeat(4, 60px)  /* x, y, a², aᵇ */
+    20px             /* spacer */
+    repeat(4, 60px)  /* 7, 8, 9, ÷ */
+    20px             /* spacer */
+    1fr 1fr;         /* functions/navigation + enter/backspace */
+  gap: var(--mathex-kb-gap);
+  align-items: stretch;
+}
+
+/* ABC keyboard mode grid */
+.mathex-kb-row--abc {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* Equal width for all letter keys */
+  gap: var(--mathex-kb-gap);
+  align-items: stretch;
+}
+
+/* ABC keyboard row 3 (with shift and backspace) */
+.mathex-kb-row--abc-row3 {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(8, 1fr) 1.2fr; /* Shift and backspace slightly wider */
+  gap: var(--mathex-kb-gap);
+  align-items: stretch;
+}
+
+/* ABC keyboard row 4 (with Enter) */
+.mathex-kb-row--abc-row4 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr) 1fr; /* Enter key at end */
+  gap: var(--mathex-kb-gap);
+  align-items: stretch;
 }
 
 /* ===== BUTTON CONTAINERS ===== */
 .mathex-kb-btn-container {
-  /* flex-grow is set inline from config */
   min-width: 0;
+  display: flex;
 }
 
+/* Spacers - use grid-column to span the spacer cell */
 .mathex-kb-spacer {
-  /* flex-grow is set inline from config */
-  min-width: 0;
   pointer-events: none;
+  grid-column: span 1;
+}
+
+/* Special width containers for wider buttons */
+.mathex-kb-btn-container[data-wide="1.5"] {
+  grid-column: span 2;
+}
+
+.mathex-kb-btn-container[data-wide="2"] {
+  grid-column: span 2;
 }
 
 /* ===== BUTTONS (Base styles) ===== */
