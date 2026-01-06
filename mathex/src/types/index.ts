@@ -11,7 +11,11 @@ export interface ButtonConfig {
   /** LaTeX string to insert when button is clicked */
   latex: string;
   /** Type of button for styling purposes */
-  type: 'symbol' | 'number' | 'operator' | 'function' | 'action';
+  type: 'symbol' | 'number' | 'operator' | 'function' | 'action' | 'letter' | 'variable';
+  /** Button style (background color variant) */
+  style?: 'white' | 'gray-light' | 'gray-medium' | 'gray-dark' | 'blue';
+  /** Button size variant */
+  size?: 'standard' | 'wide' | 'extra-wide';
   /** Optional tooltip description */
   description?: string;
 }

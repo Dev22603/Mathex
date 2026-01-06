@@ -1,122 +1,198 @@
 /**
  * Keyboard Configuration for MathKeyboard
- * Exact Desmos layout based on screenshots
+ * Pixel-perfect Desmos layout based on screenshots
  */
 
 import type { ButtonConfig } from '../../types';
 
 /**
- * Basic/Numbers keyboard mode (default)
- * Simple calculator-style layout
+ * NUMBERS MODE - 4 Section Layout
+ * Based on: "cursor in equation next to 2x.png"
+ *
+ * Layout:
+ * ┌─────────────────┬──────────────┬─────────┬──────────────────┐
+ * │   Variables     │   Numbers    │   Ops   │     Actions      │
+ * │   (4x4 grid)    │  (3x4 grid)  │ (1x4)   │  (various sizes) │
+ * └─────────────────┴──────────────┴─────────┴──────────────────┘
  */
-export const NUMBERS_KEYBOARD_LAYOUT: ButtonConfig[][] = [
+
+export interface NumbersModeLayout {
+  variables: ButtonConfig[][];  // 4x4 grid
+  numbers: ButtonConfig[][];    // 3x4 grid (calculator layout)
+  operators: ButtonConfig[];    // 1x4 vertical column
+  actions: ButtonConfig[][];    // 4 rows with various button sizes
+}
+
+/**
+ * Variables Section (Left) - 4 columns × 4 rows
+ */
+const VARIABLES_SECTION: ButtonConfig[][] = [
   // Row 1
   [
-    { display: '7', latex: '7', type: 'number' },
-    { display: '8', latex: '8', type: 'number' },
-    { display: '9', latex: '9', type: 'number' },
-    { display: '÷', latex: '\\div', type: 'operator' },
-    { display: 'x²', latex: '^{2}', type: 'operator' },
-    { display: '√', latex: '\\sqrt{}', type: 'function' },
-    { display: 'π', latex: '\\pi', type: 'symbol' },
+    { display: 'x', latex: 'x', type: 'variable', style: 'white' },
+    { display: 'y', latex: 'y', type: 'variable', style: 'white' },
+    { display: 'a²', latex: '^{2}', type: 'operator', style: 'white' },
+    { display: 'aᵇ', latex: '^{}', type: 'operator', style: 'white' },
   ],
-
   // Row 2
   [
-    { display: '4', latex: '4', type: 'number' },
-    { display: '5', latex: '5', type: 'number' },
-    { display: '6', latex: '6', type: 'number' },
-    { display: '×', latex: '\\times', type: 'operator' },
-    { display: 'xⁿ', latex: '^{}', type: 'operator' },
-    { display: 'ⁿ√', latex: '\\sqrt[]{}', type: 'function' },
-    { display: '(', latex: '(', type: 'symbol' },
+    { display: '(', latex: '(', type: 'symbol', style: 'white' },
+    { display: ')', latex: ')', type: 'symbol', style: 'white' },
+    { display: '<', latex: '<', type: 'operator', style: 'white' },
+    { display: '>', latex: '>', type: 'operator', style: 'white' },
   ],
-
   // Row 3
   [
-    { display: '1', latex: '1', type: 'number' },
-    { display: '2', latex: '2', type: 'number' },
-    { display: '3', latex: '3', type: 'number' },
-    { display: '−', latex: '-', type: 'operator' },
-    { display: 'x/y', latex: '\\frac{}{}', type: 'function' },
-    { display: '|x|', latex: '\\left|\\right|', type: 'function' },
-    { display: ')', latex: ')', type: 'symbol' },
+    { display: '|a|', latex: '\\left|\\right|', type: 'function', style: 'white' },
+    { display: ';', latex: ';', type: 'symbol', style: 'white' },
+    { display: '≤', latex: '\\leq', type: 'operator', style: 'white' },
+    { display: '≥', latex: '\\geq', type: 'operator', style: 'white' },
   ],
-
   // Row 4
   [
-    { display: '0', latex: '0', type: 'number' },
-    { display: '.', latex: '.', type: 'symbol' },
-    { display: ',', latex: ',', type: 'symbol' },
-    { display: '+', latex: '+', type: 'operator' },
-    { display: '=', latex: '=', type: 'operator' },
-    { display: '<', latex: '<', type: 'operator' },
-    { display: '⌫', latex: 'BACKSPACE', type: 'action' },
+    { display: 'ABC', latex: 'MODE_ABC', type: 'action', style: 'gray-dark' },
+    { display: '🔊', latex: 'AUDIO', type: 'action', style: 'gray-dark' },
+    { display: '√', latex: '\\sqrt{}', type: 'function', style: 'white' },
+    { display: 'π', latex: '\\pi', type: 'symbol', style: 'white' },
   ],
 ];
 
 /**
- * ABC/Letters keyboard mode
- * Based on Desmos screenshot - exact layout
+ * Numbers Section (Center-Left) - 3 columns × 4 rows
+ * Calculator-style layout
+ */
+const NUMBERS_SECTION: ButtonConfig[][] = [
+  // Row 1
+  [
+    { display: '7', latex: '7', type: 'number', style: 'gray-light' },
+    { display: '8', latex: '8', type: 'number', style: 'gray-light' },
+    { display: '9', latex: '9', type: 'number', style: 'gray-light' },
+  ],
+  // Row 2
+  [
+    { display: '4', latex: '4', type: 'number', style: 'gray-light' },
+    { display: '5', latex: '5', type: 'number', style: 'gray-light' },
+    { display: '6', latex: '6', type: 'number', style: 'gray-light' },
+  ],
+  // Row 3
+  [
+    { display: '1', latex: '1', type: 'number', style: 'gray-light' },
+    { display: '2', latex: '2', type: 'number', style: 'gray-light' },
+    { display: '3', latex: '3', type: 'number', style: 'gray-light' },
+  ],
+  // Row 4
+  [
+    { display: '0', latex: '0', type: 'number', style: 'gray-light' },
+    { display: '.', latex: '.', type: 'symbol', style: 'gray-light' },
+    { display: '=', latex: '=', type: 'operator', style: 'white' },
+  ],
+];
+
+/**
+ * Operators Section (Center-Right) - 1 column × 4 rows
+ */
+const OPERATORS_SECTION: ButtonConfig[] = [
+  { display: '÷', latex: '\\div', type: 'operator', style: 'white' },
+  { display: '×', latex: '\\times', type: 'operator', style: 'white' },
+  { display: '−', latex: '-', type: 'operator', style: 'white' },
+  { display: '+', latex: '+', type: 'operator', style: 'white' },
+];
+
+/**
+ * Actions Section (Right) - Various button sizes per row
+ */
+const ACTIONS_SECTION: ButtonConfig[][] = [
+  // Row 1: Functions button (wide)
+  [
+    { display: 'functions', latex: 'FUNCTIONS', type: 'action', style: 'gray-medium', size: 'wide' },
+  ],
+  // Row 2: Left and Right arrow buttons
+  [
+    { display: '←', latex: 'ARROW_LEFT', type: 'action', style: 'gray-medium', size: 'standard' },
+    { display: '→', latex: 'ARROW_RIGHT', type: 'action', style: 'gray-medium', size: 'standard' },
+  ],
+  // Row 3: Delete button
+  [
+    { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'white', size: 'standard' },
+  ],
+  // Row 4: Return button (large blue)
+  [
+    { display: '↵', latex: 'ENTER', type: 'action', style: 'blue', size: 'extra-wide' },
+  ],
+];
+
+/**
+ * Complete Numbers Mode Layout
+ */
+export const NUMBERS_MODE_LAYOUT: NumbersModeLayout = {
+  variables: VARIABLES_SECTION,
+  numbers: NUMBERS_SECTION,
+  operators: OPERATORS_SECTION,
+  actions: ACTIONS_SECTION,
+};
+
+/**
+ * ABC MODE - Full-width QWERTY Layout
+ * Based on: "123 toggled to abc.png"
  */
 export const ABC_KEYBOARD_LAYOUT: ButtonConfig[][] = [
   // Row 1: q-p (10 letters)
   [
-    { display: 'q', latex: 'q', type: 'symbol' },
-    { display: 'w', latex: 'w', type: 'symbol' },
-    { display: 'e', latex: 'e', type: 'symbol' },
-    { display: 'r', latex: 'r', type: 'symbol' },
-    { display: 't', latex: 't', type: 'symbol' },
-    { display: 'y', latex: 'y', type: 'symbol' },
-    { display: 'u', latex: 'u', type: 'symbol' },
-    { display: 'i', latex: 'i', type: 'symbol' },
-    { display: 'o', latex: 'o', type: 'symbol' },
-    { display: 'p', latex: 'p', type: 'symbol' },
+    { display: 'q', latex: 'q', type: 'letter', style: 'white' },
+    { display: 'w', latex: 'w', type: 'letter', style: 'white' },
+    { display: 'e', latex: 'e', type: 'letter', style: 'white' },
+    { display: 'r', latex: 'r', type: 'letter', style: 'white' },
+    { display: 't', latex: 't', type: 'letter', style: 'white' },
+    { display: 'y', latex: 'y', type: 'letter', style: 'white' },
+    { display: 'u', latex: 'u', type: 'letter', style: 'white' },
+    { display: 'i', latex: 'i', type: 'letter', style: 'white' },
+    { display: 'o', latex: 'o', type: 'letter', style: 'white' },
+    { display: 'p', latex: 'p', type: 'letter', style: 'white' },
   ],
 
-  // Row 2: a-l + theta (9 letters + theta)
+  // Row 2: a-l + theta (10 keys)
   [
-    { display: 'a', latex: 'a', type: 'symbol' },
-    { display: 's', latex: 's', type: 'symbol' },
-    { display: 'd', latex: 'd', type: 'symbol' },
-    { display: 'f', latex: 'f', type: 'symbol' },
-    { display: 'g', latex: 'g', type: 'symbol' },
-    { display: 'h', latex: 'h', type: 'symbol' },
-    { display: 'j', latex: 'j', type: 'symbol' },
-    { display: 'k', latex: 'k', type: 'symbol' },
-    { display: 'l', latex: 'l', type: 'symbol' },
-    { display: 'θ', latex: '\\theta', type: 'symbol' },
+    { display: 'a', latex: 'a', type: 'letter', style: 'white' },
+    { display: 's', latex: 's', type: 'letter', style: 'white' },
+    { display: 'd', latex: 'd', type: 'letter', style: 'white' },
+    { display: 'f', latex: 'f', type: 'letter', style: 'white' },
+    { display: 'g', latex: 'g', type: 'letter', style: 'white' },
+    { display: 'h', latex: 'h', type: 'letter', style: 'white' },
+    { display: 'j', latex: 'j', type: 'letter', style: 'white' },
+    { display: 'k', latex: 'k', type: 'letter', style: 'white' },
+    { display: 'l', latex: 'l', type: 'letter', style: 'white' },
+    { display: 'θ', latex: '\\theta', type: 'symbol', style: 'white' },
   ],
 
-  // Row 3: shift + z-m + backspace
+  // Row 3: shift (wide) + z-m + backspace (wide)
   [
-    { display: '↑', latex: 'SHIFT', type: 'action' },
-    { display: 'z', latex: 'z', type: 'symbol' },
-    { display: 'x', latex: 'x', type: 'symbol' },
-    { display: 'c', latex: 'c', type: 'symbol' },
-    { display: 'v', latex: 'v', type: 'symbol' },
-    { display: 'b', latex: 'b', type: 'symbol' },
-    { display: 'n', latex: 'n', type: 'symbol' },
-    { display: 'm', latex: 'm', type: 'symbol' },
-    { display: '⌫', latex: 'BACKSPACE', type: 'action' },
+    { display: '⬆', latex: 'SHIFT', type: 'action', style: 'gray-dark', size: 'wide' },
+    { display: 'z', latex: 'z', type: 'letter', style: 'white' },
+    { display: 'x', latex: 'x', type: 'letter', style: 'white' },
+    { display: 'c', latex: 'c', type: 'letter', style: 'white' },
+    { display: 'v', latex: 'v', type: 'letter', style: 'white' },
+    { display: 'b', latex: 'b', type: 'letter', style: 'white' },
+    { display: 'n', latex: 'n', type: 'letter', style: 'white' },
+    { display: 'm', latex: 'm', type: 'letter', style: 'white' },
+    { display: '⌫', latex: 'BACKSPACE', type: 'action', style: 'gray-dark', size: 'wide' },
   ],
 
-  // Row 4: mode switch + special symbols + large return
+  // Row 4: 123 (wide) + special chars + return (extra-wide blue)
   [
-    { display: '123', latex: 'MODE_NUMBERS', type: 'action' },
-    { display: 'aₙ', latex: '_{}', type: 'operator' },
-    { display: '!%', latex: '!', type: 'symbol' },
-    { display: '[ ]', latex: '[]', type: 'symbol' },
-    { display: '{ }', latex: '\\{\\}', type: 'symbol' },
-    { display: '~˙', latex: '\\sim', type: 'symbol' },
-    { display: ',', latex: ',', type: 'symbol' },
-    { display: '↵', latex: 'ENTER', type: 'action' },
+    { display: '123', latex: 'MODE_NUMBERS', type: 'action', style: 'gray-dark', size: 'wide' },
+    { display: 'aᵦ', latex: '_{}', type: 'operator', style: 'white' },
+    { display: '!%', latex: '!', type: 'symbol', style: 'white' },
+    { display: '[ ]', latex: '[]', type: 'symbol', style: 'white' },
+    { display: '{ }', latex: '\\{\\}', type: 'symbol', style: 'white' },
+    { display: '~˙', latex: '\\sim', type: 'symbol', style: 'white' },
+    { display: ',', latex: ',', type: 'symbol', style: 'white' },
+    { display: '↵', latex: 'ENTER', type: 'action', style: 'blue', size: 'extra-wide' },
   ],
 ];
 
 /**
  * Get keyboard layout by mode
  */
-export function getKeyboardLayout(mode: 'numbers' | 'abc'): ButtonConfig[][] {
-  return mode === 'abc' ? ABC_KEYBOARD_LAYOUT : NUMBERS_KEYBOARD_LAYOUT;
+export function getKeyboardLayout(mode: 'numbers' | 'abc'): ButtonConfig[][] | NumbersModeLayout {
+  return mode === 'abc' ? ABC_KEYBOARD_LAYOUT : NUMBERS_MODE_LAYOUT;
 }

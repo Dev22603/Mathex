@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import type { ButtonConfig } from '../../types';
-import { getKeyboardLayout } from './keyboardConfig';
+import { getKeyboardLayout, type NumbersModeLayout } from './keyboardConfig';
 import './MathKeyboard.css';
 
 /**
@@ -21,7 +21,7 @@ export interface MathKeyboardProps {
 
 /**
  * MathKeyboard - A virtual keyboard for inserting mathematical symbols
- * Exact Desmos design
+ * Pixel-perfect Desmos design with 4-section numbers layout
  *
  * @component
  */
@@ -36,6 +36,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   const [isVisible, setIsVisible] = useState(defaultVisible);
   const [currentMode, setCurrentMode] = useState<'numbers' | 'abc'>('numbers');
   const [isShiftActive, setIsShiftActive] = useState(false);
+  const [showFunctionsPanel, setShowFunctionsPanel] = useState(false);
 
   // Get current keyboard layout
   const layout = getKeyboardLayout(currentMode);
@@ -76,8 +77,23 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
             return;
 
           case 'ENTER':
-            // Just close keyboard or trigger callback
             onButtonClick?.('ENTER', type);
+            return;
+
+          case 'FUNCTIONS':
+            setShowFunctionsPanel((prev) => !prev);
+            return;
+
+          case 'ARROW_LEFT':
+            onButtonClick?.('ARROW_LEFT', type);
+            return;
+
+          case 'ARROW_RIGHT':
+            onButtonClick?.('ARROW_RIGHT', type);
+            return;
+
+          case 'AUDIO':
+            // Audio feature - not implemented yet
             return;
 
           default:
@@ -87,7 +103,11 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
       // Apply shift transformation for letters
       let finalLatex = latex;
-      if (type === 'symbol' && isShiftActive && /^[a-z]$/.test(latex)) {
+      if (
+        (type === 'letter' || type === 'symbol') &&
+        isShiftActive &&
+        /^[a-z]$/.test(latex)
+      ) {
         finalLatex = latex.toUpperCase();
         setIsShiftActive(false); // Reset shift after use
       }
@@ -97,6 +117,123 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
     },
     [isShiftActive, onButtonClick]
   );
+
+  /**
+   * Render a single button
+   */
+  const renderButton = useCallback(
+    (button: ButtonConfig, key: string) => {
+      // Apply shift transformation for display
+      let displayText = button.display;
+      if (
+        (button.type === 'letter' || button.type === 'symbol') &&
+        isShiftActive &&
+        /^[a-z]$/.test(button.display)
+      ) {
+        displayText = button.display.toUpperCase();
+      }
+
+      // Build class names
+      const classNames = [
+        'mathex-kb-btn',
+        button.style ? `style-${button.style}` : 'style-white',
+        button.size ? `size-${button.size}` : 'size-standard',
+        button.type,
+      ];
+
+      // Special states
+      if (button.latex === 'ENTER') classNames.push('enter');
+      if (button.latex === 'SHIFT' && isShiftActive) classNames.push('active');
+      if (button.latex === 'FUNCTIONS' && showFunctionsPanel) classNames.push('active');
+
+      return (
+        <button
+          key={key}
+          className={classNames.join(' ')}
+          onClick={() => handleButtonClick(button)}
+          title={button.description}
+        >
+          {displayText}
+        </button>
+      );
+    },
+    [isShiftActive, showFunctionsPanel, handleButtonClick]
+  );
+
+  /**
+   * Check if layout is Numbers Mode (4-section) or ABC mode (simple rows)
+   */
+  const isNumbersMode = (
+    layout: ButtonConfig[][] | NumbersModeLayout
+  ): layout is NumbersModeLayout => {
+    return 'variables' in layout;
+  };
+
+  /**
+   * Render Numbers Mode - 4 Section Layout
+   */
+  const renderNumbersMode = (layout: NumbersModeLayout) => {
+    return (
+      <div className="mathex-kb-numbers-grid">
+        {/* Variables Section */}
+        <div className="mathex-kb-section variables-section">
+          {layout.variables.map((row, rowIdx) => (
+            <div key={`var-row-${rowIdx}`} className="mathex-kb-row">
+              {row.map((button, btnIdx) =>
+                renderButton(button, `var-${rowIdx}-${btnIdx}`)
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Numbers Section */}
+        <div className="mathex-kb-section numbers-section">
+          {layout.numbers.map((row, rowIdx) => (
+            <div key={`num-row-${rowIdx}`} className="mathex-kb-row">
+              {row.map((button, btnIdx) =>
+                renderButton(button, `num-${rowIdx}-${btnIdx}`)
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Operators Section */}
+        <div className="mathex-kb-section operators-section">
+          {layout.operators.map((button, idx) =>
+            renderButton(button, `op-${idx}`)
+          )}
+        </div>
+
+        {/* Actions Section */}
+        <div className="mathex-kb-section actions-section">
+          {layout.actions.map((row, rowIdx) => (
+            <div key={`act-row-${rowIdx}`} className="mathex-kb-row">
+              {row.map((button, btnIdx) =>
+                renderButton(button, `act-${rowIdx}-${btnIdx}`)
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  /**
+   * Render ABC Mode - Simple QWERTY Rows
+   */
+  const renderABCMode = (layout: ButtonConfig[][]) => {
+    return (
+      <div className="mathex-kb-abc-grid">
+        {layout.map((row, rowIdx) => (
+          <div key={`abc-row-${rowIdx}`} className="mathex-kb-row">
+            {row.map((button, btnIdx) =>
+              renderButton(button, `abc-${rowIdx}-${btnIdx}`)
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className={`mathex-keyboard-wrapper ${className}`} style={style}>
@@ -113,53 +250,18 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       {/* Keyboard panel */}
       {isVisible && (
         <div className="mathex-keyboard">
-          {/* Button grid */}
-          <div className="mathex-kb-grid">
-            {layout.map((row, rowIndex) => (
-              <div key={rowIndex} className="mathex-kb-row">
-                {row.map((button, buttonIndex) => {
-                  // Apply shift transformation for display
-                  let displayText = button.display;
-                  if (
-                    button.type === 'symbol' &&
-                    isShiftActive &&
-                    /^[a-z]$/.test(button.display)
-                  ) {
-                    displayText = button.display.toUpperCase();
-                  }
+          {/* Render layout based on mode */}
+          {isNumbersMode(layout)
+            ? renderNumbersMode(layout)
+            : renderABCMode(layout)}
 
-                  // Special handling for mode switch button
-                  const isModeSwitch = button.latex === 'MODE_NUMBERS' || button.latex === 'MODE_ABC';
-                  const isEnterButton = button.latex === 'ENTER';
-                  const isActionButton = button.type === 'action';
-
-                  return (
-                    <button
-                      key={`${rowIndex}-${buttonIndex}`}
-                      className={`mathex-kb-btn ${
-                        isActionButton && !isEnterButton ? 'action' : ''
-                      } ${isEnterButton ? 'enter' : ''} ${
-                        isShiftActive && button.latex === 'SHIFT' ? 'active' : ''
-                      } ${isModeSwitch ? 'mode-switch' : ''}`}
-                      onClick={() => handleButtonClick(button)}
-                      title={button.description}
-                    >
-                      {displayText}
-                    </button>
-                  );
-                })}
+          {/* Functions panel (collapsible) */}
+          {showFunctionsPanel && (
+            <div className="mathex-functions-panel">
+              <div className="functions-placeholder">
+                Functions panel - To be implemented in Phase 5
               </div>
-            ))}
-          </div>
-
-          {/* ABC/123 mode toggle (if in ABC mode, show 123 button; if in numbers mode, show ABC button) */}
-          {currentMode === 'numbers' && (
-            <button
-              className="mathex-mode-toggle-btn"
-              onClick={() => setCurrentMode('abc')}
-            >
-              ABC
-            </button>
+            </div>
           )}
         </div>
       )}
