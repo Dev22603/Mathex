@@ -18,8 +18,6 @@ export interface ButtonConfig {
   size?: 'standard' | 'wide' | 'extra-wide';
   /** Optional tooltip description */
   description?: string;
-  /** Flex grow value for flexible sizing (Desmos-style layout) */
-  flexGrow?: number;
 }
 
 /**
