@@ -135,12 +135,11 @@
   font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-weight: 400;
-  border: 1px solid #CCC;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.1s;
+  transition: background 0.1s, transform 0.05s;
   user-select: none;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 
   /* Flexbox for centering */
   display: flex;
@@ -154,42 +153,45 @@
 }
 
 .mathex-kb-btn:hover {
-  filter: brightness(0.95);
-  transform: translateY(-1px);
+  filter: brightness(0.97);
 }
 
 .mathex-kb-btn:active {
-  transform: translateY(0);
-  filter: brightness(0.9);
+  filter: brightness(0.93);
+  transform: scale(0.98);
 }
 
 /* ============================================
    Button Color Styles
    ============================================ */
 
-/* White buttons (default) */
+/* White buttons (default) - light on gray in Desmos */
 .mathex-kb-btn.style-white {
   background: #FFFFFF;
   color: #333;
+  border: 1px solid #D0D0D0;
 }
 
-/* Gray light (numbers) */
+/* Gray light (numbers) - dark on gray in Desmos */
 .mathex-kb-btn.style-gray-light {
-  background: #C5C5C5;
+  background: #BFBFBF;
   color: #333;
+  border: 1px solid #ADADAD;
 }
 
-/* Gray medium (functions, arrows) */
+/* Gray medium (functions, arrows) - medium gray */
 .mathex-kb-btn.style-gray-medium {
-  background: #E0E0E0;
+  background: #D4D4D4;
   color: #333;
+  border: 1px solid #C2C2C2;
 }
 
-/* Gray dark (ABC, shift, 123) */
+/* Gray dark (ABC, audio) */
 .mathex-kb-btn.style-gray-dark {
-  background: #B0B0B0;
+  background: #ADADAD;
   color: #333;
   font-weight: 500;
+  border: 1px solid #9B9B9B;
 }
 
 /* Blue (return/enter) */
