@@ -186,6 +186,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <div
           key={`spacer-${index}`}
           className="mathex-kb-spacer"
+          style={{ flexGrow: button.flexGrow }}
         />
       );
     }
@@ -209,16 +210,13 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       );
     }
 
-    // Determine grid span for wider buttons
-    const dataWide = button.flexGrow >= 2 ? '2' : button.flexGrow >= 1.5 ? '1.5' : undefined;
-
     // Special case for functions button
     if (button.command === 'OPEN_FUNCTIONS') {
       return (
         <div
           key={`btn-${index}`}
           className="mathex-kb-btn-container"
-          data-wide={dataWide}
+          style={{ flexGrow: button.flexGrow }}
         >
           <button
             ref={functionsButtonRef}
@@ -238,7 +236,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <div
         key={`btn-${index}`}
         className="mathex-kb-btn-container"
-        data-wide={dataWide}
+        style={{ flexGrow: button.flexGrow }}
       >
         <button
           type="button"
@@ -320,25 +318,11 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           <div className="mathex-keyboard-keys">
             <div className="mathex-keyboard-main">
               {/* Render rows */}
-              {currentLayout.map((row, rowIndex) => {
-                // Determine row class based on mode
-                let rowClass = 'mathex-kb-row--main';
-                if (isABCMode) {
-                  if (rowIndex === 2) {
-                    rowClass = 'mathex-kb-row--abc-row3';
-                  } else if (rowIndex === 3) {
-                    rowClass = 'mathex-kb-row--abc-row4';
-                  } else {
-                    rowClass = 'mathex-kb-row--abc';
-                  }
-                }
-
-                return (
-                  <div key={`row-${rowIndex}`} className={rowClass}>
-                    {row.map((button, btnIndex) => renderButton(button, btnIndex))}
-                  </div>
-                );
-              })}
+              {currentLayout.map((row, rowIndex) => (
+                <div key={`row-${rowIndex}`} className="mathex-kb-row">
+                  {row.map((button, btnIndex) => renderButton(button, btnIndex))}
+                </div>
+              ))}
             </div>
           </div>
 

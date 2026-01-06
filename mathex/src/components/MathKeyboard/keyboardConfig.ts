@@ -66,7 +66,7 @@ export const MAIN_KEYBOARD_LAYOUT: KeyboardButton[][] = [
     { display: '2', latex: '2', variant: 'dark', flexGrow: 1, ariaLabel: '2' },
     { display: '3', latex: '3', variant: 'dark', flexGrow: 1, ariaLabel: '3' },
     { display: '−', latex: '-', variant: 'light', flexGrow: 1, ariaLabel: 'Minus' },
-    { display: '', latex: '', variant: 'light', flexGrow: 1, ariaLabel: '', isSpacer: true },
+    { display: '', latex: '', variant: 'light', flexGrow: 0.5, ariaLabel: '', isSpacer: true },
     { display: '⌫', latex: '', variant: 'dark', flexGrow: 1.5, ariaLabel: 'Backspace', command: 'BACKSPACE' },
   ],
   // Row 4: ABC mode, Audio, Special symbols, Numbers, Enter
