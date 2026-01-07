@@ -26,7 +26,7 @@ interface KeyboardButton {
   /** LaTeX to insert when clicked */
   latex: string;
   /** Button style variant */
-  variant: 'light' | 'dark' | 'blue';
+  variant: 'light' | 'dark' | 'blue' | 'light-gray';
   /** Flex grow value for button width */
   flexGrow?: number;
   /** Aria label for accessibility */
@@ -120,36 +120,60 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   );
 
   /**
-   * Render a keyboard button
+   * Render a keyboard button wrapped in a container (Desmos pattern)
    */
   const renderButton = (button: KeyboardButton) => {
     const buttonClass = `mathex-kbd-btn mathex-kbd-btn--${button.variant}`;
 
+    // Render button content based on icon and label presence
+    const renderContent = () => {
+      // If icon exists with a label, show both (like ABC button with keyboard icon)
+      if (button.icon && button.label) {
+        return (
+          <>
+            <i className={`mathex-icon mathex-icon-${button.icon}`} aria-hidden="true" />
+            <span className="mathex-kbd-text">{button.label}</span>
+          </>
+        );
+      }
+      // Icon only (backspace, enter, arrows)
+      if (button.icon) {
+        return <i className={`mathex-icon mathex-icon-${button.icon}`} aria-hidden="true" />;
+      }
+      // LaTeX label
+      if (button.isLatex) {
+        return <span className="mathex-kbd-latex">{button.label}</span>;
+      }
+      // Plain text label
+      return <span className="mathex-kbd-text">{button.label}</span>;
+    };
+
     return (
-      <button
+      <div
         key={button.latex}
-        className={buttonClass}
+        className="mathex-kbd-btn-container"
         style={{ flexGrow: button.flexGrow || 1 }}
-        onClick={() => handleButtonClick(button)}
-        aria-label={button.ariaLabel}
-        type="button"
       >
-        {button.icon ? (
-          <i className={`mathex-icon mathex-icon-${button.icon}`} aria-hidden="true" />
-        ) : button.isLatex ? (
-          <span className="mathex-kbd-latex">{button.label}</span>
-        ) : (
-          <span className="mathex-kbd-text">{button.label}</span>
-        )}
-      </button>
+        <button
+          className={buttonClass}
+          onClick={() => handleButtonClick(button)}
+          aria-label={button.ariaLabel}
+          type="button"
+          data-command={button.latex.toLowerCase()}
+        >
+          <span className="mathex-kbd-btn-content">
+            {renderContent()}
+          </span>
+        </button>
+      </div>
     );
   };
 
   /**
-   * Render a spacer
+   * Render a spacer between sections
    */
   const renderSpacer = (spacer: Spacer, index: number) => {
-    return <div key={`spacer-${index}`} style={{ flexGrow: spacer.flexGrow }} />;
+    return <div key={`spacer-${index}`} className="mathex-kbd-spacer" style={{ flexGrow: spacer.flexGrow }} />;
   };
 
   /**
@@ -215,7 +239,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
     ],
     // Row 4
     [
-      { label: 'A B C', latex: 'TOGGLE_ABC', variant: 'dark', ariaLabel: 'Toggle Letters' },
+      { label: 'A B C', latex: 'TOGGLE_ABC', variant: 'light-gray', ariaLabel: 'Toggle Letters', icon: 'keyboard' },
       { label: '', latex: 'AUDIO', variant: 'dark', ariaLabel: 'Audio Trace', icon: 'volume' },
       { label: '√', latex: '\\sqrt{}', variant: 'light', ariaLabel: 'Square Root', isLatex: true },
       { label: 'π', latex: '\\pi', variant: 'light', ariaLabel: 'Pi', isLatex: true },
@@ -271,7 +295,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
     ],
     // Row 4
     [
-      { label: '1 2 3', latex: 'TOGGLE_ABC', variant: 'dark', ariaLabel: 'Toggle Numbers' },
+      { label: '1 2 3', latex: 'TOGGLE_ABC', variant: 'light-gray', ariaLabel: 'Toggle Numbers', icon: 'keyboard' },
       { label: 'aᵦ', latex: '_{}', variant: 'light', ariaLabel: 'Subscript', isLatex: true },
       { label: '!%', latex: '!', variant: 'light', ariaLabel: 'Special characters' },
       { label: '[ ]', latex: '[]', variant: 'light', ariaLabel: 'Brackets' },

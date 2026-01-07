@@ -1,6 +1,7 @@
 /**
  * MathKeyboard Component Styles
  * Pixel-perfect recreation of Desmos keyboard UI
+ * Based on: shared_calculator_desktop CSS
  */
 
 /* ============================================================
@@ -8,60 +9,37 @@
    ============================================================ */
 
 :root {
-  /* Colors - Light Theme */
-  --mathex-kbd-bg: #f7f7f7;
-  --mathex-kbd-bg-dark: #e8e8e8;
-  --mathex-kbd-bg-light: #ffffff;
-  --mathex-kbd-bg-blue: #2f72dc;
-  --mathex-kbd-bg-blue-hover: #2a67c6;
+  /* Colors - matching Desmos exactly */
+  --mathex-kbd-bg: #f0f0f0;
+  --mathex-kbd-border-color: rgba(0, 0, 0, 0.1);
 
-  /* Button colors */
-  --mathex-kbd-btn-light-bg: #ffffff;
-  --mathex-kbd-btn-light-bg-hover: #f5f5f5;
-  --mathex-kbd-btn-light-bg-active: #e8e8e8;
-  --mathex-kbd-btn-light-border: #d0d0d0;
-  --mathex-kbd-btn-light-text: #000000;
+  /* Button colors - Desmos uses gradients and semi-transparent overlays */
+  /* Light buttons (white/operators) */
+  --mathex-kbd-btn-light-border: #d8d8d8;
 
-  --mathex-kbd-btn-dark-bg: #e8e8e8;
-  --mathex-kbd-btn-dark-bg-hover: #d8d8d8;
-  --mathex-kbd-btn-dark-bg-active: #c8c8c8;
-  --mathex-kbd-btn-dark-border: #c0c0c0;
-  --mathex-kbd-btn-dark-text: #000000;
+  /* Dark buttons (gray/numbers) */
+  --mathex-kbd-btn-dark-border: #bbb;
 
+  /* Blue button (Enter) */
   --mathex-kbd-btn-blue-bg: #2f72dc;
-  --mathex-kbd-btn-blue-bg-hover: #2a67c6;
-  --mathex-kbd-btn-blue-bg-active: #265bb0;
-  --mathex-kbd-btn-blue-text: #ffffff;
+  --mathex-kbd-btn-blue-hover: #2457a8;
+  --mathex-kbd-btn-blue-active: #193d75;
 
-  /* Shadows */
-  --mathex-kbd-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --mathex-kbd-btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --mathex-kbd-btn-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.15);
-  --mathex-kbd-btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-
-  /* Dimensions */
-  --mathex-kbd-height: 240px;
-  --mathex-kbd-padding: 12px 16px;
-  --mathex-kbd-gap: 6px;
-  --mathex-kbd-row-gap: 8px;
-
-  --mathex-kbd-btn-height: 48px;
-  --mathex-kbd-btn-min-width: 48px;
-  --mathex-kbd-btn-border-radius: 6px;
-  --mathex-kbd-btn-border-width: 1px;
+  /* Dimensions - Desmos values */
+  --mathex-kbd-btn-height: 40px;
+  --mathex-kbd-btn-border-radius: 2px;
+  --mathex-kbd-padding: 4px 3px;
 
   --mathex-kbd-toggle-size: 48px;
-  --mathex-kbd-toggle-offset: 16px;
+  --mathex-kbd-toggle-offset: 5px;
 
   /* Typography */
   --mathex-kbd-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --mathex-kbd-font-size: 16px;
-  --mathex-kbd-font-weight: 500;
-  --mathex-kbd-line-height: 1.2;
+  --mathex-kbd-font-size: 110%;
 
   /* Animation */
   --mathex-kbd-transition-duration: 0.3s;
-  --mathex-kbd-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --mathex-kbd-transition-easing: ease;
 }
 
 /* ============================================================
@@ -71,9 +49,9 @@
 .mathex-keyboard-container {
   position: relative;
   font-family: var(--mathex-kbd-font-family);
-  font-size: var(--mathex-kbd-font-size);
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .mathex-keyboard-container.mathex-keyboard--fixed {
@@ -92,43 +70,45 @@
   position: fixed;
   bottom: var(--mathex-kbd-toggle-offset);
   left: var(--mathex-kbd-toggle-offset);
-  width: var(--mathex-kbd-toggle-size);
-  height: var(--mathex-kbd-toggle-size);
+  z-index: 1001;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--mathex-kbd-btn-dark-bg);
-  border: 1px solid var(--mathex-kbd-btn-dark-border);
+  padding: 4px 14px;
+  background: linear-gradient(#f6f6f6, #f0f0f0);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--mathex-kbd-btn-border-radius);
-  box-shadow: var(--mathex-kbd-shadow);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
 
   cursor: pointer;
-  transition: all 0.2s var(--mathex-kbd-transition-easing);
-
-  z-index: 1001;
+  color: rgba(0, 0, 0, 0.7);
+  transition: background 0.2s;
 }
 
 .mathex-keyboard-toggle:hover {
-  background: var(--mathex-kbd-btn-dark-bg-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: #ededed;
+  border-color: rgba(0, 0, 0, 0.13);
+  color: rgba(0, 0, 0, 0.9);
 }
 
 .mathex-keyboard-toggle:active {
-  background: var(--mathex-kbd-btn-dark-bg-active);
-  transform: translateY(0);
-  box-shadow: var(--mathex-kbd-btn-shadow-active);
+  background: #e0e0e0;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
 .mathex-keyboard-toggle--active {
   background: var(--mathex-kbd-btn-blue-bg);
-  color: var(--mathex-kbd-btn-blue-text);
+  border-color: var(--mathex-kbd-btn-blue-bg);
+  color: #fff;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 -1px rgba(0, 0, 0, 0.04);
 }
 
 .mathex-keyboard-toggle--active:hover {
-  background: var(--mathex-kbd-btn-blue-bg-hover);
+  background: var(--mathex-kbd-btn-blue-hover);
+  border-color: var(--mathex-kbd-btn-blue-hover);
 }
 
 /* ============================================================
@@ -140,8 +120,6 @@
   bottom: 0;
   left: 0;
   right: 0;
-
-  height: var(--mathex-kbd-height);
 
   transform: translateY(100%);
   opacity: 0;
@@ -159,39 +137,75 @@
 
 .mathex-keyboard-background {
   width: 100%;
-  height: 100%;
   background: var(--mathex-kbd-bg);
-  border-top: 1px solid var(--mathex-kbd-btn-light-border);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  padding: var(--mathex-kbd-padding);
+  border-top: 1px solid var(--mathex-kbd-border-color);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mathex-keyboard-keys {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mathex-kbd-row-gap);
-  height: 100%;
+  position: relative;
+  width: 100%;
+  max-width: 835px;
+  margin: 0 auto;
+  padding: var(--mathex-kbd-padding);
+  font-size: var(--mathex-kbd-font-size);
 }
 
 /* ============================================================
-   KEYBOARD ROWS
+   KEYBOARD ROWS (Desmos: .dcg-keypad-row)
    ============================================================ */
 
 .mathex-kbd-row {
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: var(--mathex-kbd-gap);
-  flex: 1;
+  flex-flow: row nowrap;
   align-items: stretch;
 }
 
 /* ============================================================
-   KEYBOARD BUTTONS
+   BUTTON CONTAINER (Desmos: .dcg-keypad-btn-container)
+   Each button is wrapped in a container for proper spacing
+   ============================================================ */
+
+.mathex-kbd-btn-container {
+  height: var(--mathex-kbd-btn-height);
+  display: inline-block;
+  position: relative;
+  flex-grow: 1;
+}
+
+/* Spacer elements between sections */
+.mathex-kbd-spacer {
+  flex-grow: 0.5;
+}
+
+.mathex-kbd-partition {
+  width: 4%;
+}
+
+/* ============================================================
+   KEYBOARD BUTTONS (Desmos: .dcg-keypad-btn)
+   Buttons are absolutely positioned within their container
    ============================================================ */
 
 .mathex-kbd-btn {
-  /* Reset default button styles */
-  margin: 0;
+  /* Position absolutely within container with 2px margin on all sides */
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+
+  /* Layout */
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
   padding: 0;
+  margin: 0;
+
+  /* Reset */
   border: none;
   background: none;
   font: inherit;
@@ -199,26 +213,16 @@
   cursor: pointer;
   outline: none;
 
-  /* Button layout */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--mathex-kbd-btn-min-width);
-  height: 100%;
-
   /* Typography */
   font-family: var(--mathex-kbd-font-family);
-  font-size: var(--mathex-kbd-font-size);
-  font-weight: var(--mathex-kbd-font-weight);
-  line-height: var(--mathex-kbd-line-height);
+  font-weight: 400;
+  line-height: 1;
 
-  /* Appearance */
+  /* Appearance - Desmos uses 2px border-radius */
   border-radius: var(--mathex-kbd-btn-border-radius);
-  border-width: var(--mathex-kbd-btn-border-width);
-  border-style: solid;
 
   /* Animation */
-  transition: all 0.15s var(--mathex-kbd-transition-easing);
+  transition: background 0.2s;
 
   /* Prevent text selection */
   user-select: none;
@@ -226,70 +230,110 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Light variant (white background - operators, variables) */
-.mathex-kbd-btn--light {
-  background: var(--mathex-kbd-btn-light-bg);
-  border-color: var(--mathex-kbd-btn-light-border);
-  color: var(--mathex-kbd-btn-light-text);
-  box-shadow: var(--mathex-kbd-btn-shadow);
-}
-
-.mathex-kbd-btn--light:hover {
-  background: var(--mathex-kbd-btn-light-bg-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--mathex-kbd-btn-shadow-hover);
-}
-
-.mathex-kbd-btn--light:active {
-  background: var(--mathex-kbd-btn-light-bg-active);
-  transform: translateY(0);
-  box-shadow: var(--mathex-kbd-btn-shadow-active);
-}
-
-/* Dark variant (gray background - numbers, special keys) */
-.mathex-kbd-btn--dark {
-  background: var(--mathex-kbd-btn-dark-bg);
-  border-color: var(--mathex-kbd-btn-dark-border);
-  color: var(--mathex-kbd-btn-dark-text);
-  box-shadow: var(--mathex-kbd-btn-shadow);
-}
-
-.mathex-kbd-btn--dark:hover {
-  background: var(--mathex-kbd-btn-dark-bg-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--mathex-kbd-btn-shadow-hover);
-}
-
-.mathex-kbd-btn--dark:active {
-  background: var(--mathex-kbd-btn-dark-bg-active);
-  transform: translateY(0);
-  box-shadow: var(--mathex-kbd-btn-shadow-active);
-}
-
-/* Blue variant (Enter button) */
-.mathex-kbd-btn--blue {
-  background: var(--mathex-kbd-btn-blue-bg);
-  border-color: var(--mathex-kbd-btn-blue-bg);
-  color: var(--mathex-kbd-btn-blue-text);
-  box-shadow: var(--mathex-kbd-btn-shadow);
-}
-
-.mathex-kbd-btn--blue:hover {
-  background: var(--mathex-kbd-btn-blue-bg-hover);
-  border-color: var(--mathex-kbd-btn-blue-bg-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--mathex-kbd-btn-shadow-hover);
-}
-
-.mathex-kbd-btn--blue:active {
-  background: var(--mathex-kbd-btn-blue-bg-active);
-  border-color: var(--mathex-kbd-btn-blue-bg-active);
-  transform: translateY(0);
-  box-shadow: var(--mathex-kbd-btn-shadow-active);
+/* Button content wrapper */
+.mathex-kbd-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1;
+  pointer-events: none;
+  font-size: 90%;
 }
 
 /* ============================================================
-   BUTTON CONTENT
+   LIGHT VARIANT (Desmos: .dcg-btn-light-on-gray)
+   White buttons - for operators, variables, etc.
+   ============================================================ */
+
+.mathex-kbd-btn--light {
+  color: #000;
+  background: linear-gradient(#fff, #fafafa);
+  border: 1px solid var(--mathex-kbd-btn-light-border);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
+}
+
+.mathex-kbd-btn--light:hover {
+  background: #f5f5f5;
+  border-color: #d8d8d8;
+}
+
+.mathex-kbd-btn--light:active {
+  background: #ebebeb;
+  border-color: #cfcfcf;
+  box-shadow: none;
+}
+
+/* ============================================================
+   DARK VARIANT (Desmos: .dcg-btn-dark-on-gray)
+   Gray buttons - for numbers, functions button, etc.
+   Uses semi-transparent overlay on background
+   ============================================================ */
+
+.mathex-kbd-btn--dark {
+  color: #000;
+  background: linear-gradient(rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.16));
+  border: 1px solid var(--mathex-kbd-btn-dark-border);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 -1px rgba(0, 0, 0, 0.02);
+}
+
+.mathex-kbd-btn--dark:hover {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.mathex-kbd-btn--dark:active {
+  background: rgba(0, 0, 0, 0.19);
+  box-shadow: none;
+}
+
+/* ============================================================
+   BLUE VARIANT (Desmos: .dcg-btn-blue)
+   Enter button
+   ============================================================ */
+
+.mathex-kbd-btn--blue {
+  color: #fff;
+  background: var(--mathex-kbd-btn-blue-bg);
+  border: 1px solid var(--mathex-kbd-btn-blue-bg);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 -1px rgba(0, 0, 0, 0.04);
+}
+
+.mathex-kbd-btn--blue:hover {
+  background: var(--mathex-kbd-btn-blue-hover);
+  border-color: var(--mathex-kbd-btn-blue-hover);
+}
+
+.mathex-kbd-btn--blue:active {
+  background: var(--mathex-kbd-btn-blue-active);
+  border-color: var(--mathex-kbd-btn-blue-active);
+  box-shadow: none;
+}
+
+/* ============================================================
+   LIGHT-GRAY VARIANT (Desmos: .dcg-btn-light-gray)
+   For ABC toggle button with keyboard icon
+   ============================================================ */
+
+.mathex-kbd-btn--light-gray {
+  color: #000;
+  background: linear-gradient(#f6f6f6, #f0f0f0);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
+}
+
+.mathex-kbd-btn--light-gray:hover {
+  background: #ededed;
+  border-color: rgba(0, 0, 0, 0.13);
+}
+
+.mathex-kbd-btn--light-gray:active {
+  background: #e0e0e0;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: none;
+}
+
+/* ============================================================
+   BUTTON CONTENT STYLES
    ============================================================ */
 
 .mathex-kbd-text {
@@ -298,53 +342,66 @@
 
 .mathex-kbd-latex {
   display: inline-block;
+  font-family: 'Times New Roman', Times, serif;
   font-style: italic;
 }
 
+/* Special sizing for specific commands */
+.mathex-kbd-btn[data-command="left"],
+.mathex-kbd-btn[data-command="right"],
+.mathex-kbd-btn[data-command="backspace"] {
+  font-size: 110%;
+}
+
+.mathex-kbd-btn[data-command="enter"] {
+  font-size: 140%;
+}
+
 /* ============================================================
-   ICONS (Placeholder - will use actual icons)
+   ICONS
    ============================================================ */
 
 .mathex-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
 .mathex-icon-keyboard::before {
   content: '⌨';
-  font-size: 24px;
+  font-size: 175%;
+  margin-right: 8px;
 }
 
 .mathex-icon-arrow-left::before {
   content: '←';
-  font-size: 20px;
+  font-size: 100%;
 }
 
 .mathex-icon-arrow-right::before {
   content: '→';
-  font-size: 20px;
+  font-size: 100%;
 }
 
 .mathex-icon-backspace::before {
   content: '⌫';
-  font-size: 20px;
+  font-size: 100%;
 }
 
 .mathex-icon-enter::before {
   content: '↵';
-  font-size: 20px;
+  font-size: 100%;
 }
 
 .mathex-icon-volume::before {
   content: '🔊';
-  font-size: 18px;
+  font-size: 90%;
 }
 
 .mathex-icon-shift::before {
-  content: '⬆';
-  font-size: 20px;
+  content: '⇧';
+  font-size: 100%;
 }
 
 /* ============================================================
@@ -353,58 +410,91 @@
 
 .mathex-functions-panel {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  right: 8px;
+  bottom: 100%;
   width: 300px;
 
-  background: var(--mathex-kbd-bg-light);
-  border-left: 1px solid var(--mathex-kbd-btn-light-border);
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
-  transform: translateX(100%);
-  transition: transform var(--mathex-kbd-transition-duration) var(--mathex-kbd-transition-easing);
+  transform: translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.2s, opacity 0.2s, visibility 0.2s;
 
   overflow-y: auto;
+  max-height: 400px;
   z-index: 1002;
 }
 
 .mathex-functions-panel--open {
-  transform: translateX(0);
+  transform: translateY(-8px);
+  opacity: 1;
+  visibility: visible;
 }
 
 .mathex-functions-content {
-  padding: 16px;
+  padding: 12px;
 }
 
 .mathex-functions-content h3 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #666666;
+  color: #666;
+}
+
+.mathex-functions-content h3:not(:first-child) {
+  margin-top: 16px;
+}
+
+.mathex-functions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.mathex-functions-btn {
+  padding: 8px 4px;
+  background: linear-gradient(#fff, #fafafa);
+  border: 1px solid #d8d8d8;
+  border-radius: 2px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mathex-functions-btn:hover {
+  background: #f5f5f5;
+}
+
+.mathex-functions-btn:active {
+  background: #ebebeb;
 }
 
 /* ============================================================
-   RESPONSIVE DESIGN (Future)
+   RESPONSIVE DESIGN
    ============================================================ */
 
 /* Tablet */
 @media (max-width: 768px) {
   :root {
-    --mathex-kbd-btn-height: 44px;
-    --mathex-kbd-font-size: 15px;
+    --mathex-kbd-btn-height: 38px;
   }
 }
 
 /* Mobile */
 @media (max-width: 480px) {
   :root {
-    --mathex-kbd-btn-height: 40px;
-    --mathex-kbd-font-size: 14px;
-    --mathex-kbd-gap: 4px;
-    --mathex-kbd-row-gap: 6px;
+    --mathex-kbd-btn-height: 36px;
+  }
+
+  .mathex-keyboard-keys {
+    font-size: 100%;
   }
 }
 
@@ -414,7 +504,8 @@
 
 .mathex-kbd-btn:focus-visible {
   outline: 2px solid var(--mathex-kbd-btn-blue-bg);
-  outline-offset: 2px;
+  outline-offset: 1px;
+  z-index: 1;
 }
 
 /* High contrast mode support */
@@ -428,7 +519,8 @@
 @media (prefers-reduced-motion: reduce) {
   .mathex-keyboard,
   .mathex-functions-panel,
-  .mathex-kbd-btn {
+  .mathex-kbd-btn,
+  .mathex-keyboard-toggle {
     transition-duration: 0.01s;
   }
 }
