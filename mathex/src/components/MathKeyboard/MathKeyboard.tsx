@@ -234,12 +234,12 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       { label: '2', latex: '2', variant: 'dark', ariaLabel: '2' },
       { label: '3', latex: '3', variant: 'dark', ariaLabel: '3' },
       { label: '−', latex: '-', variant: 'light', ariaLabel: 'Minus' },
-      { type: 'spacer', flexGrow: 1 },
+      { type: 'spacer', flexGrow: 0.5 },
       { label: '', latex: 'BACKSPACE', variant: 'dark', flexGrow: 1.5, ariaLabel: 'Backspace', icon: 'backspace' },
     ],
     // Row 4
     [
-      { label: 'A B C', latex: 'TOGGLE_ABC', variant: 'light-gray', ariaLabel: 'Toggle Letters', icon: 'keyboard' },
+      { label: 'A B C', latex: 'TOGGLE_ABC', variant: 'dark', ariaLabel: 'Toggle Letters' },
       { label: '', latex: 'AUDIO', variant: 'dark', ariaLabel: 'Audio Trace', icon: 'volume' },
       { label: '√', latex: '\\sqrt{}', variant: 'light', ariaLabel: 'Square Root', isLatex: true },
       { label: 'π', latex: '\\pi', variant: 'light', ariaLabel: 'Pi', isLatex: true },
@@ -295,7 +295,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
     ],
     // Row 4
     [
-      { label: '1 2 3', latex: 'TOGGLE_ABC', variant: 'light-gray', ariaLabel: 'Toggle Numbers', icon: 'keyboard' },
+      { label: '1 2 3', latex: 'TOGGLE_ABC', variant: 'dark', ariaLabel: 'Toggle Numbers' },
       { label: 'aᵦ', latex: '_{}', variant: 'light', ariaLabel: 'Subscript', isLatex: true },
       { label: '!%', latex: '!', variant: 'light', ariaLabel: 'Special characters' },
       { label: '[ ]', latex: '[]', variant: 'light', ariaLabel: 'Brackets' },
