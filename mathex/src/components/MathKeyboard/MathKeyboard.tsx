@@ -152,7 +152,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <div
         key={button.latex}
         className="mathex-kbd-btn-container"
-        style={{ flexGrow: button.flexGrow || 1 }}
+        style={{ flex: `${button.flexGrow || 1} 1 0` }}
       >
         <button
           className={buttonClass}
