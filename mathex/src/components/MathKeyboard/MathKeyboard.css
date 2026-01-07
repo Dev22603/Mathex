@@ -170,9 +170,10 @@
 
 .mathex-kbd-btn-container {
   height: var(--mathex-kbd-btn-height);
-  display: inline-block;
   position: relative;
-  flex-grow: 1;
+  /* Use flex shorthand for equal width distribution regardless of content */
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 /* Spacer elements between sections */
