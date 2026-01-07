@@ -369,11 +369,44 @@ export const functionCategories: FunctionCategory[] = [
 // ============================================
 
 /**
- * Get uppercase version of ABC keyboard for shift mode
+ * Shift toggle mappings for special buttons in ABC mode
+ */
+const shiftToggleMap: Record<string, { display: string; latex: string }> = {
+  // aᵦ (subscript) → aᵇ (superscript)
+  'SUBSCRIPT': { display: 'aᵇ', latex: 'SUPERSCRIPT' },
+  'SUPERSCRIPT': { display: 'aᵦ', latex: 'SUBSCRIPT' },
+  // ! % toggles
+  '!%': { display: '% !', latex: '%!' },
+  '%!': { display: '! %', latex: '!%' },
+  // [ ] toggles
+  '[]': { display: '] [', latex: '][' },
+  '][': { display: '[ ]', latex: '[]' },
+  // { } toggles
+  '\\{\\}': { display: '} {', latex: '\\}\\{' },
+  '\\}\\{': { display: '{ }', latex: '\\{\\}' },
+  // ~ toggles to :
+  '\\sim ': { display: ':', latex: ':' },
+  ':': { display: '~', latex: '\\sim ' },
+  // , ' toggles
+  ",'": { display: "' ,", latex: "'," },
+  "',": { display: ", '", latex: ",'" },
+};
+
+/**
+ * Get uppercase/shifted version of ABC keyboard for shift mode
+ * This handles:
+ * - Letters become uppercase
+ * - aᵦ becomes aᵇ (subscript → superscript)
+ * - ! % becomes % !
+ * - [ ] becomes ] [
+ * - { } becomes } {
+ * - ~ becomes :
+ * - , ' becomes ' ,
  */
 export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
   return abcKeyboardRows.map((row) =>
     row.map((btn) => {
+      // Handle letter buttons
       if (btn.type === 'letter') {
         return {
           ...btn,
@@ -381,6 +414,17 @@ export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
           latex: btn.latex.toUpperCase(),
         };
       }
+
+      // Handle special toggleable buttons
+      const toggleMapping = shiftToggleMap[btn.latex];
+      if (toggleMapping) {
+        return {
+          ...btn,
+          display: toggleMapping.display,
+          latex: toggleMapping.latex,
+        };
+      }
+
       return btn;
     })
   );

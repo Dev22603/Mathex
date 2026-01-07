@@ -50,7 +50,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   const [keyboardMode, setKeyboardMode] = useState<KeyboardMode>('default');
   const [isShiftActive, setIsShiftActive] = useState(false);
   const [isFunctionsOpen, setIsFunctionsOpen] = useState(false);
-  const [isSubscriptMode, setIsSubscriptMode] = useState(false);
+  // Mode for next character: 'normal', 'subscript', or 'superscript'
+  const [nextCharMode, setNextCharMode] = useState<'normal' | 'subscript' | 'superscript'>('normal');
 
   // Refs
   const keyboardRef = useRef<HTMLDivElement>(null);
@@ -87,6 +88,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         case '123_MODE':
           setKeyboardMode('default');
           setIsShiftActive(false);
+          setNextCharMode('normal');
           return;
         case 'SHIFT':
           setIsShiftActive((prev) => !prev);
@@ -98,24 +100,48 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           // No functionality, just for show
           return;
         case 'SUBSCRIPT':
-          setIsSubscriptMode(true);
+          setNextCharMode('subscript');
+          return;
+        case 'SUPERSCRIPT':
+          setNextCharMode('superscript');
           return;
         case 'ARROW_LEFT':
+          // Dispatch left arrow key event to the active input
+          document.activeElement?.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })
+          );
+          return;
         case 'ARROW_RIGHT':
-          // TODO: Implement cursor navigation
+          // Dispatch right arrow key event to the active input
+          document.activeElement?.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
+          );
+          return;
+        case 'BACKSPACE':
+          // Dispatch backspace key event to the active input (same as hardware)
+          document.activeElement?.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true })
+          );
           return;
         case 'ENTER':
-          // Handle enter key
+          // Blur the active input (unfocus)
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
           return;
         default:
           break;
       }
 
-      // Handle subscript mode
-      if (isSubscriptMode && button.type === 'letter') {
-        const subscriptLatex = `_{${button.latex}}`;
-        mathContext?.insertAtCursor(subscriptLatex);
-        setIsSubscriptMode(false);
+      // Handle subscript/superscript mode for the next character
+      if (nextCharMode !== 'normal' && (button.type === 'letter' || button.type === 'variable')) {
+        const wrapper = nextCharMode === 'subscript' ? `_{${button.latex}}` : `^{${button.latex}}`;
+        mathContext?.insertAtCursor(wrapper);
+        setNextCharMode('normal');
+        // Reset shift after typing
+        if (isShiftActive) {
+          setIsShiftActive(false);
+        }
         return;
       }
 
@@ -129,17 +155,20 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         setIsShiftActive(false);
       }
     },
-    [mathContext, isShiftActive, isSubscriptMode]
+    [mathContext, isShiftActive, nextCharMode]
   );
 
   /**
    * Handle function button click
+   * Clicking a function closes only the functions panel, not the keyboard
    */
   const handleFunctionClick = useCallback(
     (latex: string) => {
       if (mathContext) {
         mathContext.insertAtCursor(latex);
       }
+      // Close only the functions panel, keyboard stays open
+      setIsFunctionsOpen(false);
     },
     [mathContext]
   );
@@ -189,7 +218,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       button.style === 'gray-light' && 'dcg-btn-light-gray',
       button.style === 'white' && 'dcg-btn-white',
       button.latex === 'SHIFT' && isShiftActive && 'dcg-active',
-      button.latex === 'SUBSCRIPT' && isSubscriptMode && 'dcg-active',
+      button.latex === 'SUBSCRIPT' && nextCharMode === 'subscript' && 'dcg-active',
+      button.latex === 'SUPERSCRIPT' && nextCharMode === 'superscript' && 'dcg-active',
     ]
       .filter(Boolean)
       .join(' ');
