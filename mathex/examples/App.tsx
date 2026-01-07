@@ -1,19 +1,6 @@
 import { useState } from 'react';
-import { MathInput, MathProvider } from 'mathex';
+import { MathInput, MathKeyboard, MathProvider } from 'mathex';
 import './App.css';
-
-// Keyboard wrapper component to connect with provider
-// function KeyboardWrapper() {
-//   const context = useMathContext();
-
-//   const handleButtonClick = (latex: string, _buttonType: string) => {
-//     if (context) {
-//       context.insertAtCursor(latex);
-//     }
-//   };
-
-//   return <MathKeyboard onButtonClick={handleButtonClick} />;
-// }
 
 function App() {
   const [latex1, setLatex1] = useState('x^2 + 3x + 1');
@@ -31,6 +18,7 @@ function App() {
         <main className="app-content">
           <section className="demo-section">
             <h2>Math Input Examples</h2>
+            <p className="demo-hint">Click on an input field, then use the keyboard at the bottom to insert symbols</p>
 
             <div className="input-example">
               <label>Equation 1:</label>
@@ -64,13 +52,18 @@ function App() {
           </section>
 
           <section className="info-section">
-            <h3>📋 Project Status: Rebuilding Keyboard</h3>
-            <p>✅ MathInput with real-time KaTeX rendering</p>
-            <p>🔨 Keyboard being rebuilt from scratch</p>
+            <h3>Keyboard Features</h3>
+            <ul>
+              <li>Click the keyboard icon at the bottom-left to toggle</li>
+              <li>Click "ABC" to switch to letter mode</li>
+              <li>Click "functions" to access math functions</li>
+              <li>Click outside the keyboard to close it</li>
+            </ul>
           </section>
         </main>
 
-        {/* <KeyboardWrapper /> */}
+        {/* Desmos-style Math Keyboard */}
+        <MathKeyboard />
       </div>
     </MathProvider>
   );
