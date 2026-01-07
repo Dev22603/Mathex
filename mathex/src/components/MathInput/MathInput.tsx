@@ -30,6 +30,8 @@ export interface MathInputProps {
   readOnly?: boolean;
   /** Callback fired on errors */
   onError?: (error: Error) => void;
+  /** Callback fired when Enter is pressed (unfocuses input) */
+  onSubmit?: () => void;
 }
 
 /**
@@ -60,6 +62,7 @@ export const MathInput: React.FC<MathInputProps> = ({
   autoFocus = false,
   readOnly = false,
   onError,
+  onSubmit,
 }) => {
   // Determine if component is controlled or uncontrolled
   const isControlled = controlledValue !== undefined;
@@ -70,6 +73,7 @@ export const MathInput: React.FC<MathInputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [renderedHTML, setRenderedHTML] = useState('');
+  const [subscriptMode, setSubscriptMode] = useState(false);
 
   // Refs
   const inputRef = useRef<HTMLDivElement>(null);
@@ -185,40 +189,145 @@ export const MathInput: React.FC<MathInputProps> = ({
   }, [autoFocus]);
 
   /**
-   * Update contentEditable text content when LaTeX changes externally
+   * Get current cursor position and selection from contentEditable
    */
-  useEffect(() => {
-    if (contentEditableRef.current && !isFocused) {
-      contentEditableRef.current.textContent = latex;
+  const getCursorPosition = useCallback((): { start: number; end: number } => {
+    if (!contentEditableRef.current) return { start: latex.length, end: latex.length };
+    
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      return { start: latex.length, end: latex.length };
     }
-  }, [latex, isFocused]);
+
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(contentEditableRef.current);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    
+    const start = preCaretRange.toString().length;
+    const end = start + range.toString().length;
+    
+    return { start, end };
+  }, [latex]);
 
   /**
-   * Handle keyboard insertions from MathKeyboard
+   * Set cursor position in contentEditable
+   */
+  const setCursorPosition = useCallback((position: number) => {
+    if (!contentEditableRef.current) return;
+    
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const range = document.createRange();
+    const textNode = contentEditableRef.current.firstChild;
+    
+    if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+      const clampedPos = Math.max(0, Math.min(position, textNode.textContent?.length || 0));
+      range.setStart(textNode, clampedPos);
+      range.setEnd(textNode, clampedPos);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }, []);
+
+  /**
+   * Update contentEditable text content when LaTeX changes externally
+   * Preserve cursor position when focused
+   */
+  useEffect(() => {
+    if (contentEditableRef.current) {
+      if (!isFocused) {
+        contentEditableRef.current.textContent = latex;
+      } else {
+        // Preserve cursor position when LaTeX changes externally
+        const { start } = getCursorPosition();
+        contentEditableRef.current.textContent = latex;
+        setTimeout(() => {
+          setCursorPosition(start);
+        }, 0);
+      }
+    }
+  }, [latex, isFocused, getCursorPosition, setCursorPosition]);
+
+  /**
+   * Handle keyboard insertions from MathKeyboard with cursor awareness
    */
   const handleKeyboardInsertion = useCallback(
-    (insertedLatex: string) => {
-      if (insertedLatex === 'BACKSPACE') {
-        // Handle backspace
-        const newLatex = latex.slice(0, -1);
-        if (isControlled) {
-          onChange?.(newLatex);
-        } else {
-          setUncontrolledValue(newLatex);
-          onChange?.(newLatex);
+    (action: 'INSERT' | 'BACKSPACE' | 'DELETE' | 'ENTER', data?: string | { position: number; length?: number }) => {
+      if (!isFocused || !contentEditableRef.current) {
+        // If not focused, just append
+        if (action === 'INSERT' && typeof data === 'string') {
+          const newLatex = latex + data;
+          if (isControlled) {
+            onChange?.(newLatex);
+          } else {
+            setUncontrolledValue(newLatex);
+            onChange?.(newLatex);
+          }
         }
-      } else {
-        // Insert LaTeX at end (Phase 1 - cursor always at end)
-        const newLatex = latex + insertedLatex;
-        if (isControlled) {
-          onChange?.(newLatex);
-        } else {
-          setUncontrolledValue(newLatex);
-          onChange?.(newLatex);
-        }
+        return;
       }
+
+      const { start, end } = getCursorPosition();
+      let newLatex = latex;
+      let newCursorPos = start;
+
+      if (action === 'INSERT' && typeof data === 'string') {
+        // Handle subscript mode
+        let insertText = data;
+        if (subscriptMode && data.length === 1 && /[a-zA-Z0-9]/.test(data)) {
+          insertText = `_{${data}}`;
+          setSubscriptMode(false);
+        }
+
+        // Insert at cursor position
+        const before = latex.substring(0, start);
+        const after = latex.substring(end);
+        newLatex = before + insertText + after;
+        newCursorPos = start + insertText.length;
+      } else if (action === 'BACKSPACE') {
+        if (start === end && start > 0) {
+          // Delete one character before cursor
+          newLatex = latex.substring(0, start - 1) + latex.substring(start);
+          newCursorPos = start - 1;
+        } else if (start !== end) {
+          // Delete selection
+          newLatex = latex.substring(0, start) + latex.substring(end);
+          newCursorPos = start;
+        }
+      } else if (action === 'DELETE') {
+        if (start === end && start < latex.length) {
+          // Delete one character after cursor
+          newLatex = latex.substring(0, start) + latex.substring(start + 1);
+          newCursorPos = start;
+        } else if (start !== end) {
+          // Delete selection
+          newLatex = latex.substring(0, start) + latex.substring(end);
+          newCursorPos = start;
+        }
+      } else if (action === 'ENTER') {
+        // Unfocus the input
+        contentEditableRef.current.blur();
+        // Call onSubmit callback if provided
+        onSubmit?.();
+        return;
+      }
+
+      // Update LaTeX
+      if (isControlled) {
+        onChange?.(newLatex);
+      } else {
+        setUncontrolledValue(newLatex);
+        onChange?.(newLatex);
+      }
+
+      // Restore cursor position after update
+      setTimeout(() => {
+        setCursorPosition(newCursorPos);
+      }, 0);
     },
-    [latex, isControlled, onChange]
+    [latex, isFocused, isControlled, onChange, getCursorPosition, setCursorPosition, subscriptMode]
   );
 
   /**
@@ -232,6 +341,15 @@ export const MathInput: React.FC<MathInputProps> = ({
       };
     }
   }, [mathContext, inputId, handleKeyboardInsertion]);
+
+  /**
+   * Expose subscript mode setter for keyboard
+   */
+  useEffect(() => {
+    if (mathContext && 'setSubscriptMode' in mathContext) {
+      (mathContext as any).setSubscriptModeForInput?.(inputId, setSubscriptMode);
+    }
+  }, [mathContext, inputId]);
 
   return (
     <div

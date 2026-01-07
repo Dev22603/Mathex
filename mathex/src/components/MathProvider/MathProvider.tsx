@@ -20,8 +20,12 @@ export interface MathProviderProps {
 
 /**
  * Input registration callback type
+ * Now supports cursor-aware operations
  */
-export type InputUpdateCallback = (latex: string) => void;
+export type InputUpdateCallback = (
+  action: 'INSERT' | 'BACKSPACE' | 'DELETE' | 'ENTER',
+  data?: string | { position: number; length?: number }
+) => void;
 
 /**
  * Context value shape
@@ -29,7 +33,7 @@ export type InputUpdateCallback = (latex: string) => void;
 interface MathContextValue {
   activeInputId: string | null;
   setActiveInput: (id: string) => void;
-  insertAtCursor: (latex: string) => void;
+  insertAtCursor: (action: 'INSERT' | 'BACKSPACE' | 'DELETE' | 'ENTER', data?: string | { position: number; length?: number }) => void;
   registerInput: (id: string, updateCallback: InputUpdateCallback) => void;
   unregisterInput: (id: string) => void;
   theme: 'light' | 'dark' | ThemeConfig;
@@ -99,7 +103,7 @@ export const MathProvider: React.FC<MathProviderProps> = ({
    * Insert LaTeX at the cursor position of the active input
    */
   const insertAtCursor = useCallback(
-    (latex: string) => {
+    (action: 'INSERT' | 'BACKSPACE' | 'DELETE' | 'ENTER', data?: string | { position: number; length?: number }) => {
       if (!activeInputId) {
         console.warn('No active input to insert LaTeX into');
         return;
@@ -107,14 +111,7 @@ export const MathProvider: React.FC<MathProviderProps> = ({
 
       const updateCallback = inputCallbacksRef.current.get(activeInputId);
       if (updateCallback) {
-        // Handle special actions
-        if (latex === 'BACKSPACE') {
-          // Backspace will be handled by the input component
-          updateCallback('BACKSPACE');
-        } else {
-          // Regular LaTeX insertion
-          updateCallback(latex);
-        }
+        updateCallback(action, data);
       }
     },
     [activeInputId]

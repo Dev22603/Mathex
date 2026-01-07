@@ -1,0 +1,382 @@
+/**
+ * MathKeyboard Component Additional Styles
+ * 
+ * This file contains additional styles needed for the keyboard component
+ * that aren't in the Desmos CSS file.
+ */
+
+/* Override Desmos CSS for our use case */
+.dcg-calculator-api-container-v1_12 .dcg-keypad {
+  position: fixed !important;
+  top: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+  z-index: 1000 !important;
+  background: #F5F5F5 !important;
+  border-top: 1px solid #D0D0D0 !important;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1) !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.dcg-keypad--hidden {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Fix keys container and background positioning */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keys-background {
+  position: relative !important;
+  background: #F5F5F5 !important;
+  border-top: 1px solid #D0D0D0 !important;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1) !important;
+  padding: 16px !important;
+  width: 100% !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keys-container {
+  position: relative !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 835px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+/* 3-column layout for default mode */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+  width: 100% !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  flex: 0 0 auto !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-column--variables {
+  /* Variables column - 4 buttons per row */
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-column--numbers {
+  /* Numbers column - 4 buttons per row */
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-column--navigation {
+  /* Navigation column - wide buttons */
+  align-items: stretch !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-column--navigation .dcg-keypad-row {
+  justify-content: flex-start !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad-row {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+}
+
+/* Fix button container and button styling */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container {
+  height: 50px !important;
+  display: inline-block !important;
+  position: relative !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  width: 60px !important;
+  margin: 0 3px !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-flow: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid #CCCCCC !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Wide button styling */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container--wide {
+  flex-grow: 1 !important;
+  min-width: 150px !important;
+  width: auto !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container--wide .dcg-keypad-btn {
+  width: 100% !important;
+  min-width: 150px !important;
+}
+
+/* Functions popover positioning */
+.dcg-functions-popover {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  background: #FFFFFF;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1001;
+  min-width: 240px;
+  max-width: 320px;
+}
+
+.dcg-functions-popover-content {
+  padding: 16px;
+}
+
+.dcg-function-category {
+  margin-bottom: 24px;
+}
+
+.dcg-function-category:last-child {
+  margin-bottom: 0;
+}
+
+.dcg-function-category-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666666;
+  margin-bottom: 12px;
+}
+
+.dcg-function-category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dcg-function-btn {
+  padding: 8px 12px;
+  background: #E8E8E8;
+  border: 1px solid #CCCCCC;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.dcg-function-btn:hover {
+  background: #F0F0F0;
+  transform: translateY(-1px);
+}
+
+.dcg-function-btn:active {
+  background: #E0E0E0;
+  transform: translateY(0);
+}
+
+/* Show keyboard button */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-show-keypad-container {
+  z-index: 6 !important;
+  position: absolute !important;
+  bottom: 5px !important;
+  left: 5px !important;
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.dcg-keypad--hidden .dcg-show-keypad-container {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 8px !important;
+  visibility: visible !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-show-keypad {
+  padding: 4px 14px !important;
+  background: #2F7DEF !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 20px !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.dcg-show-keypad:hover {
+  background: #1D6FDE !important;
+}
+
+/* Minimize button */
+.dcg-minimize-keypad-container {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.dcg-minimize-keypad {
+  width: 32px;
+  height: 32px;
+  background: #E8E8E8;
+  border: 1px solid #CCCCCC;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background-color 0.15s ease;
+}
+
+.dcg-minimize-keypad:hover {
+  background: #F0F0F0;
+}
+
+/* Button color variants */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-light-gray {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-light-gray:hover {
+  background: #F0F0F0 !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-light-gray.dcg-depressed,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-light-gray:active {
+  background: #E8E8E8 !important;
+  transform: translateY(1px) !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-blue {
+  background: #2F7DEF !important;
+  color: #FFFFFF !important;
+  border-color: #2F7DEF !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-blue:hover {
+  background: #1D6FDE !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn.dcg-btn-blue:active {
+  background: #1A6AD4 !important;
+  transform: translateY(1px) !important;
+}
+
+/* Number buttons - gray background */
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="0"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="1"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="2"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="3"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="4"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="5"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="6"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="7"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="8"]),
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn-container:has(.dcg-keypad-btn[dcg-command="9"]) {
+  /* Number buttons have gray background */
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="0"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="1"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="2"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="3"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="4"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="5"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="6"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="7"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="8"],
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="9"] {
+  background: #E8E8E8 !important;
+}
+
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="0"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="1"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="2"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="3"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="4"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="5"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="6"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="7"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="8"]:hover,
+.dcg-calculator-api-container-v1_12 .dcg-keypad .dcg-keypad-btn[dcg-command="9"]:hover {
+  background: #E0E0E0 !important;
+}
+
+/* Keyboard animation */
+.dcg-calculator-api-container-v1_12 .dcg-keypad {
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Functions popover animation */
+.dcg-functions-popover {
+  animation: popIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
