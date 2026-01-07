@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MathInput, MathProvider } from 'mathex';
+import { MathInput, MathKeyboard, MathProvider } from 'mathex';
 import './App.css';
 
 // Keyboard wrapper component to connect with provider
@@ -64,13 +64,14 @@ function App() {
           </section>
 
           <section className="info-section">
-            <h3>📋 Project Status: Rebuilding Keyboard</h3>
+            <h3>📋 Project Status: Building Keyboard</h3>
             <p>✅ MathInput with real-time KaTeX rendering</p>
-            <p>🔨 Keyboard being rebuilt from scratch</p>
+            <p>✅ MathKeyboard component created</p>
+            <p>🔨 Testing keyboard integration</p>
           </section>
         </main>
 
-        {/* <KeyboardWrapper /> */}
+        <MathKeyboard defaultVisible={false} />
       </div>
     </MathProvider>
   );
