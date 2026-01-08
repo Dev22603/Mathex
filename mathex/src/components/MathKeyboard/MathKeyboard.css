@@ -507,3 +507,34 @@
 .dcg-keypad-btn-container.dcg-disabled .dcg-keypad-btn {
   cursor: default;
 }
+
+/* ============================================
+   Dual-Character Buttons (e.g., "! %", "[ ]")
+   ============================================ */
+.dcg-dual-char {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dcg-dual-primary,
+.dcg-dual-secondary {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+
+/* Clear/active state - fully visible */
+.dcg-dual-primary.dcg-clear,
+.dcg-dual-secondary.dcg-clear {
+  opacity: 1;
+  filter: none;
+  color: var(--dcg-custom-text-color, #000);
+}
+
+/* Blurred/inactive state - faded */
+.dcg-dual-primary.dcg-blurred,
+.dcg-dual-secondary.dcg-blurred {
+  opacity: 0.35;
+  filter: none;
+  color: var(--dcg-custom-text-color, #666);
+}

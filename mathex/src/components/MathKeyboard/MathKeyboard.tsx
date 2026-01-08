@@ -79,6 +79,36 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
    */
   const handleButtonClick = useCallback(
     (button: ButtonConfig) => {
+      // Handle dual-character buttons
+      if (button.dualChar) {
+        const { primaryLatex, secondaryLatex } = button.dualChar;
+        const activeLatex = isShiftActive ? secondaryLatex : primaryLatex;
+
+        // Handle SUBSCRIPT/SUPERSCRIPT actions
+        if (activeLatex === 'SUBSCRIPT') {
+          setNextCharMode('subscript');
+          return;
+        }
+        if (activeLatex === 'SUPERSCRIPT') {
+          setNextCharMode('superscript');
+          return;
+        }
+
+        // Handle subscript/superscript mode for dual-char buttons
+        if (nextCharMode !== 'normal') {
+          const wrapper = nextCharMode === 'subscript' ? `_{${activeLatex}}` : `^{${activeLatex}}`;
+          mathContext?.insertAtCursor(wrapper);
+          setNextCharMode('normal');
+          return;
+        }
+
+        // Insert the active character's LaTeX
+        if (mathContext) {
+          mathContext.insertAtCursor(activeLatex);
+        }
+        return;
+      }
+
       // Handle special actions
       switch (button.latex) {
         case 'ABC_MODE':
@@ -98,12 +128,6 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           return;
         case 'SPEAK':
           // No functionality, just for show
-          return;
-        case 'SUBSCRIPT':
-          setNextCharMode('subscript');
-          return;
-        case 'SUPERSCRIPT':
-          setNextCharMode('superscript');
           return;
         case 'ARROW_LEFT':
           // Dispatch left arrow key event to the active input
@@ -218,11 +242,35 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       button.style === 'gray-light' && 'dcg-btn-light-gray',
       button.style === 'white' && 'dcg-btn-white',
       button.latex === 'SHIFT' && isShiftActive && 'dcg-active',
-      button.latex === 'SUBSCRIPT' && nextCharMode === 'subscript' && 'dcg-active',
-      button.latex === 'SUPERSCRIPT' && nextCharMode === 'superscript' && 'dcg-active',
+      // For dual-char subscript button, check if either mode is active
+      button.dualChar?.primaryLatex === 'SUBSCRIPT' && nextCharMode === 'subscript' && 'dcg-active',
+      button.dualChar?.secondaryLatex === 'SUPERSCRIPT' && nextCharMode === 'superscript' && 'dcg-active',
     ]
       .filter(Boolean)
       .join(' ');
+
+    // Render dual-character buttons with blur/emphasis styling
+    if (button.dualChar) {
+      const { primary, secondary } = button.dualChar;
+      return (
+        <div key={index} className={buttonClasses}>
+          <button
+            className={innerClasses}
+            onClick={() => handleButtonClick(button)}
+            type="button"
+          >
+            <span className="dcg-keypad-btn-content dcg-dual-char">
+              <span className={`dcg-dual-primary ${isShiftActive ? 'dcg-blurred' : 'dcg-clear'}`}>
+                {primary}
+              </span>
+              <span className={`dcg-dual-secondary ${isShiftActive ? 'dcg-clear' : 'dcg-blurred'}`}>
+                {secondary}
+              </span>
+            </span>
+          </button>
+        </div>
+      );
+    }
 
     return (
       <div key={index} className={buttonClasses}>

@@ -156,12 +156,78 @@ export const abcKeyboardRows: ButtonConfig[][] = [
   // Row 4
   [
     { display: '1 2 3', latex: '123_MODE', type: 'action', style: 'gray-light', size: 'wide' },
-    { display: 'aᵦ', latex: 'SUBSCRIPT', type: 'action', style: 'white' },
-    { display: '! %', latex: '!%', type: 'symbol', style: 'white' },
-    { display: '[ ]', latex: '[]', type: 'symbol', style: 'white' },
-    { display: '{ }', latex: '\\{\\}', type: 'symbol', style: 'white' },
-    { display: '~', latex: '\\sim ', type: 'symbol', style: 'white' },
-    { display: ", '", latex: ",'", type: 'symbol', style: 'white' },
+    {
+      display: 'aᵦ aᵇ',
+      latex: 'DUAL_SUBSCRIPT',
+      type: 'action',
+      style: 'white',
+      dualChar: {
+        primary: 'aᵦ',
+        primaryLatex: 'SUBSCRIPT',
+        secondary: 'aᵇ',
+        secondaryLatex: 'SUPERSCRIPT',
+      }
+    },
+    {
+      display: '! %',
+      latex: 'DUAL_EXCLAIM_PERCENT',
+      type: 'symbol',
+      style: 'white',
+      dualChar: {
+        primary: '!',
+        primaryLatex: '!',
+        secondary: '%',
+        secondaryLatex: '%',
+      }
+    },
+    {
+      display: '[ ]',
+      latex: 'DUAL_BRACKETS',
+      type: 'symbol',
+      style: 'white',
+      dualChar: {
+        primary: '[',
+        primaryLatex: '[',
+        secondary: ']',
+        secondaryLatex: ']',
+      }
+    },
+    {
+      display: '{ }',
+      latex: 'DUAL_BRACES',
+      type: 'symbol',
+      style: 'white',
+      dualChar: {
+        primary: '{',
+        primaryLatex: '\\{',
+        secondary: '}',
+        secondaryLatex: '\\}',
+      }
+    },
+    {
+      display: '~ :',
+      latex: 'DUAL_TILDE_COLON',
+      type: 'symbol',
+      style: 'white',
+      dualChar: {
+        primary: '~',
+        primaryLatex: '\\sim ',
+        secondary: ':',
+        secondaryLatex: ':',
+      }
+    },
+    {
+      display: ", '",
+      latex: 'DUAL_COMMA_QUOTE',
+      type: 'symbol',
+      style: 'white',
+      dualChar: {
+        primary: ',',
+        primaryLatex: ',',
+        secondary: "'",
+        secondaryLatex: "'",
+      }
+    },
     { display: '↵', latex: 'ENTER', type: 'action', style: 'blue', size: 'wide' },
   ],
 ];
@@ -369,44 +435,14 @@ export const functionCategories: FunctionCategory[] = [
 // ============================================
 
 /**
- * Shift toggle mappings for special buttons in ABC mode
- */
-const shiftToggleMap: Record<string, { display: string; latex: string }> = {
-  // aᵦ (subscript) → aᵇ (superscript)
-  'SUBSCRIPT': { display: 'aᵇ', latex: 'SUPERSCRIPT' },
-  'SUPERSCRIPT': { display: 'aᵦ', latex: 'SUBSCRIPT' },
-  // ! % toggles
-  '!%': { display: '% !', latex: '%!' },
-  '%!': { display: '! %', latex: '!%' },
-  // [ ] toggles
-  '[]': { display: '] [', latex: '][' },
-  '][': { display: '[ ]', latex: '[]' },
-  // { } toggles
-  '\\{\\}': { display: '} {', latex: '\\}\\{' },
-  '\\}\\{': { display: '{ }', latex: '\\{\\}' },
-  // ~ toggles to :
-  '\\sim ': { display: ':', latex: ':' },
-  ':': { display: '~', latex: '\\sim ' },
-  // , ' toggles
-  ",'": { display: "' ,", latex: "'," },
-  "',": { display: ", '", latex: ",'" },
-};
-
-/**
  * Get uppercase/shifted version of ABC keyboard for shift mode
- * This handles:
- * - Letters become uppercase
- * - aᵦ becomes aᵇ (subscript → superscript)
- * - ! % becomes % !
- * - [ ] becomes ] [
- * - { } becomes } {
- * - ~ becomes :
- * - , ' becomes ' ,
+ * This only changes letters to uppercase - dual-character buttons
+ * are handled by the MathKeyboard component with blur/emphasis styling
  */
 export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
   return abcKeyboardRows.map((row) =>
     row.map((btn) => {
-      // Handle letter buttons
+      // Handle letter buttons - uppercase when shifted
       if (btn.type === 'letter') {
         return {
           ...btn,
@@ -415,16 +451,7 @@ export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
         };
       }
 
-      // Handle special toggleable buttons
-      const toggleMapping = shiftToggleMap[btn.latex];
-      if (toggleMapping) {
-        return {
-          ...btn,
-          display: toggleMapping.display,
-          latex: toggleMapping.latex,
-        };
-      }
-
+      // All other buttons remain the same (including dual-char buttons)
       return btn;
     })
   );

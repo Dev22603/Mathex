@@ -18,6 +18,17 @@ export interface ButtonConfig {
   size?: 'standard' | 'wide' | 'extra-wide';
   /** Optional tooltip description */
   description?: string;
+  /** Optional dual-character configuration for shift-toggle buttons */
+  dualChar?: {
+    /** Primary character (shown clear when shift is OFF) */
+    primary: string;
+    /** Primary LaTeX to insert when shift is OFF */
+    primaryLatex: string;
+    /** Secondary character (shown clear when shift is ON) */
+    secondary: string;
+    /** Secondary LaTeX to insert when shift is ON */
+    secondaryLatex: string;
+  };
 }
 
 /**
