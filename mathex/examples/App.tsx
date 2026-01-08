@@ -6,13 +6,23 @@ function App() {
   const [latex1, setLatex1] = useState('x^2 + 3x + 1');
   const [latex2, setLatex2] = useState('\\frac{a}{b}');
   const [latex3, setLatex3] = useState('\\sin(\\theta)');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  const toggleTheme = () => {
+    setTheme((current) => (current === 'light' ? 'dark' : 'light'));
+  };
 
   return (
-    <MathProvider theme="light">
+    <MathProvider theme={theme}>
       <div className="app">
         <header className="app-header">
-          <h1>Mathex - Demo App</h1>
-          <p>A Desmos-like math equation editor for React</p>
+          <div>
+            <h1>Mathex - Demo App</h1>
+            <p>A Desmos-like math equation editor for React</p>
+          </div>
+          <button onClick={toggleTheme} className="theme-toggle">
+            {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+          </button>
         </header>
 
         <main className="app-content">

@@ -15,6 +15,16 @@
   --dcg-custom-text-color: #000;
 }
 
+/* Dark theme overrides for keyboard */
+[data-theme='dark'] {
+  --dcg-accent-color: #5B9CFF;
+  --dcg-accent-color-shaded-10: #4A8AE8;
+  --dcg-accent-color-shaded-20: #3978D1;
+  --dcg-custom-background-color: #2D2D2D;
+  --dcg-custom-background-color-shaded: #1E1E1E;
+  --dcg-custom-text-color: #FFFFFF;
+}
+
 /* ============================================
    Main Keyboard Container
    ============================================ */
@@ -537,4 +547,82 @@
   opacity: 0.35;
   filter: none;
   color: var(--dcg-custom-text-color, #666);
+}
+
+/* ============================================
+   Dark Theme Button Overrides
+   ============================================ */
+[data-theme='dark'] .dcg-show-keypad,
+[data-theme='dark'] .dcg-minimize-keypad {
+  background: linear-gradient(#3D3D3D, #2D2D2D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-show-keypad:hover,
+[data-theme='dark'] .dcg-minimize-keypad:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-show-keypad:active,
+[data-theme='dark'] .dcg-minimize-keypad:active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keys-background {
+  background: var(--dcg-custom-background-color-shaded);
+  border-top-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white {
+  background: linear-gradient(#3D3D3D, #2D2D2D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white:active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray {
+  background: linear-gradient(#444444, #3D3D3D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray:active,
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray.dcg-active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-popover-interior {
+  background-color: var(--dcg-custom-background-color);
+  border-color: #444444;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-track {
+  background: #1E1E1E;
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-thumb {
+  background: #555555;
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-thumb:hover {
+  background: #666666;
 }

@@ -56,6 +56,11 @@
 }
 
 /* Base reset for Mathex components */
+.mathex-provider {
+  /* Transparent wrapper - inherits parent layout */
+  display: contents;
+}
+
 .mathex-input,
 .mathex-keyboard {
   box-sizing: border-box;
