@@ -172,8 +172,13 @@ export const MathInput: React.FC<MathInputProps> = ({
    */
   const handleClick = useCallback(() => {
     if (disabled || readOnly) return;
-    contentEditableRef.current?.focus();
-  }, [disabled, readOnly]);
+    // Set focused state - useEffect will handle focusing the contentEditable
+    setIsFocused(true);
+    // Also notify context
+    if (mathContext) {
+      mathContext.setActiveInput(inputId);
+    }
+  }, [disabled, readOnly, mathContext, inputId]);
 
   /**
    * Auto-focus on mount if requested
@@ -192,6 +197,32 @@ export const MathInput: React.FC<MathInputProps> = ({
       contentEditableRef.current.textContent = latex;
     }
   }, [latex, isFocused]);
+
+  /**
+   * Focus the contentEditable when isFocused becomes true
+   */
+  useEffect(() => {
+    if (isFocused && contentEditableRef.current) {
+      // Set initial content if empty
+      if (contentEditableRef.current.textContent !== latex) {
+        contentEditableRef.current.textContent = latex;
+      }
+
+      contentEditableRef.current.focus();
+
+      // Place cursor at end
+      const range = document.createRange();
+      const sel = window.getSelection();
+      if (contentEditableRef.current.childNodes.length > 0) {
+        const lastNode = contentEditableRef.current.childNodes[contentEditableRef.current.childNodes.length - 1];
+        const offset = lastNode.textContent?.length || 0;
+        range.setStart(lastNode, offset);
+        range.collapse(true);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }
+  }, [isFocused, latex]);
 
   /**
    * Handle keyboard insertions from MathKeyboard
@@ -262,9 +293,7 @@ export const MathInput: React.FC<MathInputProps> = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-        >
-          {latex}
-        </div>
+        />
       )}
 
       {/* Placeholder (shown when empty and not focused) */}
