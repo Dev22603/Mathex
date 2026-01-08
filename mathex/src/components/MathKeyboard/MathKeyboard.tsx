@@ -123,6 +123,12 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         case 'SHIFT':
           setIsShiftActive((prev) => !prev);
           return;
+        case 'SUBSCRIPT':
+          setNextCharMode('subscript');
+          return;
+        case 'SUPERSCRIPT':
+          setNextCharMode('superscript');
+          return;
         case 'FUNCTIONS':
           setIsFunctionsOpen((prev) => !prev);
           return;
@@ -242,9 +248,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       button.style === 'gray-light' && 'dcg-btn-light-gray',
       button.style === 'white' && 'dcg-btn-white',
       button.latex === 'SHIFT' && isShiftActive && 'dcg-active',
-      // For dual-char subscript button, check if either mode is active
-      button.dualChar?.primaryLatex === 'SUBSCRIPT' && nextCharMode === 'subscript' && 'dcg-active',
-      button.dualChar?.secondaryLatex === 'SUPERSCRIPT' && nextCharMode === 'superscript' && 'dcg-active',
+      button.latex === 'SUBSCRIPT' && nextCharMode === 'subscript' && 'dcg-active',
+      button.latex === 'SUPERSCRIPT' && nextCharMode === 'superscript' && 'dcg-active',
     ]
       .filter(Boolean)
       .join(' ');

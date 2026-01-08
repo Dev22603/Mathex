@@ -156,18 +156,7 @@ export const abcKeyboardRows: ButtonConfig[][] = [
   // Row 4
   [
     { display: '1 2 3', latex: '123_MODE', type: 'action', style: 'gray-light', size: 'wide' },
-    {
-      display: 'aᵦ aᵇ',
-      latex: 'DUAL_SUBSCRIPT',
-      type: 'action',
-      style: 'white',
-      dualChar: {
-        primary: 'aᵦ',
-        primaryLatex: 'SUBSCRIPT',
-        secondary: 'aᵇ',
-        secondaryLatex: 'SUPERSCRIPT',
-      }
-    },
+    { display: 'aᵦ', latex: 'SUBSCRIPT', type: 'action', style: 'white' },
     {
       display: '! %',
       latex: 'DUAL_EXCLAIM_PERCENT',
@@ -436,8 +425,10 @@ export const functionCategories: FunctionCategory[] = [
 
 /**
  * Get uppercase/shifted version of ABC keyboard for shift mode
- * This only changes letters to uppercase - dual-character buttons
- * are handled by the MathKeyboard component with blur/emphasis styling
+ * This handles:
+ * - Letters become uppercase
+ * - aᵦ (subscript) becomes aᵇ (superscript)
+ * Dual-character buttons (!, %, etc.) are handled by blur/emphasis styling
  */
 export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
   return abcKeyboardRows.map((row) =>
@@ -448,6 +439,15 @@ export function getUppercaseAbcKeyboard(): ButtonConfig[][] {
           ...btn,
           display: btn.display.toUpperCase(),
           latex: btn.latex.toUpperCase(),
+        };
+      }
+
+      // Handle subscript -> superscript swap
+      if (btn.latex === 'SUBSCRIPT') {
+        return {
+          ...btn,
+          display: 'aᵇ',
+          latex: 'SUPERSCRIPT',
         };
       }
 
