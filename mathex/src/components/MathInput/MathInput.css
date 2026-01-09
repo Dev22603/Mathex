@@ -1,9 +1,11 @@
 /**
- * MathInput Component Styles
- * Based on Desmos design specifications (MASTERPLAN-V2.md Section 3)
+ * MathInput Component Styles - MathQuill Integration
+ * WYSIWYG math editing with rendered equations
  */
 
-/* Main input container */
+/* ============================================
+   Main Container
+   ============================================ */
 .mathex-input {
   position: relative;
   min-height: var(--math-input-min-height, 48px);
@@ -20,15 +22,15 @@
   box-sizing: border-box;
 }
 
+/* Hover effect for non-disabled inputs */
+.mathex-input:not(.mathex-input--disabled):hover {
+  border-color: var(--math-border-light, #BCBCBC);
+}
+
 /* Focused state */
 .mathex-input--focused {
   border-left-color: var(--math-primary-color, #2F7DEF);
   outline: none;
-}
-
-/* Error state */
-.mathex-input--error {
-  background: var(--math-error-bg, #FFF3E0);
 }
 
 /* Disabled state */
@@ -38,98 +40,82 @@
   opacity: 0.6;
 }
 
-/* Rendered math display */
-.mathex-rendered {
-  user-select: none;
-  -webkit-user-select: none;
+/* ============================================
+   MathQuill Container
+   ============================================ */
+.mathex-mathquill-container {
+  min-height: 24px;
+  position: relative;
 }
 
-.mathex-rendered .katex {
-  font-size: inherit;
+/* Override MathQuill's default border */
+.mathex-input .mq-editable-field {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 24px;
+  background: transparent !important;
 }
 
-/* ContentEditable input */
-.mathex-editable {
-  outline: none;
-  font-family: 'Courier New', 'Monaco', monospace;
+/* MathQuill text color */
+.mathex-input .mq-root-block {
+  color: var(--math-text-color, #000000) !important;
+}
+
+/* MathQuill cursor */
+.mathex-input .mq-cursor {
+  border-left: 1px solid var(--math-text-color, #000000) !important;
+}
+
+/* MathQuill selection */
+.mathex-input .mq-selection {
+  background: var(--math-selection-bg, #C9E1FF) !important;
+}
+
+/* MathQuill fraction bars, sqrt radicals, etc. */
+.mathex-input .mq-non-leaf,
+.mathex-input .mq-scaled {
   color: var(--math-text-color, #000000);
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  min-height: 20px;
-  caret-color: var(--math-text-color, #000000);
 }
 
-.mathex-editable:focus {
-  outline: none;
-  caret-color: var(--math-text-color, #000000);
-}
-
-/* Placeholder */
-.mathex-placeholder {
+/* ============================================
+   Placeholder Support
+   ============================================ */
+.mathex-mathquill-container[data-placeholder]:has(.mq-empty)::before,
+.mathex-mathquill-container[data-placeholder]:not(:has(*))::before {
+  content: attr(data-placeholder);
   color: var(--math-text-light, #999999);
+  font-style: italic;
   pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Cursor indicator - Using native browser caret instead */
-/* Custom cursor removed to match Desmos behavior */
-.mathex-cursor {
-  display: none;
-}
-
-/* Keep keyframes for potential future use */
-@keyframes mathex-blink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0;
-  }
-}
-
-/* Error indicator icon */
-.mathex-error-icon {
   position: absolute;
-  left: -24px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  color: var(--math-warning-color, #FF9800);
-  cursor: help;
+  left: 0;
+  top: 0;
 }
 
-/* Error text styling */
-.mathex-error {
-  color: var(--math-warning-color, #FF9800);
-  font-family: 'Courier New', monospace;
+/* ============================================
+   Dark Theme Support
+   ============================================ */
+[data-theme='dark'] .mathex-input .mq-root-block,
+[data-theme='dark'] .mathex-input .mq-non-leaf,
+[data-theme='dark'] .mathex-input .mq-scaled {
+  color: var(--math-text-color) !important;
 }
 
-/* Selection highlighting */
-.mathex-input ::selection {
-  background: var(--math-selection-bg, #C9E1FF);
-  color: inherit;
+[data-theme='dark'] .mathex-input .mq-cursor {
+  border-left-color: var(--math-text-color) !important;
 }
 
-.mathex-input ::-moz-selection {
-  background: var(--math-selection-bg, #C9E1FF);
-  color: inherit;
+[data-theme='dark'] .mathex-input .mq-selection {
+  background: var(--math-selection-bg) !important;
 }
 
-/* Hover effect for non-disabled inputs */
-.mathex-input:not(.mathex-input--disabled):hover {
-  border-color: var(--math-border-light, #BCBCBC);
-}
-
-/* Responsive adjustments */
+/* ============================================
+   Responsive
+   ============================================ */
 @media (max-width: 768px) {
   .mathex-input {
     font-size: 16px;
     min-height: 44px;
     padding: 10px 14px;
-  }
-
-  .mathex-cursor {
-    height: 20px;
   }
 }

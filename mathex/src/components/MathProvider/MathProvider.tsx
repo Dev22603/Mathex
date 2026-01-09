@@ -129,9 +129,14 @@ export const MathProvider: React.FC<MathProviderProps> = ({
     theme,
   };
 
+  // Determine theme attribute value (support both string and custom ThemeConfig)
+  const themeAttr = typeof theme === 'string' ? theme : 'custom';
+
   return (
     <MathContext.Provider value={contextValue}>
-      {children}
+      <div data-theme={themeAttr} className="mathex-provider">
+        {children}
+      </div>
     </MathContext.Provider>
   );
 };
