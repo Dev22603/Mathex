@@ -92,6 +92,14 @@ export const MathInput: React.FC<MathInputProps> = ({
   // Get context (optional - component works without provider)
   const mathContext = useMathContext();
 
+  // Ref to hold latest values for use in event handlers (avoids stale closures)
+  const latestPropsRef = useRef({ mathContext, inputId, disabled, readOnly });
+
+  // Keep the ref updated with latest values
+  useEffect(() => {
+    latestPropsRef.current = { mathContext, inputId, disabled, readOnly };
+  }, [mathContext, inputId, disabled, readOnly]);
+
   /**
    * Initialize MathQuill on mount
    */
@@ -136,11 +144,18 @@ export const MathInput: React.FC<MathInputProps> = ({
 
       // Handle focus/blur
       const element = containerRef.current;
-      const handleFocus = () => setIsFocused(true);
-      const handleBlur = () => setIsFocused(false);
+      const handleFocusIn = () => {
+        setIsFocused(true);
+        // Notify provider that this input is now active (use ref for latest values)
+        const { mathContext: ctx, inputId: id, disabled: dis, readOnly: ro } = latestPropsRef.current;
+        if (ctx && !dis && !ro) {
+          ctx.setActiveInput(id);
+        }
+      };
+      const handleFocusOut = () => setIsFocused(false);
 
-      element.addEventListener('focusin', handleFocus);
-      element.addEventListener('focusout', handleBlur);
+      element.addEventListener('focusin', handleFocusIn);
+      element.addEventListener('focusout', handleFocusOut);
 
       // Auto-focus if requested
       if (autoFocus) {
@@ -148,8 +163,8 @@ export const MathInput: React.FC<MathInputProps> = ({
       }
 
       return () => {
-        element.removeEventListener('focusin', handleFocus);
-        element.removeEventListener('focusout', handleBlur);
+        element.removeEventListener('focusin', handleFocusIn);
+        element.removeEventListener('focusout', handleFocusOut);
         mathField.revert();
         mathFieldRef.current = null;
       };
