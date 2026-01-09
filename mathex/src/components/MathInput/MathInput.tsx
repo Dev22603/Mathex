@@ -136,11 +136,19 @@ export const MathInput: React.FC<MathInputProps> = ({
 
       // Handle focus/blur
       const element = containerRef.current;
-      const handleFocus = () => setIsFocused(true);
-      const handleBlur = () => setIsFocused(false);
+      const handleFocusIn = () => {
+        setIsFocused(true);
+        // Notify context that this input is now active
+        if (mathContext) {
+          mathContext.setActiveInput(inputId);
+        }
+      };
+      const handleFocusOut = () => {
+        setIsFocused(false);
+      };
 
-      element.addEventListener('focusin', handleFocus);
-      element.addEventListener('focusout', handleBlur);
+      element.addEventListener('focusin', handleFocusIn);
+      element.addEventListener('focusout', handleFocusOut);
 
       // Auto-focus if requested
       if (autoFocus) {
@@ -148,8 +156,8 @@ export const MathInput: React.FC<MathInputProps> = ({
       }
 
       return () => {
-        element.removeEventListener('focusin', handleFocus);
-        element.removeEventListener('focusout', handleBlur);
+        element.removeEventListener('focusin', handleFocusIn);
+        element.removeEventListener('focusout', handleFocusOut);
         mathField.revert();
         mathFieldRef.current = null;
       };
@@ -193,13 +201,15 @@ export const MathInput: React.FC<MathInputProps> = ({
     (insertedLatex: string) => {
       if (!mathFieldRef.current) return;
 
+      // Ensure MathQuill is focused before inserting
+      mathFieldRef.current.focus();
+
       if (insertedLatex === 'BACKSPACE') {
         // Simulate backspace
         mathFieldRef.current.keystroke('Backspace');
       } else {
         // Insert LaTeX at cursor
         mathFieldRef.current.write(insertedLatex);
-        mathFieldRef.current.focus();
       }
     },
     []
