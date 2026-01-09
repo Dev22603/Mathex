@@ -134,34 +134,12 @@ export const MathInput: React.FC<MathInputProps> = ({
       // Set initial value
       mathField.latex(latex);
 
-      // Handle focus/blur
-      const element = containerRef.current;
-      const handleFocus = () => {
-        setIsFocused(true);
-        // Notify context that this input is active
-        if (mathContext) {
-          mathContext.setActiveInput(inputId);
-        }
-      };
-      const handleBlur = () => {
-        setIsFocused(false);
-        // Note: Don't clear activeInput here to allow keyboard clicks to work
-      };
-
-      element.addEventListener('focusin', handleFocus);
-      element.addEventListener('focusout', handleBlur);
-
       // Auto-focus if requested
       if (autoFocus) {
         mathField.focus();
-        if (mathContext) {
-          mathContext.setActiveInput(inputId);
-        }
       }
 
       return () => {
-        element.removeEventListener('focusin', handleFocus);
-        element.removeEventListener('focusout', handleBlur);
         mathField.revert();
         mathFieldRef.current = null;
       };
@@ -172,6 +150,45 @@ export const MathInput: React.FC<MathInputProps> = ({
       console.error('Failed to initialize MathQuill:', error);
     }
   }, []);
+
+  /**
+   * Set up focus/blur event listeners with proper access to mathContext
+   */
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const handleFocusIn = () => {
+      setIsFocused(true);
+      // Notify context that this input is active
+      if (mathContext) {
+        mathContext.setActiveInput(inputId);
+      }
+    };
+
+    const handleFocusOut = () => {
+      setIsFocused(false);
+      // Note: Don't clear activeInput here to allow keyboard clicks to work
+    };
+
+    element.addEventListener('focusin', handleFocusIn);
+    element.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      element.removeEventListener('focusin', handleFocusIn);
+      element.removeEventListener('focusout', handleFocusOut);
+    };
+  }, [mathContext, inputId]);
+
+  /**
+   * Handle autofocus
+   */
+  useEffect(() => {
+    if (autoFocus && mathFieldRef.current && mathContext) {
+      mathFieldRef.current.focus();
+      mathContext.setActiveInput(inputId);
+    }
+  }, [autoFocus, mathContext, inputId]);
 
   /**
    * Update MathQuill when controlled value changes externally
