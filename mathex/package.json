@@ -49,7 +49,9 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "katex": "^0.16.11"
+    "jquery": "^3.7.1",
+    "katex": "^0.16.11",
+    "mathquill": "^0.10.1-a"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

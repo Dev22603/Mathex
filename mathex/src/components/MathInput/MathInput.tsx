@@ -1,8 +1,21 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
 import { useMathContext } from '../MathProvider/MathProvider';
 import './MathInput.css';
+
+// Use global MathQuill (loaded via CDN or script tag)
+declare global {
+  interface Window {
+    MathQuill: any;
+  }
+}
+
+// Helper to get MathQuill API
+const getMQ = () => {
+  if (typeof window !== 'undefined' && window.MathQuill) {
+    return window.MathQuill.getInterface(2);
+  }
+  return null;
+};
 
 /**
  * Props for the MathInput component
@@ -33,10 +46,10 @@ export interface MathInputProps {
 }
 
 /**
- * MathInput - An input field for editing mathematical equations
+ * MathInput - A WYSIWYG math equation editor using MathQuill
  *
- * This component renders LaTeX equations in real-time using KaTeX
- * and provides an interactive editing experience similar to Desmos.
+ * This component provides a Desmos-like editing experience where you edit
+ * rendered mathematical notation directly, not raw LaTeX.
  *
  * @component
  * @example
@@ -68,12 +81,10 @@ export const MathInput: React.FC<MathInputProps> = ({
 
   // State
   const [isFocused, setIsFocused] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [renderedHTML, setRenderedHTML] = useState('');
 
   // Refs
-  const inputRef = useRef<HTMLDivElement>(null);
-  const contentEditableRef = useRef<HTMLDivElement>(null);
+  const mathFieldRef = useRef<any>(null); // MathQuill MathField instance
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Generate unique ID if not provided
   const inputId = useMemo(() => id || `math-input-${Math.random().toString(36).substr(2, 9)}`, [id]);
@@ -82,174 +93,116 @@ export const MathInput: React.FC<MathInputProps> = ({
   const mathContext = useMathContext();
 
   /**
-   * Render LaTeX to HTML using KaTeX
-   */
-  const renderLatex = useCallback(
-    (latexString: string): string => {
-      if (!latexString) return '';
-
-      try {
-        const html = katex.renderToString(latexString, {
-          throwOnError: false,
-          displayMode: false,
-          output: 'html',
-          strict: false,
-        });
-        setHasError(false);
-        return html;
-      } catch (error) {
-        setHasError(true);
-        if (onError && error instanceof Error) {
-          onError(error);
-        }
-        // Return raw LaTeX on error
-        return `<span class="mathex-error">${latexString}</span>`;
-      }
-    },
-    [onError]
-  );
-
-  /**
-   * Update rendered HTML when LaTeX changes
+   * Initialize MathQuill on mount
    */
   useEffect(() => {
-    const html = renderLatex(latex);
-    setRenderedHTML(html);
-  }, [latex, renderLatex]);
+    if (!containerRef.current || mathFieldRef.current) return;
+
+    const MQ = getMQ();
+    if (!MQ) {
+      console.error('MathQuill is not loaded. Make sure to include MathQuill script in your HTML.');
+      return;
+    }
+
+    try {
+      const config = {
+        spaceBehavesLikeTab: true,
+        leftRightIntoCmdGoes: 'up' as const,
+        restrictMismatchedBrackets: true,
+        autoCommands: 'pi theta sqrt sum prod int',
+        autoOperatorNames: 'sin cos tan sec csc cot sinh cosh tanh log ln',
+        handlers: {
+          edit: (mathField: any) => {
+            const newLatex = mathField.latex();
+            if (isControlled) {
+              onChange?.(newLatex);
+            } else {
+              setUncontrolledValue(newLatex);
+              onChange?.(newLatex);
+            }
+          },
+          enter: () => {
+            // Blur on Enter key
+            mathFieldRef.current?.blur();
+          },
+        },
+      };
+
+      const mathField = MQ.MathField(containerRef.current, config);
+      mathFieldRef.current = mathField;
+
+      // Set initial value
+      mathField.latex(latex);
+
+      // Handle focus/blur
+      const element = containerRef.current;
+      const handleFocus = () => setIsFocused(true);
+      const handleBlur = () => setIsFocused(false);
+
+      element.addEventListener('focusin', handleFocus);
+      element.addEventListener('focusout', handleBlur);
+
+      // Auto-focus if requested
+      if (autoFocus) {
+        mathField.focus();
+      }
+
+      return () => {
+        element.removeEventListener('focusin', handleFocus);
+        element.removeEventListener('focusout', handleBlur);
+        mathField.revert();
+        mathFieldRef.current = null;
+      };
+    } catch (error) {
+      if (onError && error instanceof Error) {
+        onError(error);
+      }
+      console.error('Failed to initialize MathQuill:', error);
+    }
+  }, []);
 
   /**
-   * Handle input changes from contentEditable
+   * Update MathQuill when controlled value changes externally
    */
-  const handleInput = useCallback(
-    (e: React.FormEvent<HTMLDivElement>) => {
-      if (readOnly || disabled) return;
-
-      const newLatex = e.currentTarget.textContent || '';
-
-      if (isControlled) {
-        onChange?.(newLatex);
-      } else {
-        setUncontrolledValue(newLatex);
-        onChange?.(newLatex);
+  useEffect(() => {
+    if (mathFieldRef.current && isControlled) {
+      const currentLatex = mathFieldRef.current.latex();
+      if (currentLatex !== controlledValue) {
+        mathFieldRef.current.latex(controlledValue);
       }
-    },
-    [readOnly, disabled, isControlled, onChange]
-  );
+    }
+  }, [controlledValue, isControlled]);
 
   /**
    * Handle focus
    */
   const handleFocus = useCallback(() => {
-    setIsFocused(true);
-    // Notify provider that this input is now active
-    if (mathContext) {
-      mathContext.setActiveInput(inputId);
-    }
-  }, [mathContext, inputId]);
-
-  /**
-   * Handle blur
-   */
-  const handleBlur = useCallback(() => {
-    setIsFocused(false);
-  }, []);
-
-  /**
-   * Handle keyboard events
-   * Note: Advanced cursor positioning will be implemented in Phase 4
-   */
-  const handleKeyDown = useCallback(
-    (_e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (readOnly || disabled) return;
-      // Phase 1: Basic keyboard input only
-      // Full navigation will be added in Phase 4
-    },
-    [readOnly, disabled]
-  );
-
-  /**
-   * Handle click to focus
-   */
-  const handleClick = useCallback(() => {
-    if (disabled || readOnly) return;
-    // Set focused state - useEffect will handle focusing the contentEditable
-    setIsFocused(true);
-    // Also notify context
-    if (mathContext) {
-      mathContext.setActiveInput(inputId);
-    }
-  }, [disabled, readOnly, mathContext, inputId]);
-
-  /**
-   * Auto-focus on mount if requested
-   */
-  useEffect(() => {
-    if (autoFocus && contentEditableRef.current) {
-      contentEditableRef.current.focus();
-    }
-  }, [autoFocus]);
-
-  /**
-   * Update contentEditable text content when LaTeX changes externally
-   */
-  useEffect(() => {
-    if (contentEditableRef.current && !isFocused) {
-      contentEditableRef.current.textContent = latex;
-    }
-  }, [latex, isFocused]);
-
-  /**
-   * Focus the contentEditable when isFocused becomes true
-   */
-  useEffect(() => {
-    if (isFocused && contentEditableRef.current) {
-      // Set initial content if empty
-      if (contentEditableRef.current.textContent !== latex) {
-        contentEditableRef.current.textContent = latex;
-      }
-
-      contentEditableRef.current.focus();
-
-      // Place cursor at end
-      const range = document.createRange();
-      const sel = window.getSelection();
-      if (contentEditableRef.current.childNodes.length > 0) {
-        const lastNode = contentEditableRef.current.childNodes[contentEditableRef.current.childNodes.length - 1];
-        const offset = lastNode.textContent?.length || 0;
-        range.setStart(lastNode, offset);
-        range.collapse(true);
-        sel?.removeAllRanges();
-        sel?.addRange(range);
+    if (mathFieldRef.current && !disabled && !readOnly) {
+      mathFieldRef.current.focus();
+      // Notify provider that this input is now active
+      if (mathContext) {
+        mathContext.setActiveInput(inputId);
       }
     }
-  }, [isFocused, latex]);
+  }, [mathContext, inputId, disabled, readOnly]);
 
   /**
    * Handle keyboard insertions from MathKeyboard
    */
   const handleKeyboardInsertion = useCallback(
     (insertedLatex: string) => {
+      if (!mathFieldRef.current) return;
+
       if (insertedLatex === 'BACKSPACE') {
-        // Handle backspace
-        const newLatex = latex.slice(0, -1);
-        if (isControlled) {
-          onChange?.(newLatex);
-        } else {
-          setUncontrolledValue(newLatex);
-          onChange?.(newLatex);
-        }
+        // Simulate backspace
+        mathFieldRef.current.keystroke('Backspace');
       } else {
-        // Insert LaTeX at end (Phase 1 - cursor always at end)
-        const newLatex = latex + insertedLatex;
-        if (isControlled) {
-          onChange?.(newLatex);
-        } else {
-          setUncontrolledValue(newLatex);
-          onChange?.(newLatex);
-        }
+        // Insert LaTeX at cursor
+        mathFieldRef.current.write(insertedLatex);
+        mathFieldRef.current.focus();
       }
     },
-    [latex, isControlled, onChange]
+    []
   );
 
   /**
@@ -264,52 +217,37 @@ export const MathInput: React.FC<MathInputProps> = ({
     }
   }, [mathContext, inputId, handleKeyboardInsertion]);
 
+  /**
+   * Update disabled/readonly state
+   */
+  useEffect(() => {
+    if (mathFieldRef.current && containerRef.current) {
+      if (disabled || readOnly) {
+        containerRef.current.setAttribute('contenteditable', 'false');
+        containerRef.current.style.pointerEvents = 'none';
+        containerRef.current.style.opacity = '0.6';
+      } else {
+        containerRef.current.removeAttribute('contenteditable');
+        containerRef.current.style.pointerEvents = '';
+        containerRef.current.style.opacity = '';
+      }
+    }
+  }, [disabled, readOnly]);
+
   return (
     <div
-      ref={inputRef}
-      className={`mathex-input ${isFocused ? 'mathex-input--focused' : ''} ${
-        hasError ? 'mathex-input--error' : ''
-      } ${disabled ? 'mathex-input--disabled' : ''} ${className}`}
+      className={`mathex-input mathex-input--mathquill ${isFocused ? 'mathex-input--focused' : ''} ${
+        disabled ? 'mathex-input--disabled' : ''
+      } ${className}`}
       style={style}
-      onClick={handleClick}
+      onClick={handleFocus}
       data-id={id}
     >
-      {/* Rendered math display (shown when not focused or when empty) */}
-      {!isFocused && latex && (
-        <div
-          className="mathex-rendered"
-          dangerouslySetInnerHTML={{ __html: renderedHTML }}
-        />
-      )}
-
-      {/* ContentEditable input (shown when focused) */}
-      {isFocused && (
-        <div
-          ref={contentEditableRef}
-          className="mathex-editable"
-          contentEditable={!disabled && !readOnly}
-          suppressContentEditableWarning
-          onInput={handleInput}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-        />
-      )}
-
-      {/* Placeholder (shown when empty and not focused) */}
-      {!latex && !isFocused && (
-        <div className="mathex-placeholder">{placeholder}</div>
-      )}
-
-      {/* Cursor indicator (shown when focused) */}
-      {isFocused && <div className="mathex-cursor" />}
-
-      {/* Error indicator */}
-      {hasError && (
-        <div className="mathex-error-icon" title="Invalid LaTeX syntax">
-          ⚠️
-        </div>
-      )}
+      <div
+        ref={containerRef}
+        className="mathex-mathquill-container"
+        data-placeholder={!latex ? placeholder : undefined}
+      />
     </div>
   );
 };
