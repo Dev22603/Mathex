@@ -76,9 +76,12 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
   /**
    * Handle button click
+   * Uses MouseEvent to access preventDefault for focus management
    */
   const handleButtonClick = useCallback(
-    (button: ButtonConfig) => {
+    (button: ButtonConfig, event: React.MouseEvent) => {
+      // Prevent the button from stealing focus from the input
+      event.preventDefault();
       // Handle dual-character buttons
       if (button.dualChar) {
         const { primaryLatex, secondaryLatex } = button.dualChar;
@@ -193,7 +196,9 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
    * Clicking a function closes only the functions panel, not the keyboard
    */
   const handleFunctionClick = useCallback(
-    (latex: string) => {
+    (latex: string, event: React.MouseEvent) => {
+      // Prevent the button from stealing focus from the input
+      event.preventDefault();
       if (mathContext) {
         mathContext.insertAtCursor(latex);
       }
@@ -261,7 +266,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <div key={index} className={buttonClasses}>
           <button
             className={innerClasses}
-            onClick={() => handleButtonClick(button)}
+            onMouseDown={(e) => handleButtonClick(button, e)}
             type="button"
           >
             <span className="dcg-keypad-btn-content dcg-dual-char">
@@ -281,7 +286,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <div key={index} className={buttonClasses}>
         <button
           className={innerClasses}
-          onClick={() => handleButtonClick(button)}
+          onMouseDown={(e) => handleButtonClick(button, e)}
           type="button"
         >
           <span className="dcg-keypad-btn-content">{button.display}</span>
@@ -360,7 +365,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                 <div key={index} className="dcg-keypad-btn-container dcg-function-btn">
                   <button
                     className="dcg-keypad-btn dcg-btn-white"
-                    onClick={() => handleFunctionClick(func.latex)}
+                    onMouseDown={(e) => handleFunctionClick(func.latex, e)}
                     title={func.description}
                     type="button"
                   >
