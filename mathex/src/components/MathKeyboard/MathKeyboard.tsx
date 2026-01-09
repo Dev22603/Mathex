@@ -262,6 +262,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           <button
             className={innerClasses}
             onClick={() => handleButtonClick(button)}
+            onMouseDown={(e) => e.preventDefault()} // Prevent blur on MathInput
             type="button"
           >
             <span className="dcg-keypad-btn-content dcg-dual-char">
@@ -282,6 +283,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <button
           className={innerClasses}
           onClick={() => handleButtonClick(button)}
+          onMouseDown={(e) => e.preventDefault()} // Prevent blur on MathInput
           type="button"
         >
           <span className="dcg-keypad-btn-content">{button.display}</span>
@@ -361,6 +363,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                   <button
                     className="dcg-keypad-btn dcg-btn-white"
                     onClick={() => handleFunctionClick(func.latex)}
+                    onMouseDown={(e) => e.preventDefault()} // Prevent blur on MathInput
                     title={func.description}
                     type="button"
                   >
