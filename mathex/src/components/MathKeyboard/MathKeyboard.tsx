@@ -262,6 +262,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           <button
             className={innerClasses}
             onClick={() => handleButtonClick(button)}
+            onMouseDown={(e) => e.preventDefault()}
             type="button"
           >
             <span className="dcg-keypad-btn-content dcg-dual-char">
@@ -282,6 +283,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <button
           className={innerClasses}
           onClick={() => handleButtonClick(button)}
+          onMouseDown={(e) => e.preventDefault()}
           type="button"
         >
           <span className="dcg-keypad-btn-content">{button.display}</span>
@@ -361,6 +363,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                   <button
                     className="dcg-keypad-btn dcg-btn-white"
                     onClick={() => handleFunctionClick(func.latex)}
+                    onMouseDown={(e) => e.preventDefault()}
                     title={func.description}
                     type="button"
                   >
@@ -383,6 +386,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <button
         className="dcg-show-keypad dcg-btn-light-gray"
         onClick={toggleKeyboard}
+        onMouseDown={(e) => e.preventDefault()}
         type="button"
         aria-label={isVisible ? 'Hide keyboard' : 'Show keyboard'}
       >
@@ -402,6 +406,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       <button
         className="dcg-minimize-keypad dcg-btn-light-gray"
         onClick={toggleKeyboard}
+        onMouseDown={(e) => e.preventDefault()}
         type="button"
         aria-label="Hide keyboard"
       >
