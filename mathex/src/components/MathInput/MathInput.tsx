@@ -136,8 +136,17 @@ export const MathInput: React.FC<MathInputProps> = ({
 
       // Handle focus/blur
       const element = containerRef.current;
-      const handleFocus = () => setIsFocused(true);
-      const handleBlur = () => setIsFocused(false);
+      const handleFocus = () => {
+        setIsFocused(true);
+        // Notify context that this input is active
+        if (mathContext) {
+          mathContext.setActiveInput(inputId);
+        }
+      };
+      const handleBlur = () => {
+        setIsFocused(false);
+        // Note: Don't clear activeInput here to allow keyboard clicks to work
+      };
 
       element.addEventListener('focusin', handleFocus);
       element.addEventListener('focusout', handleBlur);
@@ -145,6 +154,9 @@ export const MathInput: React.FC<MathInputProps> = ({
       // Auto-focus if requested
       if (autoFocus) {
         mathField.focus();
+        if (mathContext) {
+          mathContext.setActiveInput(inputId);
+        }
       }
 
       return () => {
