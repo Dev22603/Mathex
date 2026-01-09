@@ -267,6 +267,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           <button
             className={innerClasses}
             onMouseDown={(e) => handleButtonClick(button, e)}
+            onMouseUp={(e) => e.preventDefault()}
+            tabIndex={-1}
             type="button"
           >
             <span className="dcg-keypad-btn-content dcg-dual-char">
@@ -287,6 +289,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <button
           className={innerClasses}
           onMouseDown={(e) => handleButtonClick(button, e)}
+          onMouseUp={(e) => e.preventDefault()}
+          tabIndex={-1}
           type="button"
         >
           <span className="dcg-keypad-btn-content">{button.display}</span>
@@ -366,6 +370,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                   <button
                     className="dcg-keypad-btn dcg-btn-white"
                     onMouseDown={(e) => handleFunctionClick(func.latex, e)}
+                    onMouseUp={(e) => e.preventDefault()}
+                    tabIndex={-1}
                     title={func.description}
                     type="button"
                   >
