@@ -268,19 +268,25 @@ export const MathInput: React.FC<MathInputProps> = ({
 
   /**
    * Register with provider on mount, unregister on unmount
+   * CRITICAL: Uses refs to avoid re-running when context object reference changes
+   * This prevents the register/unregister cascade that was resetting activeInputId
    */
   useEffect(() => {
-    if (mathContext) {
-      log('MathInput', 'Registering input with provider', { inputId });
-      mathContext.registerInput(inputId, handleKeyboardInsertion);
+    const currentContext = mathContextRef.current;
+    const currentInputId = inputIdRef.current;
+
+    if (currentContext) {
+      log('MathInput', 'Registering input with provider (mount)', { inputId: currentInputId });
+      currentContext.registerInput(currentInputId, handleKeyboardInsertion);
       return () => {
-        log('MathInput', 'Unregistering input from provider', { inputId });
-        mathContext.unregisterInput(inputId);
+        log('MathInput', 'Unregistering input from provider (unmount)', { inputId: currentInputId });
+        currentContext.unregisterInput(currentInputId);
       };
     } else {
-      log('MathInput', 'WARNING: No mathContext available for registration', { inputId });
+      log('MathInput', 'WARNING: No mathContext available for registration', { inputId: currentInputId });
     }
-  }, [mathContext, inputId, handleKeyboardInsertion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only on mount - uses refs to access current values
 
   /**
    * Update disabled/readonly state

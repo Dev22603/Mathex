@@ -78,6 +78,10 @@ export const MathProvider: React.FC<MathProviderProps> = ({
   // State for tracking active input
   const [activeInputId, setActiveInputId] = useState<string | null>(null);
 
+  // Ref to access activeInputId in callbacks without causing re-renders
+  const activeInputIdRef = useRef<string | null>(null);
+  activeInputIdRef.current = activeInputId;
+
   // Registry of input update callbacks
   const inputCallbacksRef = useRef<Map<string, InputUpdateCallback>>(new Map());
 
@@ -100,40 +104,43 @@ export const MathProvider: React.FC<MathProviderProps> = ({
 
   /**
    * Set the active input (called when an input receives focus)
+   * NOTE: No dependencies needed - we just call the setter
    */
   const setActiveInput = useCallback((id: string) => {
-    log('MathProvider', 'setActiveInput', { id, previousActiveId: activeInputId });
+    log('MathProvider', 'setActiveInput', { id });
     setActiveInputId(id);
-  }, [activeInputId]);
+  }, []);
 
   /**
    * Insert LaTeX at the cursor position of the active input
+   * NOTE: Uses ref to access activeInputId to avoid dependency that causes context churn
    */
   const insertAtCursor = useCallback(
     (latex: string) => {
+      const currentActiveId = activeInputIdRef.current;
       log('MathProvider', 'insertAtCursor called', {
         latex,
-        activeInputId,
-        hasCallback: activeInputId ? inputCallbacksRef.current.has(activeInputId) : false,
+        activeInputId: currentActiveId,
+        hasCallback: currentActiveId ? inputCallbacksRef.current.has(currentActiveId) : false,
         registeredInputs: Array.from(inputCallbacksRef.current.keys())
       });
 
-      if (!activeInputId) {
+      if (!currentActiveId) {
         log('MathProvider', 'WARNING: No active input to insert LaTeX into');
         console.warn('No active input to insert LaTeX into');
         return;
       }
 
-      const updateCallback = inputCallbacksRef.current.get(activeInputId);
+      const updateCallback = inputCallbacksRef.current.get(currentActiveId);
       if (updateCallback) {
-        log('MathProvider', 'Calling update callback for active input', { activeInputId, latex });
+        log('MathProvider', 'Calling update callback for active input', { activeInputId: currentActiveId, latex });
         // Pass the command/latex to the input handler
         updateCallback(latex);
       } else {
-        log('MathProvider', 'ERROR: No callback found for activeInputId', { activeInputId });
+        log('MathProvider', 'ERROR: No callback found for activeInputId', { activeInputId: currentActiveId });
       }
     },
-    [activeInputId]
+    [] // Empty deps - uses refs to access current values
   );
 
   const contextValue: MathContextValue = {
