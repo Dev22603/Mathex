@@ -11,6 +11,14 @@ import {
 import type { ButtonConfig, FunctionCategory } from '../../types';
 import './MathKeyboard.css';
 
+// Debug logging helper
+const DEBUG = true;
+const log = (component: string, action: string, data?: any) => {
+  if (DEBUG) {
+    console.log(`[${component}] ${action}`, data !== undefined ? data : '');
+  }
+};
+
 /**
  * Props for the MathKeyboard component
  */
@@ -79,10 +87,18 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
    */
   const handleButtonClick = useCallback(
     (button: ButtonConfig) => {
+      log('MathKeyboard', 'handleButtonClick', {
+        latex: button.latex,
+        type: button.type,
+        activeInputId: mathContext?.activeInputId,
+        hasMathContext: !!mathContext
+      });
+
       // Handle dual-character buttons
       if (button.dualChar) {
         const { primaryLatex, secondaryLatex } = button.dualChar;
         const activeLatex = isShiftActive ? secondaryLatex : primaryLatex;
+        log('MathKeyboard', 'dual-char button', { primaryLatex, secondaryLatex, activeLatex, isShiftActive });
 
         // Handle SUBSCRIPT/SUPERSCRIPT actions
         if (activeLatex === 'SUBSCRIPT') {
@@ -97,6 +113,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         // Handle subscript/superscript mode for dual-char buttons
         if (nextCharMode !== 'normal') {
           const wrapper = nextCharMode === 'subscript' ? `_{${activeLatex}}` : `^{${activeLatex}}`;
+          log('MathKeyboard', 'inserting with mode wrapper', { wrapper });
           mathContext?.insertAtCursor(wrapper);
           setNextCharMode('normal');
           return;
@@ -104,7 +121,10 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
         // Insert the active character's LaTeX
         if (mathContext) {
+          log('MathKeyboard', 'inserting activeLatex via context', { activeLatex });
           mathContext.insertAtCursor(activeLatex);
+        } else {
+          log('MathKeyboard', 'WARNING: No mathContext for dual-char insertion');
         }
         return;
       }
@@ -136,27 +156,31 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           // No functionality, just for show
           return;
         case 'ARROW_LEFT':
-          // Dispatch left arrow key event to the active input
-          document.activeElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })
-          );
+          // Use context to send arrow left command to active input
+          log('MathKeyboard', 'ARROW_LEFT - sending via context');
+          if (mathContext) {
+            mathContext.insertAtCursor('ARROW_LEFT');
+          }
           return;
         case 'ARROW_RIGHT':
-          // Dispatch right arrow key event to the active input
-          document.activeElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-          );
+          // Use context to send arrow right command to active input
+          log('MathKeyboard', 'ARROW_RIGHT - sending via context');
+          if (mathContext) {
+            mathContext.insertAtCursor('ARROW_RIGHT');
+          }
           return;
         case 'BACKSPACE':
-          // Dispatch backspace key event to the active input (same as hardware)
-          document.activeElement?.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true })
-          );
+          // Use context to send backspace command to active input
+          log('MathKeyboard', 'BACKSPACE - sending via context');
+          if (mathContext) {
+            mathContext.insertAtCursor('BACKSPACE');
+          }
           return;
         case 'ENTER':
-          // Blur the active input (unfocus)
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
+          // Blur the active input (unfocus) - this is handled specially
+          log('MathKeyboard', 'ENTER - sending blur command');
+          if (mathContext) {
+            mathContext.insertAtCursor('ENTER');
           }
           return;
         default:
@@ -166,6 +190,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       // Handle subscript/superscript mode for the next character
       if (nextCharMode !== 'normal' && (button.type === 'letter' || button.type === 'variable')) {
         const wrapper = nextCharMode === 'subscript' ? `_{${button.latex}}` : `^{${button.latex}}`;
+        log('MathKeyboard', 'inserting letter/variable with mode', { wrapper });
         mathContext?.insertAtCursor(wrapper);
         setNextCharMode('normal');
         // Reset shift after typing
@@ -177,7 +202,10 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
       // Insert LaTeX at cursor
       if (mathContext) {
+        log('MathKeyboard', 'inserting standard latex via context', { latex: button.latex });
         mathContext.insertAtCursor(button.latex);
+      } else {
+        log('MathKeyboard', 'WARNING: No mathContext for standard insertion', { latex: button.latex });
       }
 
       // Reset shift after typing a letter
@@ -194,8 +222,15 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
    */
   const handleFunctionClick = useCallback(
     (latex: string) => {
+      log('MathKeyboard', 'handleFunctionClick', {
+        latex,
+        activeInputId: mathContext?.activeInputId,
+        hasMathContext: !!mathContext
+      });
       if (mathContext) {
         mathContext.insertAtCursor(latex);
+      } else {
+        log('MathKeyboard', 'WARNING: No mathContext for function insertion');
       }
       // Close only the functions panel, keyboard stays open
       setIsFunctionsOpen(false);
@@ -231,6 +266,15 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
   }, [isVisible, onVisibilityChange]);
 
   /**
+   * Prevent focus stealing - CRITICAL for keyboard to work properly
+   * This prevents the button click from moving focus away from the MathInput
+   */
+  const preventFocusLoss = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    log('MathKeyboard', 'preventFocusLoss - mousedown prevented');
+  }, []);
+
+  /**
    * Render a single button
    */
   const renderButton = (button: ButtonConfig, index: number) => {
@@ -262,6 +306,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
           <button
             className={innerClasses}
             onClick={() => handleButtonClick(button)}
+            onMouseDown={preventFocusLoss}
+            onTouchStart={preventFocusLoss as any}
             type="button"
           >
             <span className="dcg-keypad-btn-content dcg-dual-char">
@@ -282,6 +328,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         <button
           className={innerClasses}
           onClick={() => handleButtonClick(button)}
+          onMouseDown={preventFocusLoss}
+          onTouchStart={preventFocusLoss as any}
           type="button"
         >
           <span className="dcg-keypad-btn-content">{button.display}</span>
@@ -361,6 +409,8 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
                   <button
                     className="dcg-keypad-btn dcg-btn-white"
                     onClick={() => handleFunctionClick(func.latex)}
+                    onMouseDown={preventFocusLoss}
+                    onTouchStart={preventFocusLoss as any}
                     title={func.description}
                     type="button"
                   >

@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import type { ThemeConfig } from '../../types';
 
+// Debug logging helper
+const DEBUG = true;
+const log = (component: string, action: string, data?: any) => {
+  if (DEBUG) {
+    console.log(`[${component}] ${action}`, data !== undefined ? data : '');
+  }
+};
+
 /**
  * Props for the MathProvider component
  */
@@ -77,6 +85,7 @@ export const MathProvider: React.FC<MathProviderProps> = ({
    * Register an input with its update callback
    */
   const registerInput = useCallback((id: string, updateCallback: InputUpdateCallback) => {
+    log('MathProvider', 'registerInput', { id, totalRegistered: inputCallbacksRef.current.size + 1 });
     inputCallbacksRef.current.set(id, updateCallback);
   }, []);
 
@@ -84,6 +93,7 @@ export const MathProvider: React.FC<MathProviderProps> = ({
    * Unregister an input
    */
   const unregisterInput = useCallback((id: string) => {
+    log('MathProvider', 'unregisterInput', { id, totalRemaining: inputCallbacksRef.current.size - 1 });
     inputCallbacksRef.current.delete(id);
     setActiveInputId((current) => (current === id ? null : current));
   }, []);
@@ -92,29 +102,35 @@ export const MathProvider: React.FC<MathProviderProps> = ({
    * Set the active input (called when an input receives focus)
    */
   const setActiveInput = useCallback((id: string) => {
+    log('MathProvider', 'setActiveInput', { id, previousActiveId: activeInputId });
     setActiveInputId(id);
-  }, []);
+  }, [activeInputId]);
 
   /**
    * Insert LaTeX at the cursor position of the active input
    */
   const insertAtCursor = useCallback(
     (latex: string) => {
+      log('MathProvider', 'insertAtCursor called', {
+        latex,
+        activeInputId,
+        hasCallback: activeInputId ? inputCallbacksRef.current.has(activeInputId) : false,
+        registeredInputs: Array.from(inputCallbacksRef.current.keys())
+      });
+
       if (!activeInputId) {
+        log('MathProvider', 'WARNING: No active input to insert LaTeX into');
         console.warn('No active input to insert LaTeX into');
         return;
       }
 
       const updateCallback = inputCallbacksRef.current.get(activeInputId);
       if (updateCallback) {
-        // Handle special actions
-        if (latex === 'BACKSPACE') {
-          // Backspace will be handled by the input component
-          updateCallback('BACKSPACE');
-        } else {
-          // Regular LaTeX insertion
-          updateCallback(latex);
-        }
+        log('MathProvider', 'Calling update callback for active input', { activeInputId, latex });
+        // Pass the command/latex to the input handler
+        updateCallback(latex);
+      } else {
+        log('MathProvider', 'ERROR: No callback found for activeInputId', { activeInputId });
       }
     },
     [activeInputId]

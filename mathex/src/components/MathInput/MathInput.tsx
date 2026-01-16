@@ -2,6 +2,14 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useMathContext } from '../MathProvider/MathProvider';
 import './MathInput.css';
 
+// Debug logging helper
+const DEBUG = true;
+const log = (component: string, action: string, data?: any) => {
+  if (DEBUG) {
+    console.log(`[${component}] ${action}`, data !== undefined ? data : '');
+  }
+};
+
 // Use global MathQuill (loaded via CDN or script tag)
 declare global {
   interface Window {
@@ -92,6 +100,16 @@ export const MathInput: React.FC<MathInputProps> = ({
   // Get context (optional - component works without provider)
   const mathContext = useMathContext();
 
+  // Store context and inputId in refs for use in event handlers (avoids stale closure)
+  const mathContextRef = useRef(mathContext);
+  const inputIdRef = useRef(inputId);
+  useEffect(() => {
+    mathContextRef.current = mathContext;
+    inputIdRef.current = inputId;
+  }, [mathContext, inputId]);
+
+  log('MathInput', 'render', { inputId, hasContext: !!mathContext, activeInputId: mathContext?.activeInputId });
+
   /**
    * Initialize MathQuill on mount
    */
@@ -134,13 +152,28 @@ export const MathInput: React.FC<MathInputProps> = ({
       // Set initial value
       mathField.latex(latex);
 
-      // Handle focus/blur
+      // Handle focus/blur - CRITICAL: This is where we set the active input in context
       const element = containerRef.current;
-      const handleFocus = () => setIsFocused(true);
-      const handleBlur = () => setIsFocused(false);
+      const handleFocusIn = () => {
+        const currentInputId = inputIdRef.current;
+        const currentContext = mathContextRef.current;
+        log('MathInput', 'focusin event fired', { inputId: currentInputId, hasContext: !!currentContext });
+        setIsFocused(true);
+        // Set this input as active in the context when it receives focus
+        if (currentContext) {
+          log('MathInput', 'Setting active input from focusin', { inputId: currentInputId });
+          currentContext.setActiveInput(currentInputId);
+        } else {
+          log('MathInput', 'WARNING: No mathContext available in focusin handler');
+        }
+      };
+      const handleFocusOut = () => {
+        log('MathInput', 'focusout event fired', { inputId: inputIdRef.current });
+        setIsFocused(false);
+      };
 
-      element.addEventListener('focusin', handleFocus);
-      element.addEventListener('focusout', handleBlur);
+      element.addEventListener('focusin', handleFocusIn);
+      element.addEventListener('focusout', handleFocusOut);
 
       // Auto-focus if requested
       if (autoFocus) {
@@ -148,8 +181,9 @@ export const MathInput: React.FC<MathInputProps> = ({
       }
 
       return () => {
-        element.removeEventListener('focusin', handleFocus);
-        element.removeEventListener('focusout', handleBlur);
+        log('MathInput', 'cleanup - removing listeners', { inputId });
+        element.removeEventListener('focusin', handleFocusIn);
+        element.removeEventListener('focusout', handleFocusOut);
         mathField.revert();
         mathFieldRef.current = null;
       };
@@ -191,15 +225,42 @@ export const MathInput: React.FC<MathInputProps> = ({
    */
   const handleKeyboardInsertion = useCallback(
     (insertedLatex: string) => {
-      if (!mathFieldRef.current) return;
+      log('MathInput', 'handleKeyboardInsertion called', {
+        insertedLatex,
+        hasMathField: !!mathFieldRef.current,
+        inputId: inputIdRef.current
+      });
 
-      if (insertedLatex === 'BACKSPACE') {
-        // Simulate backspace
-        mathFieldRef.current.keystroke('Backspace');
-      } else {
-        // Insert LaTeX at cursor
-        mathFieldRef.current.write(insertedLatex);
-        mathFieldRef.current.focus();
+      if (!mathFieldRef.current) {
+        log('MathInput', 'ERROR: mathFieldRef.current is null, cannot insert');
+        return;
+      }
+
+      // Handle special commands
+      switch (insertedLatex) {
+        case 'BACKSPACE':
+          log('MathInput', 'Executing backspace keystroke');
+          mathFieldRef.current.keystroke('Backspace');
+          return;
+        case 'ARROW_LEFT':
+          log('MathInput', 'Executing Left arrow keystroke');
+          mathFieldRef.current.keystroke('Left');
+          return;
+        case 'ARROW_RIGHT':
+          log('MathInput', 'Executing Right arrow keystroke');
+          mathFieldRef.current.keystroke('Right');
+          return;
+        case 'ENTER':
+          log('MathInput', 'Executing blur (Enter)');
+          mathFieldRef.current.blur();
+          return;
+        default:
+          // Insert LaTeX at cursor
+          log('MathInput', 'Writing LaTeX to MathQuill', { latex: insertedLatex });
+          mathFieldRef.current.write(insertedLatex);
+          // Re-focus after insertion to ensure subsequent inputs work
+          log('MathInput', 'Re-focusing MathQuill after write');
+          mathFieldRef.current.focus();
       }
     },
     []
@@ -210,10 +271,14 @@ export const MathInput: React.FC<MathInputProps> = ({
    */
   useEffect(() => {
     if (mathContext) {
+      log('MathInput', 'Registering input with provider', { inputId });
       mathContext.registerInput(inputId, handleKeyboardInsertion);
       return () => {
+        log('MathInput', 'Unregistering input from provider', { inputId });
         mathContext.unregisterInput(inputId);
       };
+    } else {
+      log('MathInput', 'WARNING: No mathContext available for registration', { inputId });
     }
   }, [mathContext, inputId, handleKeyboardInsertion]);
 
