@@ -67,6 +67,7 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
 
   // Get context
   const mathContext = useMathContext();
+  log('MathKeyboard', 'context retrieved', { mathContext, hasContext: !!mathContext });
 
   /**
    * Toggle keyboard visibility

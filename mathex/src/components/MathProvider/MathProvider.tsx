@@ -48,12 +48,17 @@ interface MathContextValue {
  */
 const MathContext = createContext<MathContextValue | undefined>(undefined);
 
+// Log context creation at module load time
+console.log('[MathProvider] Context created, MathContext object:', MathContext);
+
 /**
  * Hook to access the math context
  * Optional - returns undefined if not within a provider
  */
 export const useMathContext = () => {
-  return useContext(MathContext);
+  const context = useContext(MathContext);
+  log('useMathContext', 'called', { hasContext: context !== undefined, contextKeys: context ? Object.keys(context) : [] });
+  return context;
 };
 
 /**
@@ -154,6 +159,8 @@ export const MathProvider: React.FC<MathProviderProps> = ({
 
   // Determine theme attribute value (support both string and custom ThemeConfig)
   const themeAttr = typeof theme === 'string' ? theme : 'custom';
+
+  log('MathProvider', 'rendering with contextValue', { activeInputId, registeredInputs: Array.from(inputCallbacksRef.current.keys()) });
 
   return (
     <MathContext.Provider value={contextValue}>
