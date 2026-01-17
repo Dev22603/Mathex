@@ -10,6 +10,7 @@ export default defineConfig({
     dts({
       include: ['src/**/*.ts', 'src/**/*.tsx'],
       exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'examples/**'],
+      tsconfigPath: './tsconfig.lib.json',
     }),
   ],
   build: {

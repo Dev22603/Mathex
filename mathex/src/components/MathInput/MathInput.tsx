@@ -3,7 +3,7 @@ import { useMathContext } from '../MathProvider/MathProvider';
 import './MathInput.css';
 
 // Debug logging helper
-const DEBUG = true;
+const DEBUG = false;
 const log = (component: string, action: string, data?: any) => {
   if (DEBUG) {
     console.log(`[${component}] ${action}`, data !== undefined ? data : '');

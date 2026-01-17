@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, type R
 import type { ThemeConfig } from '../../types';
 
 // Debug logging helper
-const DEBUG = true;
+const DEBUG = false;
 const log = (component: string, action: string, data?: any) => {
   if (DEBUG) {
     console.log(`[${component}] ${action}`, data !== undefined ? data : '');
@@ -48,17 +48,12 @@ interface MathContextValue {
  */
 const MathContext = createContext<MathContextValue | undefined>(undefined);
 
-// Log context creation at module load time
-console.log('[MathProvider] Context created, MathContext object:', MathContext);
-
 /**
  * Hook to access the math context
  * Optional - returns undefined if not within a provider
  */
 export const useMathContext = () => {
-  const context = useContext(MathContext);
-  log('useMathContext', 'called', { hasContext: context !== undefined, contextKeys: context ? Object.keys(context) : [] });
-  return context;
+  return useContext(MathContext);
 };
 
 /**
