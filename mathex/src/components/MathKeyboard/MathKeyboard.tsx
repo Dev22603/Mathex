@@ -139,7 +139,6 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
         case '123_MODE':
           setKeyboardMode('default');
           setIsShiftActive(false);
-          setNextCharMode('normal');
           return;
         case 'SHIFT':
           setIsShiftActive((prev) => !prev);
