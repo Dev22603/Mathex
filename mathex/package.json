@@ -1,5 +1,5 @@
 {
-  "name": "mathex",
+  "name": "mathex-editor",
   "version": "0.0.1",
   "description": "A Desmos-like math equation editor component library for React",
   "type": "module",
