@@ -1,0 +1,163 @@
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 300px; /* Space for keyboard */
+}
+
+.app-header {
+  background: white;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.app-header > div {
+  text-align: center;
+  flex: 1;
+}
+
+.theme-toggle {
+  padding: 0.75rem 1.5rem;
+  background: #2F7DEF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  background: #1D6FDE;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #2F7DEF;
+  font-size: 2.5rem;
+}
+
+.app-header p {
+  margin: 0.5rem 0 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.app-content {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.demo-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+}
+
+.demo-section h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.input-example {
+  margin-bottom: 2rem;
+}
+
+.input-example label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.latex-display {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #F5F5F5;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.info-section {
+  background: #FFF9E6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #FFD700;
+}
+
+.info-section h3 {
+  margin-top: 0;
+  color: #B8860B;
+}
+
+.info-section p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+/* Dark theme support for demo app */
+[data-theme='dark'] .app {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+[data-theme='dark'] .app-header {
+  background: #2D2D2D;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .app-header h1 {
+  color: #5B9CFF;
+}
+
+[data-theme='dark'] .app-header p {
+  color: #CCCCCC;
+}
+
+[data-theme='dark'] .demo-section {
+  background: #2D2D2D;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .demo-section h2 {
+  color: #FFFFFF;
+}
+
+[data-theme='dark'] .input-example label {
+  color: #CCCCCC;
+}
+
+[data-theme='dark'] .latex-display {
+  background: #1E1E1E;
+  color: #CCCCCC;
+}
+
+[data-theme='dark'] .info-section {
+  background: #3E2723;
+  border-left-color: #FFA726;
+}
+
+[data-theme='dark'] .info-section h3 {
+  color: #FFD54F;
+}
+
+[data-theme='dark'] .info-section p {
+  color: #CCCCCC;
+}

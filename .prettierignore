@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+build
+.vite
+
+# Git
+.git
+
+# Documentation
+MASTERPLAN.md
+MASTERPLAN-V2.md
+TODO.md
+README.md
+*.docx
+
+# Config files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Other
+.DS_Store
+coverage

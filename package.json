@@ -1,0 +1,76 @@
+{
+  "name": "mathex-editor",
+  "version": "0.0.2",
+  "description": "A Desmos-like math equation editor component library for React",
+  "type": "module",
+  "main": "./dist/mathex.cjs",
+  "module": "./dist/mathex.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mathex.js",
+      "require": "./dist/mathex.cjs"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "math",
+    "equation",
+    "editor",
+    "react",
+    "latex",
+    "katex",
+    "desmos",
+    "wysiwyg",
+    "educational"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dev22603/Mathex.git"
+  },
+  "homepage": "https://github.com/Dev22603/Mathex/blob/main/mathex/README.md",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:lib": "tsc -b && vite build --config vite.config.lib.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "jquery": "^3.7.1",
+    "katex": "^0.16.11",
+    "mathquill": "^0.10.1-a"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/katex": "^0.16.7",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "prettier": "^3.4.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4",
+    "vite-plugin-dts": "^4.5.0"
+  }
+}

@@ -1,0 +1,628 @@
+/**
+ * MathKeyboard CSS - Desmos-style styling
+ * Based on exact CSS values from Desmos calculator
+ */
+
+/* ============================================
+   CSS Variables
+   ============================================ */
+:root {
+  --dcg-accent-color: #2f72dc;
+  --dcg-accent-color-shaded-10: #2457a8;
+  --dcg-accent-color-shaded-20: #193d75;
+  --dcg-custom-background-color: #fff;
+  --dcg-custom-background-color-shaded: #eff2f3;
+  --dcg-custom-text-color: #000;
+}
+
+/* Dark theme overrides for keyboard */
+[data-theme='dark'] {
+  --dcg-accent-color: #5B9CFF;
+  --dcg-accent-color-shaded-10: #4A8AE8;
+  --dcg-accent-color-shaded-20: #3978D1;
+  --dcg-custom-background-color: #2D2D2D;
+  --dcg-custom-background-color-shaded: #1E1E1E;
+  --dcg-custom-text-color: #FFFFFF;
+}
+
+/* ============================================
+   Main Keyboard Container
+   ============================================ */
+.dcg-keypad {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dcg-keypad.dcg-hidden {
+  pointer-events: none;
+}
+
+.dcg-keypad.dcg-hidden .dcg-show-keypad-container {
+  pointer-events: auto;
+}
+
+/* ============================================
+   Toggle Button (Show/Hide Keyboard)
+   ============================================ */
+.dcg-show-keypad-container {
+  z-index: 6;
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  animation: dcg-fadeIn-show-keypad 0.6s;
+}
+
+.dcg-show-keypad {
+  padding: 4px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: linear-gradient(#f6f6f6, #f0f0f0);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
+  transition: background 0.2s;
+}
+
+.dcg-show-keypad:hover {
+  background: #ededed;
+  border-color: #bbb;
+}
+
+.dcg-show-keypad:active {
+  background: #e0e0e0;
+  border-color: #949494;
+  box-shadow: none;
+}
+
+.dcg-icon-keyboard {
+  font-size: 175%;
+  line-height: 1;
+}
+
+.dcg-icon-caret {
+  font-size: 75%;
+  line-height: 2rem;
+}
+
+/* ============================================
+   Minimize Button (When keyboard is visible)
+   ============================================ */
+.dcg-minimize-keypad-container {
+  position: absolute;
+  top: -2.5rem;
+  left: -1px;
+  z-index: 10;
+}
+
+.dcg-minimize-keypad {
+  padding: 0.25rem 1.25rem;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  background: linear-gradient(#f6f6f6, #f0f0f0);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
+  transition: background 0.2s;
+}
+
+.dcg-minimize-keypad:hover {
+  background: #ededed;
+  border-color: #bbb;
+}
+
+.dcg-minimize-keypad:active {
+  background: #e0e0e0;
+  border-color: #949494;
+  box-shadow: none;
+}
+
+/* ============================================
+   Keys Container
+   ============================================ */
+.dcg-keys-container {
+  position: relative;
+  width: 100%;
+  animation: dcg-slideUp 0.3s ease-out;
+}
+
+.dcg-keys-background {
+  background: var(--dcg-custom-background-color, #f5f5f5);
+  border-top: 1px solid #ccc;
+  padding: 8px 0;
+}
+
+.dcg-keys {
+  position: relative;
+  width: 100%;
+  max-width: 835px;
+  margin: auto;
+  text-align: center;
+}
+
+/* ============================================
+   Basic Keypad Layout
+   ============================================ */
+.dcg-basic-keypad {
+  display: flex;
+  justify-content: center;
+}
+
+.dcg-audio-keypad-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 4px;
+}
+
+.dcg-audio-keypad-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dcg-left-section {
+  min-width: 240px;
+}
+
+.dcg-middle-section {
+  min-width: 240px;
+}
+
+.dcg-right-section {
+  min-width: 160px;
+}
+
+/* ============================================
+   Keypad Row
+   ============================================ */
+.dcg-keypad-row {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+/* ============================================
+   Button Container
+   ============================================ */
+.dcg-keypad-btn-container {
+  position: relative;
+  width: 60px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.dcg-keypad-btn-container.dcg-wide {
+  width: 75px;
+}
+
+.dcg-keypad-btn-container.dcg-extra-wide {
+  width: 100%;
+  min-width: 140px;
+}
+
+/* ============================================
+   Button Base Styles
+   ============================================ */
+.dcg-keypad-btn {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.dcg-keypad-btn-content {
+  text-align: center;
+  flex: 1;
+  pointer-events: none;
+  font-weight: 400;
+}
+
+/* ============================================
+   White Button Style
+   ============================================ */
+.dcg-keypad-btn.dcg-btn-white {
+  color: var(--dcg-custom-text-color, #000);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.4), inset 0 -1px rgba(0, 0, 0, 0.02);
+  background: linear-gradient(#fff, #f9f9f9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dcg-keypad-btn.dcg-btn-white:hover {
+  background: #f5f5f5;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.dcg-keypad-btn.dcg-btn-white:active {
+  background: #ebebeb;
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+}
+
+/* ============================================
+   Light Gray Button Style (Numbers)
+   ============================================ */
+.dcg-keypad-btn.dcg-btn-light-gray {
+  color: #000;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), inset 0 -1px rgba(0, 0, 0, 0.02);
+  background: linear-gradient(#f6f6f6, #f0f0f0);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dcg-keypad-btn.dcg-btn-light-gray:hover {
+  background: #ededed;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.dcg-keypad-btn.dcg-btn-light-gray:active,
+.dcg-keypad-btn.dcg-btn-light-gray.dcg-active {
+  background: #e0e0e0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: none;
+}
+
+/* ============================================
+   Blue Button Style (Enter)
+   ============================================ */
+.dcg-keypad-btn.dcg-btn-blue {
+  color: #fff;
+  background: var(--dcg-accent-color, #2f72dc);
+  border: 1px solid transparent;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 -1px rgba(0, 0, 0, 0.04);
+}
+
+.dcg-keypad-btn.dcg-btn-blue:hover {
+  background: var(--dcg-accent-color-shaded-10, #2457a8);
+}
+
+.dcg-keypad-btn.dcg-btn-blue:active {
+  background: var(--dcg-accent-color-shaded-20, #193d75);
+  box-shadow: none;
+}
+
+/* ============================================
+   ABC Keyboard Layout
+   ============================================ */
+.dcg-abc-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+}
+
+.dcg-abc-mode .dcg-keypad-row {
+  justify-content: center;
+}
+
+/* Row 2 offset for QWERTY layout */
+.dcg-abc-row-1 {
+  padding-left: 20px;
+}
+
+/* Row 3 and 4 adjustments */
+.dcg-abc-row-2 .dcg-keypad-btn-container:first-child,
+.dcg-abc-row-2 .dcg-keypad-btn-container:last-child {
+  width: 75px;
+}
+
+.dcg-abc-row-3 .dcg-keypad-btn-container:first-child {
+  width: 100px;
+}
+
+.dcg-abc-row-3 .dcg-keypad-btn-container:last-child {
+  width: 120px;
+}
+
+/* ============================================
+   Functions Panel
+   ============================================ */
+.dcg-functions-popover {
+  position: absolute;
+  right: 8px;
+  top: -306px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(20px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  z-index: 100;
+}
+
+.dcg-functions-popover.dcg-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.dcg-popover-interior {
+  background-color: var(--dcg-custom-background-color, #fff);
+  color: var(--dcg-custom-text-color, #000);
+  padding: 0;
+  width: 310px;
+  height: 306px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Scrollbar styling */
+.dcg-popover-interior::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dcg-popover-interior::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.dcg-popover-interior::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.dcg-popover-interior::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ============================================
+   Function Category Sections
+   ============================================ */
+.dcg-keypad-keys-section {
+  border: 1px solid transparent;
+}
+
+.dcg-keypad-keys-section + .dcg-keypad-keys-section {
+  margin-top: 8px;
+}
+
+.dcg-section-heading {
+  color: var(--dcg-custom-text-color, #666);
+  text-transform: uppercase;
+  font-size: 75%;
+  text-align: left;
+  padding: 5px 8px;
+  position: sticky;
+  top: 0;
+  background: var(--dcg-custom-background-color, #fff);
+  z-index: 2;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.dcg-keypad-keys-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 7px;
+}
+
+/* Function button styling */
+.dcg-function-btn {
+  width: 33.3%;
+  height: 42px;
+  margin-bottom: -5px;
+  overflow: hidden;
+}
+
+.dcg-function-btn .dcg-keypad-btn {
+  font-size: 80% !important;
+  white-space: nowrap;
+  color: var(--dcg-custom-text-color, #000);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes dcg-fadeIn-show-keypad {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dcg-slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 900px) {
+  .dcg-keypad-btn-container {
+    width: 50px;
+    height: 45px;
+  }
+
+  .dcg-keypad-btn {
+    font-size: 14px;
+  }
+
+  .dcg-left-section,
+  .dcg-middle-section {
+    min-width: 200px;
+  }
+
+  .dcg-right-section {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 700px) {
+  .dcg-audio-keypad-container {
+    flex-wrap: wrap;
+  }
+
+  .dcg-keypad-btn-container {
+    width: 45px;
+    height: 40px;
+  }
+
+  .dcg-keypad-btn {
+    font-size: 13px;
+  }
+
+  .dcg-functions-popover {
+    right: 4px;
+    width: 280px;
+  }
+
+  .dcg-popover-interior {
+    width: 280px;
+  }
+}
+
+/* ============================================
+   Disabled State
+   ============================================ */
+.dcg-keypad-btn-container.dcg-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.dcg-keypad-btn-container.dcg-disabled .dcg-keypad-btn {
+  cursor: default;
+}
+
+/* ============================================
+   Dual-Character Buttons (e.g., "! %", "[ ]")
+   ============================================ */
+.dcg-dual-char {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dcg-dual-primary,
+.dcg-dual-secondary {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+
+/* Clear/active state - fully visible */
+.dcg-dual-primary.dcg-clear,
+.dcg-dual-secondary.dcg-clear {
+  opacity: 1;
+  filter: none;
+  color: var(--dcg-custom-text-color, #000);
+}
+
+/* Blurred/inactive state - faded */
+.dcg-dual-primary.dcg-blurred,
+.dcg-dual-secondary.dcg-blurred {
+  opacity: 0.35;
+  filter: none;
+  color: var(--dcg-custom-text-color, #666);
+}
+
+/* ============================================
+   Dark Theme Button Overrides
+   ============================================ */
+[data-theme='dark'] .dcg-show-keypad,
+[data-theme='dark'] .dcg-minimize-keypad {
+  background: linear-gradient(#3D3D3D, #2D2D2D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-show-keypad:hover,
+[data-theme='dark'] .dcg-minimize-keypad:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-show-keypad:active,
+[data-theme='dark'] .dcg-minimize-keypad:active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keys-background {
+  background: var(--dcg-custom-background-color-shaded);
+  border-top-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white {
+  background: linear-gradient(#3D3D3D, #2D2D2D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-white:active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray {
+  background: linear-gradient(#444444, #3D3D3D);
+  border-color: #555555;
+  color: var(--dcg-custom-text-color);
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray:hover {
+  background: #4D4D4D;
+  border-color: #666666;
+}
+
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray:active,
+[data-theme='dark'] .dcg-keypad-btn.dcg-btn-light-gray.dcg-active {
+  background: #3D3D3D;
+  border-color: #444444;
+}
+
+[data-theme='dark'] .dcg-popover-interior {
+  background-color: var(--dcg-custom-background-color);
+  border-color: #444444;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-track {
+  background: #1E1E1E;
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-thumb {
+  background: #555555;
+}
+
+[data-theme='dark'] .dcg-popover-interior::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}

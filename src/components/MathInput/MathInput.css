@@ -1,0 +1,121 @@
+/**
+ * MathInput Component Styles - MathQuill Integration
+ * WYSIWYG math editing with rendered equations
+ */
+
+/* ============================================
+   Main Container
+   ============================================ */
+.mathex-input {
+  position: relative;
+  min-height: var(--math-input-min-height, 48px);
+  padding: var(--math-input-padding, 12px 16px);
+  background: var(--math-background, #FFFFFF);
+  border: 2px solid var(--math-border-color, #D0D0D0);
+  border-left: 3px solid transparent;
+  border-radius: var(--math-border-radius, 4px);
+  font-family: var(--math-font, 'KaTeX_Main', 'Times New Roman', serif);
+  font-size: var(--math-font-size, 18px);
+  line-height: 1.6;
+  cursor: text;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Hover effect for non-disabled inputs */
+.mathex-input:not(.mathex-input--disabled):hover {
+  border-color: var(--math-border-light, #BCBCBC);
+}
+
+/* Focused state */
+.mathex-input--focused {
+  border-left-color: var(--math-primary-color, #2F7DEF);
+  outline: none;
+}
+
+/* Disabled state */
+.mathex-input--disabled {
+  background: var(--math-bg-light-gray, #F5F5F5);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ============================================
+   MathQuill Container
+   ============================================ */
+.mathex-mathquill-container {
+  min-height: 24px;
+  position: relative;
+}
+
+/* Override MathQuill's default border */
+.mathex-input .mq-editable-field {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 24px;
+  background: transparent !important;
+}
+
+/* MathQuill text color */
+.mathex-input .mq-root-block {
+  color: var(--math-text-color, #000000) !important;
+}
+
+/* MathQuill cursor */
+.mathex-input .mq-cursor {
+  border-left: 1px solid var(--math-text-color, #000000) !important;
+}
+
+/* MathQuill selection */
+.mathex-input .mq-selection {
+  background: var(--math-selection-bg, #C9E1FF) !important;
+}
+
+/* MathQuill fraction bars, sqrt radicals, etc. */
+.mathex-input .mq-non-leaf,
+.mathex-input .mq-scaled {
+  color: var(--math-text-color, #000000);
+}
+
+/* ============================================
+   Placeholder Support
+   ============================================ */
+.mathex-mathquill-container[data-placeholder]:has(.mq-empty)::before,
+.mathex-mathquill-container[data-placeholder]:not(:has(*))::before {
+  content: attr(data-placeholder);
+  color: var(--math-text-light, #999999);
+  font-style: italic;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* ============================================
+   Dark Theme Support
+   ============================================ */
+[data-theme='dark'] .mathex-input .mq-root-block,
+[data-theme='dark'] .mathex-input .mq-non-leaf,
+[data-theme='dark'] .mathex-input .mq-scaled {
+  color: var(--math-text-color) !important;
+}
+
+[data-theme='dark'] .mathex-input .mq-cursor {
+  border-left-color: var(--math-text-color) !important;
+}
+
+[data-theme='dark'] .mathex-input .mq-selection {
+  background: var(--math-selection-bg) !important;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .mathex-input {
+    font-size: 16px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+}

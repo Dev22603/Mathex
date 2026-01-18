@@ -1,0 +1,73 @@
+/**
+ * Mathex - Main styles
+ * CSS variables for theming
+ */
+
+:root {
+  /* Colors - Light Theme (Default) */
+  --math-primary-color: #2F7DEF;
+  --math-primary-hover: #1D6FDE;
+  --math-background: #FFFFFF;
+  --math-bg-light-gray: #F5F5F5;
+  --math-bg-gray: #E8E8E8;
+  --math-bg-hover: #F0F0F0;
+  --math-border-color: #D0D0D0;
+  --math-border-light: #E0E0E0;
+  --math-text-color: #000000;
+  --math-text-gray: #666666;
+  --math-text-light: #999999;
+  --math-selection-bg: #C9E1FF;
+  --math-error-bg: #FFF3E0;
+  --math-warning-color: #FF9800;
+
+  /* Sizing */
+  --math-font-size: 18px;
+  --math-ui-font-size: 14px;
+  --math-button-font-size: 16px;
+  --math-button-width: 60px;
+  --math-button-height: 50px;
+  --math-keyboard-height: auto;
+
+  /* Spacing */
+  --math-button-gap: 6px;
+  --math-section-gap: 20px;
+  --math-input-padding: 12px 16px;
+  --math-keyboard-padding: 16px;
+
+  /* Border Radius */
+  --math-border-radius: 4px;
+  --math-button-border-radius: 6px;
+  --math-keyboard-border-radius: 8px 8px 0 0;
+}
+
+/* Dark theme variables */
+[data-theme='dark'] {
+  --math-background: #1E1E1E;
+  --math-bg-light-gray: #2D2D2D;
+  --math-bg-gray: #3D3D3D;
+  --math-bg-hover: #4D4D4D;
+  --math-border-color: #444444;
+  --math-border-light: #555555;
+  --math-text-color: #FFFFFF;
+  --math-text-gray: #CCCCCC;
+  --math-text-light: #999999;
+  --math-selection-bg: #264F78;
+  --math-error-bg: #3E2723;
+}
+
+/* Base reset for Mathex components */
+.mathex-provider {
+  /* Transparent wrapper - inherits parent layout */
+  display: contents;
+}
+
+.mathex-input,
+.mathex-keyboard {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.mathex-input *,
+.mathex-keyboard * {
+  box-sizing: border-box;
+}
