@@ -189,9 +189,9 @@ export const MathKeyboard: React.FC<MathKeyboardProps> = ({
       }
 
       // Handle subscript/superscript mode for the next character
-      if (nextCharMode !== 'normal' && (button.type === 'letter' || button.type === 'variable')) {
+      if (nextCharMode !== 'normal' && (button.type === 'letter' || button.type === 'variable' || button.type === 'number' || button.type === 'symbol')) {
         const wrapper = nextCharMode === 'subscript' ? `_{${button.latex}}` : `^{${button.latex}}`;
-        log('MathKeyboard', 'inserting letter/variable with mode', { wrapper });
+        log('MathKeyboard', 'inserting letter/variable/number/symbol with mode', { wrapper });
         mathContext?.insertAtCursor(wrapper);
         setNextCharMode('normal');
         // Reset shift after typing
