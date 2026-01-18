@@ -33,6 +33,7 @@
     "type": "git",
     "url": "https://github.com/Dev22603/Mathex.git"
   },
+  "homepage": "https://github.com/Dev22603/Mathex#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
