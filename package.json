@@ -1,6 +1,6 @@
 {
   "name": "mathex-editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Desmos-like math equation editor component library for React",
   "type": "module",
   "main": "./dist/mathex.cjs",
@@ -33,7 +33,6 @@
     "type": "git",
     "url": "https://github.com/Dev22603/Mathex.git"
   },
-  "homepage": "https://github.com/Dev22603/Mathex/blob/main/mathex/README.md",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
